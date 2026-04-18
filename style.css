@@ -232,6 +232,419 @@ footer {
     font-weight: 600;
 }
 
+/* Big Bass Bash weigh-in helper (/fish) — redesigned */
+
+.fish-container { max-width: 780px; }
+
+.fish-hero {
+    text-align: center;
+    padding: 8px 0 18px;
+}
+.fish-hero h1 {
+    margin: 0 0 6px;
+    font-size: 2rem;
+    color: #0a2d4f;
+    letter-spacing: -0.01em;
+}
+.fish-hero-tag {
+    margin: 0;
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+
+.fish-banner {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 0 0 16px;
+    font-size: 0.92rem;
+    border: 1px solid transparent;
+}
+.fish-banner-warn {
+    background: #fff8e1;
+    border-color: #ffc107;
+    color: #5d4700;
+}
+
+.fish-mock-clock {
+    background: linear-gradient(135deg, #1a1a2e, #2d3a4f);
+    color: #f8f9fa;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.fish-mock-clock-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #adb5bd;
+    margin-bottom: 4px;
+}
+.fish-mock-clock-time {
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+}
+.fish-mock-clock-meta {
+    font-size: 0.82rem;
+    color: #ced4da;
+    margin-top: 4px;
+}
+
+.fish-card {
+    background: #fff;
+    border: 1px solid #e6ebf1;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.fish-card h2 {
+    margin: 0 0 12px;
+    font-size: 1.15rem;
+    color: #0a2d4f;
+    border-bottom: none;
+    letter-spacing: -0.005em;
+}
+.fish-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+.fish-card-header h2 { margin: 0; }
+
+.fish-card-status {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 18px;
+}
+.fish-card-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c757d;
+}
+.fish-card-value {
+    font-size: 1rem;
+    color: #1a1a2e;
+}
+
+.fish-form { display: flex; flex-direction: column; gap: 12px; }
+.fish-form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+}
+@media (max-width: 560px) {
+    .fish-form-row { grid-template-columns: 1fr; }
+}
+.fish-field { display: flex; flex-direction: column; gap: 4px; }
+.fish-field-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #405068;
+    letter-spacing: 0.01em;
+}
+.fish-field input,
+.fish-field select {
+    padding: 10px 12px;
+    border: 1px solid #d3dae3;
+    border-radius: 7px;
+    font-size: 1rem;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+.fish-field input:focus,
+.fish-field select:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 3px rgba(0,102,204,0.15);
+}
+.fish-field-lg input { font-size: 1.15rem; font-weight: 600; }
+
+.fish-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #f6f9fc;
+    border: 1px solid #e0e7ef;
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    flex-wrap: wrap;
+}
+.fish-toggle input[type="checkbox"] {
+    width: 18px; height: 18px; margin: 0; cursor: pointer;
+}
+.fish-toggle-label { font-weight: 600; color: #1a1a2e; }
+.fish-toggle-hint { color: #6c757d; font-size: 0.85rem; }
+
+.fish-details {
+    background: #fafbfc;
+    border: 1px solid #e6ebf1;
+    border-radius: 8px;
+    padding: 0 12px;
+}
+.fish-details summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #405068;
+    padding: 10px 0;
+    position: relative;
+    padding-right: 24px;
+}
+.fish-details summary::-webkit-details-marker { display: none; }
+.fish-details summary::after {
+    content: "▸";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.15s;
+    color: #6c757d;
+}
+.fish-details[open] summary::after { transform: translateY(-50%) rotate(90deg); }
+.fish-details-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 6px 0 12px;
+}
+@media (max-width: 560px) {
+    .fish-details-body { grid-template-columns: 1fr; }
+}
+
+.fish-actions { display: flex; justify-content: flex-end; }
+.fish-btn {
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+}
+.fish-btn-primary {
+    background: #0066cc;
+    color: #fff;
+    border-color: #0066cc;
+}
+.fish-btn-primary:hover { background: #0052a3; border-color: #0052a3; }
+.fish-btn-secondary {
+    background: #fff;
+    color: #0066cc;
+    border-color: #0066cc;
+    font-size: 0.85rem;
+    padding: 7px 12px;
+}
+.fish-btn-secondary:hover { background: #f0f6ff; }
+
+.fish-reco {
+    border-left: 4px solid #0066cc;
+}
+.fish-reco-summary { margin: 6px 0 6px; font-size: 1.2rem; color: #0a2d4f; }
+.fish-reco-detail { margin: 0 0 8px; color: #2a3a53; line-height: 1.5; }
+
+.fish-action-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+}
+.fish-action-weigh-now { background: #d4edda; color: #155724; border: 1px solid #28a745; }
+.fish-action-weigh-before-end { background: #fff3cd; color: #7c5a00; border: 1px solid #ffc107; }
+.fish-action-wait { background: #d1ecf1; color: #0c5460; border: 1px solid #17a2b8; }
+.fish-action-wait-for-next-window { background: #e7deff; color: #3d1e7d; border: 1px solid #6f42c1; }
+.fish-action-cannot-make { background: #f8d7da; color: #721c24; border: 1px solid #dc3545; }
+
+.fish-likelihood {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #f6f9fc;
+    border: 1px solid #e0e7ef;
+    border-radius: 8px;
+}
+.fish-likelihood-row {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+.fish-likelihood-metric { display: flex; flex-direction: column; }
+.fish-likelihood-pct {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0066cc;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+.fish-likelihood-pct.is-out { color: #b8336a; }
+.fish-likelihood-sublabel { font-size: 0.82rem; color: #495057; margin-top: 2px; }
+.fish-likelihood-meta { margin-top: 10px; font-size: 0.88rem; color: #495057; line-height: 1.45; }
+
+.fish-disclaimer { font-size: 0.82rem; color: #6c757d; margin: 12px 0 0; }
+
+/* Forecast card */
+.fish-trend-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.fish-trend-hot { background: #ffe1cc; color: #8a3c00; border: 1px solid #ff8f3e; }
+.fish-trend-slow { background: #d4e9ff; color: #083c6d; border: 1px solid #4b9eff; }
+.fish-trend-flat { background: #e9ecef; color: #495057; border: 1px solid #ced4da; }
+
+.fish-forecast-hint { margin: 0 0 12px; color: #6c757d; font-size: 0.88rem; }
+
+.fish-forecast-list { display: flex; flex-direction: column; gap: 6px; }
+.fish-forecast-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border: 1px solid #e6ebf1;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+.fish-forecast-row.is-best {
+    background: #f4fff6;
+    border-color: #28a745;
+    box-shadow: 0 0 0 2px rgba(40,167,69,0.08);
+}
+.fish-forecast-past { opacity: 0.65; background: #f8f9fa; }
+.fish-forecast-current { border-left: 3px solid #0066cc; }
+.fish-forecast-future { }
+
+.fish-forecast-left { min-width: 0; }
+.fish-forecast-title {
+    font-weight: 700;
+    color: #1a1a2e;
+    font-size: 0.95rem;
+}
+.fish-forecast-sub {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-top: 2px;
+}
+
+.fish-forecast-cutoff,
+.fish-forecast-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    min-width: 70px;
+}
+.fish-forecast-cutoff-val,
+.fish-forecast-pct {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-variant-numeric: tabular-nums;
+}
+.fish-forecast-pct.is-in { color: #1a7a3a; }
+.fish-forecast-pct.is-out { color: #a8364c; }
+.fish-forecast-cutoff-label,
+.fish-forecast-pct-label {
+    font-size: 0.72rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+}
+
+@media (max-width: 560px) {
+    .fish-forecast-row {
+        grid-template-columns: 1fr auto;
+        gap: 6px 12px;
+    }
+    .fish-forecast-metric { grid-column: 2; grid-row: 1; }
+    .fish-forecast-cutoff { grid-column: 2; grid-row: 2; }
+}
+
+/* Leaderboard periods (collapsible) */
+.fish-leaderboard-card .fish-meta { margin: 4px 0 10px; }
+.fish-periods { display: flex; flex-direction: column; gap: 6px; }
+.fish-period-block {
+    border: 1px solid #e6ebf1;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+}
+.fish-period-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: #1a1a2e;
+    position: relative;
+}
+.fish-period-summary::-webkit-details-marker { display: none; }
+.fish-period-summary::before {
+    content: "▸";
+    display: inline-block;
+    color: #6c757d;
+    margin-right: 8px;
+    transition: transform 0.15s;
+}
+.fish-period-block[open] > .fish-period-summary::before { transform: rotate(90deg); }
+.fish-period-title { flex: 1; }
+.fish-period-count {
+    font-size: 0.78rem;
+    color: #6c757d;
+    font-weight: 500;
+    background: #f1f4f8;
+    padding: 2px 8px;
+    border-radius: 999px;
+}
+
+.fish-table-wrap { overflow-x: auto; padding: 0 8px 8px; }
+.fish-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    background: #fff;
+}
+.fish-table th,
+.fish-table td {
+    border-bottom: 1px solid #f1f4f8;
+    padding: 7px 10px;
+    text-align: left;
+}
+.fish-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6c757d;
+}
+
+.fish-meta { font-size: 0.85rem; color: #6c757d; margin: 8px 0; }
+
 @media (max-width: 600px) {
     .container {
         padding: 20px 15px;

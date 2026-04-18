@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Bass Bash weigh-in helper — 314 Apps</title>
+    <meta name="description" content="Unofficial helper for Big Bass Bash payout windows and weigh-in timing, with cross-window forecasts.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container fish-container">
+        <div class="fish-hero">
+            <h1>Big Bass Bash weigh-in helper</h1>
+            <p class="fish-hero-tag">Lake of the Ozarks · unofficial timing &amp; payout forecast</p>
+        </div>
+
+        <div id="mockBanner" class="fish-banner fish-banner-warn" hidden>
+            <span id="mockBannerText"></span>
+        </div>
+
+        <div id="mockClockWrap" class="fish-mock-clock" hidden>
+            <div class="fish-mock-clock-label">Mock tournament time · America/Chicago</div>
+            <div id="mockClockTime" class="fish-mock-clock-time">—</div>
+            <div id="mockClockMeta" class="fish-mock-clock-meta"></div>
+        </div>
+
+        <div id="payoutStatus" class="fish-card fish-card-status">
+            <div class="fish-card-label">Payout status</div>
+            <div id="payoutStatusText" class="fish-card-value">Loading…</div>
+        </div>
+
+        <section class="fish-card fish-card-form">
+            <h2>Your fish</h2>
+            <form id="recoForm" class="fish-form">
+                <div class="fish-form-row">
+                    <label class="fish-field fish-field-lg">
+                        <span class="fish-field-label">Fish weight (lb)</span>
+                        <input type="number" id="fishWeightLb" name="fishWeightLb" step="0.01" min="0" required placeholder="4.25" inputmode="decimal">
+                    </label>
+                    <label class="fish-field">
+                        <span class="fish-field-label">Travel to weigh-in (min)</span>
+                        <input type="number" id="travelMinutes" name="travelMinutes" step="1" min="0" value="15">
+                    </label>
+                    <label class="fish-field">
+                        <span class="fish-field-label">Fish in livewell</span>
+                        <select id="livewellCount" name="livewellCount">
+                            <option value="1">1</option>
+                            <option value="2">2 (max)</option>
+                        </select>
+                    </label>
+                </div>
+
+                <label class="fish-toggle">
+                    <input type="checkbox" id="shirtPurchased" name="shirtPurchased">
+                    <span class="fish-toggle-label">I purchased a tournament shirt</span>
+                    <span class="fish-toggle-hint">(unlocks 46th-place payout)</span>
+                </label>
+
+                <details class="fish-details">
+                    <summary>Advanced options</summary>
+                    <div class="fish-details-body">
+                        <label class="fish-field" id="secondFishWrap" hidden>
+                            <span class="fish-field-label">Second fish weight (lb)</span>
+                            <input type="number" id="secondFishWeightLb" name="secondFishWeightLb" step="0.01" min="0" placeholder="Other held fish">
+                        </label>
+                        <label class="fish-field">
+                            <span class="fish-field-label">Override minutes left</span>
+                            <input type="number" id="manualMinutesLeft" name="manualMinutesLeft" step="0.1" min="0" placeholder="If clock differs">
+                        </label>
+                        <label class="fish-field">
+                            <span class="fish-field-label">API base URL</span>
+                            <input type="url" id="apiBase" name="apiBase" placeholder="(empty = same origin)" autocomplete="off">
+                        </label>
+                    </div>
+                </details>
+
+                <div class="fish-actions">
+                    <button type="submit" class="fish-btn fish-btn-primary">Get recommendation</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="fish-card fish-reco" id="recoBox" hidden>
+            <span id="recoAction" class="fish-action-pill" hidden></span>
+            <h2 id="recoSummary" class="fish-reco-summary"></h2>
+            <p id="recoDetail" class="fish-reco-detail"></p>
+            <div id="recoLikelihood" class="fish-likelihood" hidden>
+                <div class="fish-likelihood-row">
+                    <div class="fish-likelihood-metric">
+                        <span class="fish-likelihood-pct" id="recoLikelihoodPct">—</span>
+                        <span class="fish-likelihood-sublabel" id="recoLikelihoodLabel">chance paid at window close</span>
+                    </div>
+                    <div class="fish-likelihood-metric" id="recoRankWrap" hidden>
+                        <span class="fish-likelihood-pct" id="recoProjectedRank">—</span>
+                        <span class="fish-likelihood-sublabel" id="recoProjectedRankLabel">projected final rank</span>
+                    </div>
+                </div>
+                <div class="fish-likelihood-meta" id="recoLikelihoodMeta"></div>
+            </div>
+            <p id="recoDisclaimer" class="fish-disclaimer"></p>
+        </section>
+
+        <section class="fish-card fish-forecast" id="forecastBox" hidden>
+            <div class="fish-card-header">
+                <h2>Compare payout windows</h2>
+                <span class="fish-trend-pill" id="trendPill" hidden></span>
+            </div>
+            <p class="fish-forecast-hint" id="forecastHint">Predicted chance &amp; cutoff for each window, given your fish weight.</p>
+            <div class="fish-forecast-list" id="forecastList"></div>
+        </section>
+
+        <section class="fish-card fish-leaderboard-card">
+            <div class="fish-card-header">
+                <h2>Live leaderboard</h2>
+                <button type="button" class="fish-btn fish-btn-secondary" id="refreshLb">Refresh</button>
+            </div>
+            <p class="fish-meta" id="leaderboardMeta">Not loaded yet.</p>
+            <div id="periodsMount" class="fish-periods" aria-live="polite" aria-relevant="additions text"></div>
+        </section>
+
+        <div class="cta">
+            <p><a href="../index.html">← 314 Apps home</a> · <a href="../contact.html">Contact</a></p>
+        </div>
+
+        <footer>
+            <p><a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-of-service.html">Terms of Service</a></p>
+            <p>&copy; 2026 314 Apps. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="app.js" type="module"></script>
+</body>
+</html>
