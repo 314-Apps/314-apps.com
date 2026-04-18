@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -12,6 +13,12 @@ import {
 import { buildMockLeaderboard, isMockLeaderboardEnabled } from "./lib/mockLeaderboard.js";
 import { getMockSimulatedDate, getSimulationMeta } from "./lib/mockTime.js";
 import { fetchAndParseLeaderboard, resolveWidgetUrl } from "./lib/scrape.js";
+import {
+  ensureRuntimeSettingsFile,
+  getRuntimeSettings,
+  saveRuntimeSettings,
+} from "./lib/runtimeSettings.js";
+import { maybeAppendTrainingSnapshot, trainingDataDirectory } from "./lib/trainingCapture.js";
 import type { SnapshotPayload } from "./lib/types.js";
 import { getActiveWindow, tournamentDayKind } from "./lib/payoutWindows.js";
 import { recommendWeighIn } from "./lib/recommendation.js";
@@ -42,23 +49,28 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirnamePath = path.dirname(__filename);
 const repoRoot = path.resolve(__dirnamePath, "..", "..");
 
-async function refreshSnapshot(): Promise<SnapshotPayload> {
+async function refreshMockSnapshot(): Promise<SnapshotPayload> {
   const now = Date.now();
-  const ttlMs = (Number.isFinite(CACHE_TTL_SECONDS) ? CACHE_TTL_SECONDS : 45) * 1000;
+  const sim = getMockSimulatedDate();
+  const leaderboard = buildMockLeaderboard(sim);
+  const mockTtl = Number.isFinite(MOCK_CACHE_MS) && MOCK_CACHE_MS > 0 ? MOCK_CACHE_MS : 1500;
+  const payload: SnapshotPayload = {
+    leaderboard,
+    fetchedAt: now,
+    expiresAt: now + mockTtl,
+  };
+  mockSnapshotCache = payload;
+  return payload;
+}
 
-  if (mockMode) {
-    const sim = getMockSimulatedDate();
-    const leaderboard = buildMockLeaderboard(sim);
-    const mockTtl = Number.isFinite(MOCK_CACHE_MS) && MOCK_CACHE_MS > 0 ? MOCK_CACHE_MS : 1500;
-    const payload: SnapshotPayload = {
-      leaderboard,
-      fetchedAt: now,
-      expiresAt: now + mockTtl,
-    };
-    mockSnapshotCache = payload;
-    return payload;
+async function fetchLiveSnapshotAndCache(): Promise<SnapshotPayload> {
+  const settings = getRuntimeSettings();
+  if (!settings.liveScrapeEnabled) {
+    throw new Error("Live scraping is disabled. Turn it on under Advanced options or set runtime settings.");
   }
 
+  const now = Date.now();
+  const ttlMs = (Number.isFinite(CACHE_TTL_SECONDS) ? CACHE_TTL_SECONDS : 45) * 1000;
   const widgetUrl = await resolveWidgetUrl(
     process.env.ALEADERBOARD_WIDGET_URL,
     process.env.MIDWEST_LIVE_PAGE_URL,
@@ -70,23 +82,65 @@ async function refreshSnapshot(): Promise<SnapshotPayload> {
     expiresAt: now + ttlMs,
   };
   await putSnapshot(doc, TABLE_NAME, payload);
+
+  if (settings.trainingCaptureEnabled) {
+    const realNow = new Date();
+    const td = tournamentDayKind(realNow);
+    const active = getActiveWindow(realNow);
+    maybeAppendTrainingSnapshot(leaderboard, {
+      fetchedAtMs: now,
+      tournamentDay: td,
+      activeWindow: active && active.day
+        ? {
+            day: active.day,
+            windowId: active.window.id,
+            label: active.window.label,
+          }
+        : null,
+    });
+  }
+
   return payload;
 }
 
-async function getFreshSnapshot(): Promise<SnapshotPayload> {
+/** Mock refresh, or live fetch when scraping is enabled. */
+async function refreshSnapshot(): Promise<SnapshotPayload> {
+  if (mockMode) {
+    return refreshMockSnapshot();
+  }
+  return fetchLiveSnapshotAndCache();
+}
+
+async function getFreshSnapshot(): Promise<{ payload: SnapshotPayload; stale: boolean }> {
   if (mockMode) {
     const existing = mockSnapshotCache;
     if (existing && existing.expiresAt > Date.now()) {
-      return existing;
+      return { payload: existing, stale: false };
     }
-    return refreshSnapshot();
+    const payload = await refreshMockSnapshot();
+    return { payload, stale: false };
   }
 
+  const settings = getRuntimeSettings();
   const existing = await getSnapshot(doc, TABLE_NAME);
-  if (existing && existing.expiresAt > Date.now()) {
-    return existing;
+
+  if (settings.liveScrapeEnabled) {
+    if (existing && existing.expiresAt > Date.now()) {
+      return { payload: existing, stale: false };
+    }
+    const payload = await fetchLiveSnapshotAndCache();
+    return { payload, stale: false };
   }
-  return refreshSnapshot();
+
+  // Live scrape off: serve last cached snapshot even if TTL expired.
+  if (existing) {
+    const stale = existing.expiresAt <= Date.now();
+    return { payload: existing, stale };
+  }
+
+  throw new Error(
+    "No leaderboard cached yet. Enable live scraping once to fetch data, or check DynamoDB / TABLE_NAME.",
+  );
 }
 
 const app = express();
@@ -95,16 +149,57 @@ app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
   const payoutPlaces = Number.parseInt(process.env.PAYOUT_PLACES_HEURISTIC || "45", 10);
+  const rs = getRuntimeSettings();
   const body: Record<string, unknown> = {
     ok: true,
     time: new Date().toISOString(),
     mockLeaderboard: mockMode,
     payoutPlacesHeuristic: Number.isFinite(payoutPlaces) && payoutPlaces > 0 ? payoutPlaces : 45,
+    liveScrapeEnabled: mockMode ? false : rs.liveScrapeEnabled,
+    trainingCaptureEnabled: mockMode ? false : rs.trainingCaptureEnabled,
+    trainingDataPath: mockMode ? null : trainingDataDirectory(),
   };
   if (mockMode) {
     body.simulation = getSimulationMeta();
   }
   res.json(body);
+});
+
+app.get("/api/settings", (_req, res) => {
+  const rs = getRuntimeSettings();
+  res.json({
+    mockLeaderboard: mockMode,
+    liveScrapeEnabled: mockMode ? false : rs.liveScrapeEnabled,
+    trainingCaptureEnabled: mockMode ? false : rs.trainingCaptureEnabled,
+    trainingDataPath: mockMode ? null : trainingDataDirectory(),
+    defaults: {
+      liveScrapeEnabled:
+        process.env.DEFAULT_LIVE_SCRAPE_ENABLED?.trim().toLowerCase() === "true",
+      trainingCaptureEnabled:
+        process.env.DEFAULT_TRAINING_CAPTURE?.trim().toLowerCase() === "true",
+    },
+  });
+});
+
+app.post("/api/settings", (req, res) => {
+  if (mockMode) {
+    res.status(400).json({
+      error: "Settings apply only when not in mock mode (unset USE_MOCK_LEADERBOARD).",
+    });
+    return;
+  }
+  const body = req.body ?? {};
+  const next = saveRuntimeSettings({
+    liveScrapeEnabled:
+      typeof body.liveScrapeEnabled === "boolean" ? body.liveScrapeEnabled : undefined,
+    trainingCaptureEnabled:
+      typeof body.trainingCaptureEnabled === "boolean" ? body.trainingCaptureEnabled : undefined,
+  });
+  res.json({
+    liveScrapeEnabled: next.liveScrapeEnabled,
+    trainingCaptureEnabled: next.trainingCaptureEnabled,
+    trainingDataPath: trainingDataDirectory(),
+  });
 });
 
 app.get("/api/payout-status", (_req, res) => {
@@ -127,12 +222,13 @@ app.get("/api/payout-status", (_req, res) => {
 app.get("/api/leaderboard", async (_req, res) => {
   try {
     await maybeEnsureTable();
-    const snap = await getFreshSnapshot();
+    const { payload, stale } = await getFreshSnapshot();
     res.json({
-      fetchedAt: new Date(snap.fetchedAt).toISOString(),
-      expiresAt: new Date(snap.expiresAt).toISOString(),
-      sourceUrl: snap.leaderboard.sourceUrl,
-      leaderboard: snap.leaderboard,
+      fetchedAt: new Date(payload.fetchedAt).toISOString(),
+      expiresAt: new Date(payload.expiresAt).toISOString(),
+      stale,
+      sourceUrl: payload.leaderboard.sourceUrl,
+      leaderboard: payload.leaderboard,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -143,10 +239,18 @@ app.get("/api/leaderboard", async (_req, res) => {
 app.post("/api/leaderboard/refresh", async (_req, res) => {
   try {
     await maybeEnsureTable();
+    if (!mockMode && !getRuntimeSettings().liveScrapeEnabled) {
+      res.status(400).json({
+        error:
+          "Live scraping is disabled. Enable it in /api/settings or Advanced options before refreshing.",
+      });
+      return;
+    }
     const snap = await refreshSnapshot();
     res.json({
       fetchedAt: new Date(snap.fetchedAt).toISOString(),
       expiresAt: new Date(snap.expiresAt).toISOString(),
+      stale: false,
       sourceUrl: snap.leaderboard.sourceUrl,
       leaderboard: snap.leaderboard,
     });
@@ -159,7 +263,7 @@ app.post("/api/leaderboard/refresh", async (_req, res) => {
 app.post("/api/recommendation", async (req, res) => {
   try {
     await maybeEnsureTable();
-    const snap = await getFreshSnapshot();
+    const { payload: snap, stale: snapshotStale } = await getFreshSnapshot();
     const body = req.body ?? {};
     const fishWeightLb = Number(body.fishWeightLb);
     const travelMinutes = Number(body.travelMinutes ?? 0);
@@ -198,10 +302,38 @@ app.post("/api/recommendation", async (req, res) => {
     res.json({
       recommendation: result,
       leaderboardFetchedAt: new Date(snap.fetchedAt).toISOString(),
+      snapshotStale,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     res.status(502).json({ error: msg });
+  }
+});
+
+const FISH_PUBLIC_BASE_URL = process.env.FISH_PUBLIC_BASE_URL?.trim();
+
+/**
+ * When the app is reached through a reverse proxy / tunnel, relative assets (`../style.css`)
+ * may resolve incorrectly unless the browser has a correct `<base href>`.
+ * Set FISH_PUBLIC_BASE_URL to the **public** URL of the `/fish/` folder, e.g.
+ * `https://abc123.trycloudflare.com/fish` (no trailing slash required).
+ */
+app.get(["/fish", "/fish/", "/fish/index.html"], (req, res, next) => {
+  if (!FISH_PUBLIC_BASE_URL) {
+    return next();
+  }
+  try {
+    const htmlPath = path.join(repoRoot, "fish", "index.html");
+    let html = readFileSync(htmlPath, "utf8");
+    if (!/<base\s[\s\S]*?>/i.test(html)) {
+      const baseHref = FISH_PUBLIC_BASE_URL.endsWith("/")
+        ? FISH_PUBLIC_BASE_URL
+        : `${FISH_PUBLIC_BASE_URL}/`;
+      html = html.replace("<head>", `<head>\n    <base href="${baseHref.replace(/"/g, "&quot;")}">`);
+    }
+    res.type("html").send(html);
+  } catch {
+    next();
   }
 });
 
@@ -224,6 +356,8 @@ app.use(
 if (!mockMode) {
   await ensureTableExists(TABLE_NAME);
 }
+
+ensureRuntimeSettingsFile();
 
 app.listen(PORT, () => {
   const mode = mockMode ? "MOCK leaderboard (no DynamoDB / no live scrape)" : "live leaderboard";

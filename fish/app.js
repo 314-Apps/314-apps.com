@@ -33,14 +33,24 @@ function el(id) {
   return node;
 }
 
+function safeEl(id) {
+  return document.getElementById(id);
+}
+
 /** @type {ReturnType<typeof setInterval> | null} */
-let mockClockTimer = null;
+let clockTimer = null;
+
+/** Subline under live clock (set once per health response). */
+let liveClockMetaText = "";
 
 /** @type {ReturnType<typeof setInterval> | null} */
 let leaderboardPollTimer = null;
 
 /** Whether last /api/health reported mock mode (faster poll). */
 let apiMockMode = false;
+
+/** Ignore checkbox change while syncing from server. */
+let settingsHydrating = false;
 
 const LEADERBOARD_POLL_MS_MOCK = 2000;
 const LEADERBOARD_POLL_MS_LIVE = 15000;
@@ -79,30 +89,82 @@ function formatMockChicagoTime(isoString) {
   }).format(d);
 }
 
-function stopMockClock() {
-  if (mockClockTimer != null) {
-    clearInterval(mockClockTimer);
-    mockClockTimer = null;
+function stopClock() {
+  if (clockTimer != null) {
+    clearInterval(clockTimer);
+    clockTimer = null;
   }
+}
+
+/** Stops the inline fallback clock from index.html once the module bundle takes over. */
+function clearInlineClockFallback() {
+  if (typeof window === "undefined") return;
+  const id = window.__fishInlineClockInterval;
+  if (id != null) {
+    clearInterval(id);
+    window.__fishInlineClockInterval = null;
+  }
+}
+
+/** Wall clock in Chicago (same formatter as mock simulated time). */
+function formatChicagoWallClock() {
+  return formatMockChicagoTime(new Date().toISOString());
+}
+
+function tickLiveClock() {
+  const timeEl = document.getElementById("mockClockTime");
+  const metaEl = document.getElementById("mockClockMeta");
+  try {
+    if (timeEl) timeEl.textContent = formatChicagoWallClock();
+  } catch {
+    if (timeEl) timeEl.textContent = new Date().toLocaleString();
+  }
+  if (metaEl) metaEl.textContent = liveClockMetaText;
+}
+
+/**
+ * @param {object | null} health from GET /api/health (optional if fetch failed)
+ */
+function showClockWrap() {
   const wrap = document.getElementById("mockClockWrap");
-  if (wrap) wrap.hidden = true;
+  if (!wrap) return;
+  wrap.removeAttribute("hidden");
+  wrap.hidden = false;
+  wrap.style.display = "block";
+  wrap.style.visibility = "visible";
+  wrap.style.opacity = "1";
+}
+
+function startLiveClock(health) {
+  clearInlineClockFallback();
+  stopClock();
+  const labelEl = document.getElementById("clockLabel");
+  if (labelEl) labelEl.textContent = "Current time · America/Chicago";
+  const n = health?.payoutPlacesHeuristic ?? 45;
+  liveClockMetaText = health
+    ? `Live data · heuristic ~${n} paid places · payout windows use Central Time`
+    : "Live leaderboard · payout windows use Central Time";
+  showClockWrap();
+  tickLiveClock();
+  clockTimer = setInterval(tickLiveClock, 1000);
 }
 
 async function tickMockClock() {
   try {
     const h = await fetchJson("/api/health");
     if (!h.mockLeaderboard) {
-      stopMockClock();
       el("mockBanner").hidden = true;
+      startLiveClock(h);
       return;
     }
 
-    const wrap = document.getElementById("mockClockWrap");
+    const labelEl = document.getElementById("clockLabel");
     const timeEl = document.getElementById("mockClockTime");
     const metaEl = document.getElementById("mockClockMeta");
     const sim = h.simulation;
 
-    if (wrap) wrap.hidden = false;
+    if (labelEl) labelEl.textContent = "Mock tournament time · America/Chicago";
+    showClockWrap();
     if (timeEl && sim?.simulatedIso) {
       timeEl.textContent = formatMockChicagoTime(sim.simulatedIso);
     }
@@ -112,16 +174,15 @@ async function tickMockClock() {
       metaEl.textContent = `${scale}× real speed · ${simMin.toFixed(1)} simulated minutes since start · bubble vs ~${h.payoutPlacesHeuristic ?? 45}th place`;
     }
   } catch {
-    stopMockClock();
-    const wrap = document.getElementById("mockClockWrap");
-    if (wrap) wrap.hidden = true;
+    startLiveClock(null);
   }
 }
 
 function startMockClock() {
-  stopMockClock();
+  clearInlineClockFallback();
+  stopClock();
   tickMockClock();
-  mockClockTimer = setInterval(tickMockClock, 1000);
+  clockTimer = setInterval(tickMockClock, 1000);
 }
 
 async function fetchJson(path, options) {
@@ -148,10 +209,21 @@ async function fetchJson(path, options) {
   return data;
 }
 
+function setTournamentStatusLines(day, win) {
+  const liveEl = document.getElementById("tournamentStatusLive");
+  const notStartedEl = document.getElementById("tournamentStatusNotStarted");
+  if (!liveEl || !notStartedEl) return;
+  const isLive = !!win;
+  const notStarted = !day;
+  liveEl.hidden = !isLive;
+  notStartedEl.hidden = !notStarted;
+}
+
 function renderPayoutStatus(data) {
   const t = el("payoutStatusText");
   const day = data.tournamentDay;
   const win = data.activeWindow;
+  setTournamentStatusLines(day, win);
   if (!day) {
     t.textContent =
       "Not a tournament day (configure BBB_SATURDAY_DATE / BBB_SUNDAY_DATE or use a weekend).";
@@ -177,12 +249,15 @@ async function loadHealthBanner() {
       startMockClock();
     } else {
       banner.hidden = true;
-      stopMockClock();
+      startLiveClock(h);
     }
   } catch {
     apiMockMode = false;
     el("mockBanner").hidden = true;
-    stopMockClock();
+    // Keep wall clock visible even when /api/health fails (offline, wrong host, CORS).
+    startLiveClock(null);
+  } finally {
+    showClockWrap();
   }
 }
 
@@ -193,6 +268,10 @@ async function loadPayoutStatus() {
   } catch (e) {
     el("payoutStatusText").textContent =
       e instanceof Error ? e.message : "Could not load payout status.";
+    const liveEl = document.getElementById("tournamentStatusLive");
+    const notStartedEl = document.getElementById("tournamentStatusNotStarted");
+    if (liveEl) liveEl.hidden = true;
+    if (notStartedEl) notStartedEl.hidden = true;
   }
 }
 
@@ -273,7 +352,8 @@ async function loadLeaderboard(opts = {}) {
   try {
     const data = await fetchJson("/api/leaderboard");
     const pollSec = (apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE) / 1000;
-    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt}) · Auto-refresh every ${pollSec}s.`;
+    const staleBit = data.stale ? " · Stale cache (live scraping off)" : "";
+    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt})${staleBit} · Auto-refresh every ${pollSec}s.`;
     renderPeriods(data.leaderboard);
   } catch (e) {
     meta.textContent = e instanceof Error ? e.message : String(e);
@@ -286,7 +366,8 @@ async function refreshLeaderboard() {
   try {
     const data = await fetchJson("/api/leaderboard/refresh", { method: "POST" });
     const pollSec = (apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE) / 1000;
-    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} · Auto-refresh every ${pollSec}s`;
+    const staleBit = data.stale ? " · Stale" : "";
+    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt}${staleBit} · Auto-refresh every ${pollSec}s`;
     renderPeriods(data.leaderboard);
   } catch (e) {
     meta.textContent = e instanceof Error ? e.message : String(e);
@@ -294,6 +375,55 @@ async function refreshLeaderboard() {
 }
 
 const SHIRT_STORAGE_KEY = "fishShirtPurchased";
+
+async function loadSettingsFromServer() {
+  const note = el("fishSettingsNote");
+  const wrap = el("fishSettingsWrap");
+  const live = el("settingLiveScrape");
+  const train = el("settingTrainingCapture");
+  try {
+    const s = await fetchJson("/api/settings");
+    settingsHydrating = true;
+    live.checked = !!s.liveScrapeEnabled;
+    train.checked = !!s.trainingCaptureEnabled;
+    const mock = s.mockLeaderboard === true;
+    live.disabled = mock;
+    train.disabled = mock;
+    wrap.style.opacity = mock ? "0.65" : "1";
+    if (mock) {
+      note.textContent =
+        "Live scrape & training capture apply when the API runs without mock mode (unset USE_MOCK_LEADERBOARD).";
+      note.className = "fish-settings-note is-warn";
+    } else {
+      const path = s.trainingDataPath ? ` Saved under ${s.trainingDataPath}.` : "";
+      note.textContent = `Server-side toggles (persist across restarts).${path}`;
+      note.className = "fish-settings-note is-ok";
+    }
+  } catch (e) {
+    note.textContent = e instanceof Error ? e.message : String(e);
+    note.className = "fish-settings-note is-warn";
+  } finally {
+    settingsHydrating = false;
+  }
+}
+
+async function postSettingsToServer() {
+  if (settingsHydrating) return;
+  try {
+    await fetchJson("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        liveScrapeEnabled: el("settingLiveScrape").checked === true,
+        trainingCaptureEnabled: el("settingTrainingCapture").checked === true,
+      }),
+    });
+    await loadSettingsFromServer();
+  } catch (e) {
+    el("fishSettingsNote").textContent = e instanceof Error ? e.message : String(e);
+    el("fishSettingsNote").className = "fish-settings-note is-warn";
+  }
+}
 
 async function submitReco(ev) {
   ev.preventDefault();
@@ -549,65 +679,115 @@ function renderForecasts(r) {
 
 async function boot() {
   await loadHealthBanner();
+  await loadSettingsFromServer();
   await loadPayoutStatus();
   await loadLeaderboard({ silent: false });
   startLeaderboardPoll();
 }
 
 function init() {
-  const apiInput = el("apiBase");
-  apiInput.value = getApiBase();
-  apiInput.addEventListener("change", async () => {
-    const v = apiInput.value.trim().replace(/\/$/, "");
-    try {
-      localStorage.setItem(API_STORAGE_KEY, v);
-    } catch {
-      /* ignore */
-    }
-    stopLeaderboardPoll();
-    await loadHealthBanner();
-    await loadPayoutStatus();
-    await loadLeaderboard({ silent: false });
-    startLeaderboardPoll();
-  });
-
-  const livewellSel = el("livewellCount");
-  const secondFishWrap = el("secondFishWrap");
-  const syncSecondFish = () => {
-    secondFishWrap.hidden = livewellSel.value !== "2";
-  };
-  livewellSel.addEventListener("change", syncSecondFish);
-  syncSecondFish();
-
-  const shirtInput = el("shirtPurchased");
   try {
-    const stored = localStorage.getItem(SHIRT_STORAGE_KEY);
-    if (stored === "1") shirtInput.checked = true;
-  } catch {
-    /* ignore */
-  }
-  shirtInput.addEventListener("change", () => {
-    try {
-      localStorage.setItem(SHIRT_STORAGE_KEY, shirtInput.checked ? "1" : "0");
-    } catch {
-      /* ignore */
-    }
-  });
+    // Wall clock first — does not depend on the API.
+    startLiveClock(null);
 
-  el("recoForm").addEventListener("submit", submitReco);
-  el("refreshLb").addEventListener("click", refreshLeaderboard);
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stopLeaderboardPoll();
+    if (typeof location !== "undefined" && location.protocol !== "file:") {
+      const apiBase = getApiBase();
+      let tunnelHint = "";
+      if (apiBase) {
+        try {
+          const apiHost = new URL(apiBase).hostname;
+          if (apiHost && apiHost !== location.hostname) {
+            tunnelHint =
+              ` Your API base points at "${apiHost}" but this page is "${location.hostname}" — clear Advanced → API base URL (empty = same origin) for Cloudflare Tunnel.`;
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      console.info(
+        `[fish] API base: "${apiBase || "(same origin)"}" · Page: ${location.origin}${location.pathname} — leave API base empty unless the API is on another host.${tunnelHint}`,
+      );
     } else {
-      startLeaderboardPoll();
-      loadLeaderboard({ silent: true });
-      loadPayoutStatus();
+      console.warn(
+        "[fish] Open this app through the Node server (e.g. http://127.0.0.1:8787/fish/) — file:// breaks API calls and the clock may not match the server.",
+      );
     }
-  });
 
-  boot();
+    const apiInput = safeEl("apiBase");
+    if (apiInput) {
+      apiInput.value = getApiBase();
+      apiInput.addEventListener("change", async () => {
+        const v = apiInput.value.trim().replace(/\/$/, "");
+        try {
+          localStorage.setItem(API_STORAGE_KEY, v);
+        } catch {
+          /* ignore */
+        }
+        stopLeaderboardPoll();
+        await loadHealthBanner();
+        await loadSettingsFromServer();
+        await loadPayoutStatus();
+        await loadLeaderboard({ silent: false });
+        startLeaderboardPoll();
+      });
+    }
+
+    const livewellSel = safeEl("livewellCount");
+    const secondFishWrap = safeEl("secondFishWrap");
+    if (livewellSel && secondFishWrap) {
+      const syncSecondFish = () => {
+        secondFishWrap.hidden = livewellSel.value !== "2";
+      };
+      livewellSel.addEventListener("change", syncSecondFish);
+      syncSecondFish();
+    }
+
+    const shirtInput = safeEl("shirtPurchased");
+    if (shirtInput) {
+      try {
+        const stored = localStorage.getItem(SHIRT_STORAGE_KEY);
+        if (stored === "1") shirtInput.checked = true;
+      } catch {
+        /* ignore */
+      }
+      shirtInput.addEventListener("change", () => {
+        try {
+          localStorage.setItem(SHIRT_STORAGE_KEY, shirtInput.checked ? "1" : "0");
+        } catch {
+          /* ignore */
+        }
+      });
+    }
+
+    const settingLive = safeEl("settingLiveScrape");
+    const settingTrain = safeEl("settingTrainingCapture");
+    if (settingLive) settingLive.addEventListener("change", postSettingsToServer);
+    if (settingTrain) settingTrain.addEventListener("change", postSettingsToServer);
+
+    el("recoForm").addEventListener("submit", submitReco);
+    el("refreshLb").addEventListener("click", refreshLeaderboard);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopLeaderboardPoll();
+      } else {
+        startLeaderboardPoll();
+        loadLeaderboard({ silent: true });
+        loadPayoutStatus();
+        loadSettingsFromServer();
+      }
+    });
+
+    void boot();
+  } catch (err) {
+    console.error("[fish] init failed:", err);
+    const banner = document.createElement("div");
+    banner.setAttribute("role", "alert");
+    banner.style.cssText =
+      "margin:12px;padding:14px;border-radius:10px;background:#fde8e8;border:1px solid #e03131;color:#611;font:14px/1.4 system-ui,sans-serif;max-width:720px;";
+    banner.innerHTML = `<strong>Page script error.</strong> ${err instanceof Error ? err.message : String(err)}<br><br>Use the URL the dev server prints (e.g. <code>http://127.0.0.1:8787/fish/</code>), leave <strong>API base</strong> empty, and open the browser console for details.`;
+    document.querySelector(".fish-container")?.prepend(banner);
+  }
 }
 
 init();

@@ -47,6 +47,8 @@ set -a
 . ./.env
 set +a
 export PORT="$TARGET_PORT"
+# Live local workflow: scrape A Leaderboard by default. Set DEFAULT_LIVE_SCRAPE_ENABLED=false in .env to use cache-only.
+export DEFAULT_LIVE_SCRAPE_ENABLED="${DEFAULT_LIVE_SCRAPE_ENABLED:-true}"
 
 info "Creating DynamoDB table if needed..."
 npm run ddb:create-table
@@ -85,4 +87,4 @@ cleanup
 trap - EXIT
 
 info "Starting dev server (watch mode) on http://127.0.0.1:${TARGET_PORT}/fish/"
-exec env PORT="$TARGET_PORT" npm run dev
+exec env PORT="$TARGET_PORT" DEFAULT_LIVE_SCRAPE_ENABLED="${DEFAULT_LIVE_SCRAPE_ENABLED}" npm run dev

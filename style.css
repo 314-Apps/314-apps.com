@@ -273,6 +273,16 @@ footer {
     margin-bottom: 16px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    min-height: 5.5rem;
+    visibility: visible;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Between hero/banner and cards — same visual weight in live and mock */
+.fish-mock-clock-strip {
+    margin-bottom: 18px;
 }
 .fish-mock-clock-label {
     font-size: 0.75rem;
@@ -292,6 +302,26 @@ footer {
     font-size: 0.82rem;
     color: #ced4da;
     margin-top: 4px;
+}
+
+.fish-status-head {
+    width: 100%;
+}
+
+.fish-tournament-status {
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    line-height: 1.35;
+}
+
+.fish-tournament-live {
+    color: #0f6b32;
+    font-weight: 600;
+}
+
+.fish-tournament-not-started {
+    color: #b02a37;
+    font-weight: 600;
 }
 
 .fish-card {
@@ -644,6 +674,24 @@ footer {
 }
 
 .fish-meta { font-size: 0.85rem; color: #6c757d; margin: 8px 0; }
+
+.fish-settings {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+    border-top: 1px solid #e6ebf1;
+    margin-top: 4px;
+}
+.fish-settings-note {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #6c757d;
+    line-height: 1.4;
+}
+.fish-settings-note.is-warn { color: #856404; }
+.fish-settings-note.is-ok { color: #1a5f2a; }
 
 @media (max-width: 600px) {
     .container {

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Big Bass Bash weigh-in helper — 314 Apps</title>
     <meta name="description" content="Unofficial helper for Big Bass Bash payout windows and weigh-in timing, with cross-window forecasts.">
-    <link rel="stylesheet" href="../style.css">
+    <!-- Root-relative so /fish and /fish/ both resolve JS/CSS correctly (Cloudflare Tunnel, proxies). -->
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container fish-container">
@@ -18,13 +19,22 @@
             <span id="mockBannerText"></span>
         </div>
 
-        <div id="mockClockWrap" class="fish-mock-clock" hidden>
-            <div class="fish-mock-clock-label">Mock tournament time · America/Chicago</div>
-            <div id="mockClockTime" class="fish-mock-clock-time">—</div>
-            <div id="mockClockMeta" class="fish-mock-clock-meta"></div>
+        <!-- Inline fallback styles: tunnel/proxy setups sometimes fail to load ../style.css; clock must stay visible. -->
+        <div id="mockClockWrap" class="fish-mock-clock fish-mock-clock-strip" aria-live="polite" style="background:linear-gradient(135deg,#1a1a2e,#2d3a4f);color:#f8f9fa;padding:14px 18px;border-radius:10px;margin-bottom:18px;text-align:center;min-height:5.5rem;display:block;width:100%;box-sizing:border-box;box-shadow:0 2px 10px rgba(0,0,0,0.12);">
+            <div id="clockLabel" class="fish-mock-clock-label" style="font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#adb5bd;margin-bottom:4px;">Current time · America/Chicago</div>
+            <div id="mockClockTime" class="fish-mock-clock-time" style="font-size:1.35rem;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;">—</div>
+            <div id="mockClockMeta" class="fish-mock-clock-meta" style="font-size:0.82rem;color:#ced4da;margin-top:4px;"></div>
         </div>
 
         <div id="payoutStatus" class="fish-card fish-card-status">
+            <div class="fish-status-head">
+                <p id="tournamentStatusLive" class="fish-tournament-status fish-tournament-live" hidden style="color:#0f6b32;font-weight:600;font-size:0.95rem;line-height:1.35;margin:0 0 10px 0;">
+                    <strong>Tournament is live</strong> — a payout window is in progress (Central).
+                </p>
+                <p id="tournamentStatusNotStarted" class="fish-tournament-status fish-tournament-not-started" hidden style="color:#b02a37;font-weight:600;font-size:0.95rem;line-height:1.35;margin:0 0 10px 0;">
+                    <strong>Tournament hasn't started</strong> — not a tournament weekend/day, or dates not configured in the API.
+                </p>
+            </div>
             <div class="fish-card-label">Payout status</div>
             <div id="payoutStatusText" class="fish-card-value">Loading…</div>
         </div>
@@ -71,6 +81,19 @@
                             <span class="fish-field-label">API base URL</span>
                             <input type="url" id="apiBase" name="apiBase" placeholder="(empty = same origin)" autocomplete="off">
                         </label>
+                        <div class="fish-settings" id="fishSettingsWrap">
+                            <p class="fish-settings-note" id="fishSettingsNote"></p>
+                            <label class="fish-toggle">
+                                <input type="checkbox" id="settingLiveScrape" name="settingLiveScrape">
+                                <span class="fish-toggle-label">Enable live leaderboard scraping</span>
+                                <span class="fish-toggle-hint">(fetch A Leaderboard; off = cached copy only)</span>
+                            </label>
+                            <label class="fish-toggle">
+                                <input type="checkbox" id="settingTrainingCapture" name="settingTrainingCapture">
+                                <span class="fish-toggle-label">Save snapshots for training data</span>
+                                <span class="fish-toggle-hint">(JSONL time series on server — rank changes &amp; drop-offs)</span>
+                            </label>
+                        </div>
                     </div>
                 </details>
 
@@ -128,6 +151,34 @@
         </footer>
     </div>
 
-    <script src="app.js" type="module"></script>
+    <!-- Inline clock: runs even if /fish/app.js fails (wrong path, CSP, ad-block). Module bundle clears this when it loads. -->
+    <script>
+(function () {
+  function formatChicago() {
+    try {
+      return new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Chicago",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short",
+      }).format(new Date());
+    } catch (e) {
+      return new Date().toLocaleString();
+    }
+  }
+  function tick() {
+    var el = document.getElementById("mockClockTime");
+    if (el) el.textContent = formatChicago();
+  }
+  tick();
+  window.__fishInlineClockInterval = setInterval(tick, 1000);
+})();
+    </script>
+    <script src="/fish/app.js" type="module"></script>
 </body>
 </html>
