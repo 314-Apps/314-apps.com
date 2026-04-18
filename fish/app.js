@@ -53,7 +53,88 @@ let apiMockMode = false;
 let settingsHydrating = false;
 
 const LEADERBOARD_POLL_MS_MOCK = 2000;
-const LEADERBOARD_POLL_MS_LIVE = 15000;
+/** Live mode: align with server cache TTL so we poll about when a new scrape may run. */
+const LEADERBOARD_POLL_MS_LIVE = 300000;
+
+function formatAutoRefreshLabel(ms) {
+  const sec = ms / 1000;
+  if (sec >= 60 && sec % 60 === 0) return `${sec / 60} min`;
+  return `${sec}s`;
+}
+
+/** @type {ReturnType<typeof setInterval> | null} */
+let scrapeCountdownTimer = null;
+/** @type {number | null} */
+let leaderboardExpiresAtMs = null;
+/** @type {boolean} */
+let leaderboardStaleCache = false;
+
+function stopScrapeCountdown() {
+  if (scrapeCountdownTimer != null) {
+    clearInterval(scrapeCountdownTimer);
+    scrapeCountdownTimer = null;
+  }
+}
+
+function formatCountdownRemainMs(ms) {
+  const x = Math.max(0, ms);
+  const totalSec = Math.floor(x / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function tickScrapeCountdown() {
+  const wrap = safeEl("leaderboardScrapeCountdown");
+  if (!wrap) return;
+  if (leaderboardStaleCache) {
+    wrap.innerHTML =
+      'Automatic fetch paused — <span class="fish-scrape-countdown-digits">live scrape off</span> (serving cached leaderboard).';
+    wrap.hidden = false;
+    return;
+  }
+  if (leaderboardExpiresAtMs == null || Number.isNaN(leaderboardExpiresAtMs)) {
+    wrap.hidden = true;
+    return;
+  }
+  const remain = leaderboardExpiresAtMs - Date.now();
+  const modeLabel = apiMockMode ? "mock" : "live";
+  if (remain <= 0) {
+    wrap.innerHTML = `Cache expired — <span class="fish-scrape-countdown-digits">next poll</span> may run a new <strong>${modeLabel}</strong> fetch.`;
+  } else {
+    const digits = formatCountdownRemainMs(remain);
+    wrap.innerHTML = `Next <strong>${modeLabel}</strong> fetch in <span class="fish-scrape-countdown-digits">${digits}</span>.`;
+  }
+  wrap.hidden = false;
+}
+
+function startScrapeCountdownFromLeaderboardPayload(data) {
+  stopScrapeCountdown();
+  const wrap = safeEl("leaderboardScrapeCountdown");
+  if (!wrap) return;
+  if (!data || typeof data.expiresAt !== "string") {
+    wrap.hidden = true;
+    return;
+  }
+  leaderboardExpiresAtMs = Date.parse(data.expiresAt);
+  leaderboardStaleCache = data.stale === true;
+  if (Number.isNaN(leaderboardExpiresAtMs)) {
+    wrap.hidden = true;
+    return;
+  }
+  tickScrapeCountdown();
+  if (!leaderboardStaleCache) {
+    scrapeCountdownTimer = setInterval(tickScrapeCountdown, 1000);
+  }
+}
+
+function clearScrapeCountdownUi() {
+  stopScrapeCountdown();
+  leaderboardExpiresAtMs = null;
+  leaderboardStaleCache = false;
+  const wrap = safeEl("leaderboardScrapeCountdown");
+  if (wrap) wrap.hidden = true;
+}
 
 function stopLeaderboardPoll() {
   if (leaderboardPollTimer != null) {
@@ -351,11 +432,15 @@ async function loadLeaderboard(opts = {}) {
   }
   try {
     const data = await fetchJson("/api/leaderboard");
-    const pollSec = (apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE) / 1000;
+    const pollLabel = formatAutoRefreshLabel(
+      apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE,
+    );
     const staleBit = data.stale ? " · Stale cache (live scraping off)" : "";
-    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt})${staleBit} · Auto-refresh every ${pollSec}s.`;
+    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt})${staleBit} · Auto-refresh every ${pollLabel}.`;
+    startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
   } catch (e) {
+    clearScrapeCountdownUi();
     meta.textContent = e instanceof Error ? e.message : String(e);
   }
 }
@@ -365,11 +450,15 @@ async function refreshLeaderboard() {
   meta.textContent = "Refreshing…";
   try {
     const data = await fetchJson("/api/leaderboard/refresh", { method: "POST" });
-    const pollSec = (apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE) / 1000;
+    const pollLabel = formatAutoRefreshLabel(
+      apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE,
+    );
     const staleBit = data.stale ? " · Stale" : "";
-    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt}${staleBit} · Auto-refresh every ${pollSec}s`;
+    meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt}${staleBit} · Auto-refresh every ${pollLabel}`;
+    startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
   } catch (e) {
+    clearScrapeCountdownUi();
     meta.textContent = e instanceof Error ? e.message : String(e);
   }
 }
@@ -395,8 +484,11 @@ async function loadSettingsFromServer() {
         "Live scrape & training capture apply when the API runs without mock mode (unset USE_MOCK_LEADERBOARD).";
       note.className = "fish-settings-note is-warn";
     } else {
-      const path = s.trainingDataPath ? ` Saved under ${s.trainingDataPath}.` : "";
-      note.textContent = `Server-side toggles (persist across restarts).${path}`;
+      const lb = s.trainingDataPath ? ` Leaderboard snapshots: ${s.trainingDataPath}.` : "";
+      const rq = s.recommendationQueriesPath
+        ? ` Recommendation queries (your fish weights, not on the board): ${s.recommendationQueriesPath}.`
+        : "";
+      note.textContent = `Server-side toggles (persist across restarts).${lb}${rq}`;
       note.className = "fish-settings-note is-ok";
     }
   } catch (e) {
@@ -531,7 +623,18 @@ function renderLikelihood(r) {
         ? ` (${r.projectedRankLow}–${r.projectedRankHigh})`
         : "";
     rankEl.textContent = `#${r.projectedRank}${range}`;
-    rankLabel.textContent = `projected final rank${out ? ` — outside top ${paid}` : ` — paid spot`}`;
+    const pct = r.payoutLikelihoodPercent;
+    const rankInside = !out;
+    const pctSaysCash = pct != null && pct > 0;
+    let rankNote;
+    if (out) {
+      rankNote = ` — outside top ${paid}`;
+    } else if (rankInside && !pctSaysCash) {
+      rankNote = ` — inside top ${paid} on rank estimate; 0% = below projected final cutoff weight`;
+    } else {
+      rankNote = ` — paid spot`;
+    }
+    rankLabel.textContent = `projected final rank${rankNote}`;
   } else {
     rankWrap.hidden = true;
     rankEl.classList.remove("is-out");

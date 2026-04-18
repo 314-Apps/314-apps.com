@@ -410,13 +410,15 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
   }
   const pctElapsed = Math.round(f * 100);
   if (boardFull && cb != null) {
-    parts.push(`Live ${places}th-place bubble ${cb.toFixed(2)} lb at ${pctElapsed}% through the window.`);
+    parts.push(
+      `Live ${places}th-place bubble ${cb.toFixed(2)} lb at ${pctElapsed}% through the window (full payout depth on the board).`,
+    );
   } else if (cb != null) {
     parts.push(
-      `Board has ${rowCount}/${places} fish at ${pctElapsed}% elapsed — no live cutoff yet, leaning on history.`,
+      `Board has ${rowCount}/${places} fish scored at ${pctElapsed}% elapsed — the ${places}th-place weight is not on the board yet (only ${rowCount} entries), so the final-cutoff estimate leans on history until ${places} fish are posted.`,
     );
   } else {
-    parts.push("No live cutoff yet; using history only.");
+    parts.push("No weights in this period yet; using history only for the cutoff.");
   }
 
   if (projectedRank != null) {

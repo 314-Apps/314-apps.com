@@ -10,8 +10,9 @@ const TRAINING_DIR = path.resolve(__dirnamePath, "..", "..", "data", "live-train
 const SCHEMA_VERSION = 1 as const;
 
 function minIntervalMs(): number {
-  const n = Number.parseInt(process.env.TRAINING_CAPTURE_MIN_INTERVAL_MS || "30000", 10);
-  return Number.isFinite(n) && n >= 5000 ? n : 30000;
+  const n = Number.parseInt(process.env.TRAINING_CAPTURE_MIN_INTERVAL_MS || "0", 10);
+  if (!Number.isFinite(n) || n < 0) return 0;
+  return n;
 }
 
 /** Stable within a weekend for same angler + station (weight can change = cull). */
@@ -72,7 +73,7 @@ export function maybeAppendTrainingSnapshot(
   const now = Date.now();
   const last = lastAppendByWindow.get(key) ?? 0;
   const gap = minIntervalMs();
-  if (now - last < gap) {
+  if (gap > 0 && now - last < gap) {
     return { appended: false, reason: `throttled (${gap}ms per window)` };
   }
 

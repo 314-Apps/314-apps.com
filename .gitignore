@@ -4,5 +4,6 @@ node_modules/
 .DS_Store
 server/data/runtime-settings.json
 server/data/live-training/
+server/data/recommendation-queries/
 *.swp
 *~

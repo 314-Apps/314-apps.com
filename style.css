@@ -614,6 +614,7 @@ footer {
 
 /* Leaderboard periods (collapsible) */
 .fish-leaderboard-card .fish-meta { margin: 4px 0 10px; }
+.fish-leaderboard-card .fish-scrape-countdown { margin-top: -6px; margin-bottom: 10px; }
 .fish-periods { display: flex; flex-direction: column; gap: 6px; }
 .fish-period-block {
     border: 1px solid #e6ebf1;
@@ -674,6 +675,17 @@ footer {
 }
 
 .fish-meta { font-size: 0.85rem; color: #6c757d; margin: 8px 0; }
+
+.fish-scrape-countdown {
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.fish-scrape-countdown-digits {
+  font-weight: 600;
+  color: #343a40;
+  letter-spacing: 0.02em;
+}
 
 .fish-settings {
     grid-column: 1 / -1;

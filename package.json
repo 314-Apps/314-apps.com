@@ -11,7 +11,9 @@
     "start:mock": "env USE_MOCK_LEADERBOARD=1 PAYOUT_PLACES_HEURISTIC=45 node --import tsx server/src/index.ts",
     "dev:mock": "env USE_MOCK_LEADERBOARD=1 PAYOUT_PLACES_HEURISTIC=45 tsx watch server/src/index.ts",
     "fish:mock": "bash scripts/fish-mock-dev.sh",
-    "train:historical": "tsx server/scripts/train-historical.ts"
+    "train:historical": "tsx server/scripts/train-historical.ts",
+    "compare:reco-to-final": "tsx server/scripts/compare-reco-to-final.ts",
+    "sweep:predictions": "tsx server/scripts/prediction-weight-sweep.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.758.0",

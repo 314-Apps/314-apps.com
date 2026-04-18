@@ -19,13 +19,27 @@ import {
   saveRuntimeSettings,
 } from "./lib/runtimeSettings.js";
 import { maybeAppendTrainingSnapshot, trainingDataDirectory } from "./lib/trainingCapture.js";
+import {
+  appendRecommendationQueryLog,
+  recommendationQueriesDirectory,
+} from "./lib/recommendationQueryLog.js";
 import type { SnapshotPayload } from "./lib/types.js";
 import { getActiveWindow, tournamentDayKind } from "./lib/payoutWindows.js";
-import { recommendWeighIn } from "./lib/recommendation.js";
+import { recommendWeighIn, type RecommendationInput } from "./lib/recommendation.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
-const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "45", 10);
+const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
 const MOCK_CACHE_MS = Number.parseInt(process.env.MOCK_CACHE_MS || "1500", 10);
+
+/** Background scrape interval (defaults to same ms as CACHE_TTL_SECONDS). Set AUTO_SCRAPE_ENABLED=false to disable. */
+const AUTO_SCRAPE_ENABLED = process.env.AUTO_SCRAPE_ENABLED?.trim().toLowerCase() !== "false";
+const AUTO_SCRAPE_INTERVAL_MS = (() => {
+  const ttlSec = Number.isFinite(CACHE_TTL_SECONDS) && CACHE_TTL_SECONDS > 0 ? CACHE_TTL_SECONDS : 300;
+  const def = ttlSec * 1000;
+  const raw = Number.parseInt(process.env.AUTO_SCRAPE_INTERVAL_MS || String(def), 10);
+  if (!Number.isFinite(raw)) return def;
+  return Math.max(10_000, raw);
+})();
 
 const mockMode = isMockLeaderboardEnabled();
 const tableNameEnv = process.env.TABLE_NAME?.trim();
@@ -38,6 +52,9 @@ const TABLE_NAME: string = tableNameEnv ?? "bbb_fish_leaderboard_mock_unused";
 const doc = createDdbClient();
 
 let mockSnapshotCache: SnapshotPayload | null = null;
+
+/** Deduplicate concurrent live fetches (HTTP + scheduled tick). */
+let liveFetchInFlight: Promise<SnapshotPayload> | null = null;
 
 async function maybeEnsureTable(): Promise<void> {
   if (!mockMode) {
@@ -63,14 +80,14 @@ async function refreshMockSnapshot(): Promise<SnapshotPayload> {
   return payload;
 }
 
-async function fetchLiveSnapshotAndCache(): Promise<SnapshotPayload> {
+async function executeFetchLiveSnapshotAndCache(): Promise<SnapshotPayload> {
   const settings = getRuntimeSettings();
   if (!settings.liveScrapeEnabled) {
     throw new Error("Live scraping is disabled. Turn it on under Advanced options or set runtime settings.");
   }
 
   const now = Date.now();
-  const ttlMs = (Number.isFinite(CACHE_TTL_SECONDS) ? CACHE_TTL_SECONDS : 45) * 1000;
+  const ttlMs = (Number.isFinite(CACHE_TTL_SECONDS) ? CACHE_TTL_SECONDS : 300) * 1000;
   const widgetUrl = await resolveWidgetUrl(
     process.env.ALEADERBOARD_WIDGET_URL,
     process.env.MIDWEST_LIVE_PAGE_URL,
@@ -101,6 +118,16 @@ async function fetchLiveSnapshotAndCache(): Promise<SnapshotPayload> {
   }
 
   return payload;
+}
+
+async function fetchLiveSnapshotAndCache(): Promise<SnapshotPayload> {
+  if (liveFetchInFlight) return liveFetchInFlight;
+  liveFetchInFlight = executeFetchLiveSnapshotAndCache();
+  try {
+    return await liveFetchInFlight;
+  } finally {
+    liveFetchInFlight = null;
+  }
 }
 
 /** Mock refresh, or live fetch when scraping is enabled. */
@@ -158,6 +185,7 @@ app.get("/api/health", (_req, res) => {
     liveScrapeEnabled: mockMode ? false : rs.liveScrapeEnabled,
     trainingCaptureEnabled: mockMode ? false : rs.trainingCaptureEnabled,
     trainingDataPath: mockMode ? null : trainingDataDirectory(),
+    recommendationQueriesPath: mockMode ? null : recommendationQueriesDirectory(),
   };
   if (mockMode) {
     body.simulation = getSimulationMeta();
@@ -172,6 +200,7 @@ app.get("/api/settings", (_req, res) => {
     liveScrapeEnabled: mockMode ? false : rs.liveScrapeEnabled,
     trainingCaptureEnabled: mockMode ? false : rs.trainingCaptureEnabled,
     trainingDataPath: mockMode ? null : trainingDataDirectory(),
+    recommendationQueriesPath: mockMode ? null : recommendationQueriesDirectory(),
     defaults: {
       liveScrapeEnabled:
         process.env.DEFAULT_LIVE_SCRAPE_ENABLED?.trim().toLowerCase() === "true",
@@ -199,6 +228,7 @@ app.post("/api/settings", (req, res) => {
     liveScrapeEnabled: next.liveScrapeEnabled,
     trainingCaptureEnabled: next.trainingCaptureEnabled,
     trainingDataPath: trainingDataDirectory(),
+    recommendationQueriesPath: recommendationQueriesDirectory(),
   });
 });
 
@@ -279,10 +309,10 @@ app.post("/api/recommendation", async (req, res) => {
       return;
     }
 
-    const result = recommendWeighIn(snap.leaderboard, {
+    const recoInput: RecommendationInput = {
       fishWeightLb,
       travelMinutes: Number.isFinite(travelMinutes) ? travelMinutes : 0,
-      livewellCount,
+      livewellCount: livewellCount === 2 ? 2 : 1,
       secondFishWeightLb:
         secondFishWeightLb != null && Number.isFinite(secondFishWeightLb)
           ? secondFishWeightLb
@@ -297,7 +327,22 @@ app.post("/api/recommendation", async (req, res) => {
         : mockMode
           ? getMockSimulatedDate()
           : new Date(),
-    });
+    };
+
+    const result = recommendWeighIn(snap.leaderboard, recoInput);
+
+    if (getRuntimeSettings().trainingCaptureEnabled) {
+      appendRecommendationQueryLog(
+        recoInput,
+        result,
+        {
+          leaderboardFetchedAt: new Date(snap.fetchedAt).toISOString(),
+          snapshotStale,
+          sourceUrl: snap.leaderboard.sourceUrl,
+        },
+        mockMode,
+      );
+    }
 
     res.json({
       recommendation: result,
@@ -359,7 +404,33 @@ if (!mockMode) {
 
 ensureRuntimeSettingsFile();
 
+function startAutoScrapeScheduler(): void {
+  if (mockMode || !AUTO_SCRAPE_ENABLED) return;
+
+  const tick = () => {
+    void (async () => {
+      try {
+        await maybeEnsureTable();
+        if (!getRuntimeSettings().liveScrapeEnabled) return;
+        await fetchLiveSnapshotAndCache();
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error(`[leaderboard] auto-scrape: ${msg}`);
+      }
+    })();
+  };
+
+  setInterval(tick, AUTO_SCRAPE_INTERVAL_MS);
+  setTimeout(tick, 5000);
+}
+
 app.listen(PORT, () => {
   const mode = mockMode ? "MOCK leaderboard (no DynamoDB / no live scrape)" : "live leaderboard";
   console.log(`Fish helper: API + static site at http://localhost:${PORT}/ (try /fish/) — ${mode}`);
+  if (!mockMode && AUTO_SCRAPE_ENABLED) {
+    startAutoScrapeScheduler();
+    console.log(
+      `[leaderboard] auto-scrape every ${AUTO_SCRAPE_INTERVAL_MS}ms (set AUTO_SCRAPE_ENABLED=false to disable)`,
+    );
+  }
 });

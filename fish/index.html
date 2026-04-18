@@ -91,7 +91,7 @@
                             <label class="fish-toggle">
                                 <input type="checkbox" id="settingTrainingCapture" name="settingTrainingCapture">
                                 <span class="fish-toggle-label">Save snapshots for training data</span>
-                                <span class="fish-toggle-hint">(JSONL time series on server — rank changes &amp; drop-offs)</span>
+                                <span class="fish-toggle-hint">(leaderboard JSONL + your “Get recommendation” weight queries for later accuracy checks)</span>
                             </label>
                         </div>
                     </div>
@@ -138,6 +138,7 @@
                 <button type="button" class="fish-btn fish-btn-secondary" id="refreshLb">Refresh</button>
             </div>
             <p class="fish-meta" id="leaderboardMeta">Not loaded yet.</p>
+            <p class="fish-meta fish-scrape-countdown" id="leaderboardScrapeCountdown" hidden aria-live="polite"></p>
             <div id="periodsMount" class="fish-periods" aria-live="polite" aria-relevant="additions text"></div>
         </section>
 

@@ -18,6 +18,27 @@ function parseDayLabel(h2: string): { day: "Saturday" | "Sunday"; label: string 
   return { day, label: m[2].trim() };
 }
 
+function dedupePeriods(sections: PeriodSection[]): PeriodSection[] {
+  const byKey = new Map<string, PeriodSection>();
+  const order: string[] = [];
+  for (const p of sections) {
+    const h2n = p.h2.replace(/\s+/g, " ").trim();
+    const key = `${p.day}|${h2n}`;
+    if (!byKey.has(key)) order.push(key);
+    const prev = byKey.get(key);
+    if (!prev) {
+      byKey.set(key, { ...p, h2: h2n });
+      continue;
+    }
+    // A Leaderboard sometimes embeds the same payout window twice (e.g. responsive duplicate DOM).
+    // Keep one block; prefer the snapshot with more rows.
+    if (p.rows.length > prev.rows.length) {
+      byKey.set(key, { ...p, h2: h2n });
+    }
+  }
+  return order.map((k) => byKey.get(k)!);
+}
+
 export function parseLeaderboardHtml(html: string, sourceUrl: string): ParsedLeaderboard {
   const $ = load(html);
   const periods: PeriodSection[] = [];
@@ -64,7 +85,7 @@ export function parseLeaderboardHtml(html: string, sourceUrl: string): ParsedLea
   return {
     sourceUrl,
     fetchedAt: new Date().toISOString(),
-    periods,
+    periods: dedupePeriods(periods),
   };
 }
 
