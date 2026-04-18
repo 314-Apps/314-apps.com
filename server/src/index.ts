@@ -34,8 +34,14 @@ import {
 import {
   buildTrainingDayLeaderboards,
   loadJsonl,
+  type PeriodKey,
   type TrainingSnap,
 } from "../scripts/evalShared.js";
+import {
+  attachLocationsToStations,
+  computeWeighStationStats,
+  loadWeighStationLocations,
+} from "./lib/weighStationStats.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
@@ -294,6 +300,68 @@ app.get("/api/training-leaderboards", (req, res) => {
     placesPaidHeuristic: places,
     trainingFile: file,
     periods,
+  });
+});
+
+/**
+ * Aggregates merged leaderboard rows by weigh-in station (live-training JSONL).
+ * Query: `date=YYYY-MM-DD`, optional `minLb`, `maxLb`, `period=Saturday-W2`.
+ */
+app.get("/api/weigh-station-stats", (req, res) => {
+  const date = String(req.query.date ?? "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    res.status(400).json({ error: "Query parameter date=YYYY-MM-DD is required." });
+    return;
+  }
+  const minQ = req.query.minLb;
+  const maxQ = req.query.maxLb;
+  const minLb =
+    minQ != null && String(minQ).trim() !== "" ? Number(minQ) : 0;
+  const maxLb =
+    maxQ != null && String(maxQ).trim() !== "" ? Number(maxQ) : 10;
+  const periodRaw = String(req.query.period ?? "").trim();
+  let periodFilter: PeriodKey | null = null;
+  if (periodRaw) {
+    if (!/^(Saturday|Sunday)-W[1-4]$/.test(periodRaw)) {
+      res.status(400).json({
+        error: "Optional period must match Saturday-W1 … Sunday-W4 (e.g. Saturday-W2).",
+      });
+      return;
+    }
+    periodFilter = periodRaw as PeriodKey;
+  }
+  const placesPaid = Number.parseInt(process.env.PAYOUT_PLACES_HEURISTIC || "46", 10);
+  const places = Number.isFinite(placesPaid) && placesPaid > 0 ? placesPaid : 46;
+
+  const file = path.join(trainingDataDirectory(), `${date}.jsonl`);
+  if (!existsSync(file)) {
+    res.status(404).json({
+      error: `No live-training file for ${date}.`,
+      path: file,
+      hint:
+        "Enable training capture during scrapes, or place JSONL under server/data/live-training/.",
+    });
+    return;
+  }
+
+  const snaps = loadJsonl(file) as TrainingSnap[];
+  const stats = computeWeighStationStats(snaps, {
+    minLb: Number.isFinite(minLb) ? minLb : 0,
+    maxLb: Number.isFinite(maxLb) ? maxLb : 10,
+    placesPaidHeuristic: places,
+    periodFilter,
+  });
+  const loc = loadWeighStationLocations();
+  const stationsWithGeo = attachLocationsToStations(stats.stations, loc);
+  const metric = String(req.query.metric ?? "count") === "totalLb" ? "totalLb" : "count";
+
+  res.json({
+    date,
+    metric,
+    trainingFile: file,
+    locationsLoaded: Object.keys(loc).length,
+    ...stats,
+    stations: stationsWithGeo,
   });
 });
 

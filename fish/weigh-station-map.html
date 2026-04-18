@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weigh station map — Big Bass Bash helper</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <link rel="stylesheet" href="style.css?v=1">
+    <style>
+        .fish-ws-map-wrap { height: min(70vh, 520px); width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid #e6ebf1; margin-top: 10px; }
+        .fish-ws-map-wrap .leaflet-container { font-family: inherit; }
+    </style>
+</head>
+<body>
+    <div class="container fish-container">
+        <div class="fish-hero">
+            <h1>Weigh stations on a map</h1>
+            <p class="fish-hero-tag">Circle size ∝ fish count (filtered). Add lat/lng in <code>server/data/weigh-station-locations.json</code> keyed by normalized station name.</p>
+        </div>
+
+        <section class="fish-card fish-card-form">
+            <h2>Same filters as charts</h2>
+            <div class="fish-form-row">
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Date</span>
+                    <input type="date" id="wsMapDate" required>
+                </label>
+                <label class="fish-field">
+                    <span class="fish-field-label">Min lb</span>
+                    <input type="number" id="wsMapMinLb" step="0.01" min="0" value="0">
+                </label>
+                <label class="fish-field">
+                    <span class="fish-field-label">Max lb</span>
+                    <input type="number" id="wsMapMaxLb" step="0.01" min="0" value="10">
+                </label>
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Period</span>
+                    <select id="wsMapPeriod">
+                        <option value="">All pay windows</option>
+                        <option value="Saturday-W1">Saturday W1</option>
+                        <option value="Saturday-W2">Saturday W2</option>
+                        <option value="Saturday-W3">Saturday W3</option>
+                        <option value="Saturday-W4">Saturday W4</option>
+                        <option value="Sunday-W1">Sunday W1</option>
+                        <option value="Sunday-W2">Sunday W2</option>
+                        <option value="Sunday-W3">Sunday W3</option>
+                        <option value="Sunday-W4">Sunday W4</option>
+                    </select>
+                </label>
+            </div>
+            <button type="button" class="fish-btn" id="wsMapLoadBtn">Load map</button>
+            <p id="wsMapStatus" class="fish-meta" aria-live="polite"></p>
+        </section>
+
+        <section class="fish-card">
+            <h2>Map</h2>
+            <p id="wsMapHint" class="fish-meta"></p>
+            <div id="wsMapMount" class="fish-ws-map-wrap"></div>
+            <div id="wsMapUnmapped" class="fish-meta"></div>
+        </section>
+
+        <p class="fish-meta"><a href="weigh-station-charts.html">← Bar chart &amp; table</a></p>
+
+        <div class="cta">
+            <p><a href="index.html">← Weigh-in helper</a></p>
+        </div>
+
+        <footer>
+            <p><a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-of-service.html">Terms of Service</a></p>
+            <p>&copy; 2026 314 Apps. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="weigh-station-map.js?v=1" type="module"></script>
+</body>
+</html>

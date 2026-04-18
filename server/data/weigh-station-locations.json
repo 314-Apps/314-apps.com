@@ -1,0 +1,3 @@
+{
+  "_readme": "Keys must match normalized weigh-station strings (lowercase, trimmed, single spaces). Values: { \"lat\": number, \"lng\": number, \"label\": \"optional display\" }"
+}

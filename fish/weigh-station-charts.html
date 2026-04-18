@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weigh station stats — Big Bass Bash helper</title>
+    <meta name="description" content="Fish volume and weight by weigh-in station from live-training captures.">
+    <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+    <div class="container fish-container">
+        <div class="fish-hero">
+            <h1>Fish by weigh-in station</h1>
+            <p class="fish-hero-tag">From merged <code>live-training/{date}.jsonl</code> (same logic as training leaderboards)</p>
+        </div>
+
+        <section class="fish-card fish-card-form">
+            <h2>Filters</h2>
+            <div class="fish-form-row">
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Date</span>
+                    <input type="date" id="wsDate" required>
+                </label>
+                <label class="fish-field">
+                    <span class="fish-field-label">Min lb</span>
+                    <input type="number" id="wsMinLb" step="0.01" min="0" value="0">
+                </label>
+                <label class="fish-field">
+                    <span class="fish-field-label">Max lb</span>
+                    <input type="number" id="wsMaxLb" step="0.01" min="0" value="10">
+                </label>
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Period (optional)</span>
+                    <select id="wsPeriod">
+                        <option value="">All pay windows</option>
+                        <option value="Saturday-W1">Saturday W1</option>
+                        <option value="Saturday-W2">Saturday W2</option>
+                        <option value="Saturday-W3">Saturday W3</option>
+                        <option value="Saturday-W4">Saturday W4</option>
+                        <option value="Sunday-W1">Sunday W1</option>
+                        <option value="Sunday-W2">Sunday W2</option>
+                        <option value="Sunday-W3">Sunday W3</option>
+                        <option value="Sunday-W4">Sunday W4</option>
+                    </select>
+                </label>
+            </div>
+            <div class="fish-form-row">
+                <label class="fish-field">
+                    <span class="fish-field-label">Bar chart shows</span>
+                    <select id="wsMetric">
+                        <option value="count">Fish count</option>
+                        <option value="totalLb">Total lb</option>
+                    </select>
+                </label>
+                <button type="button" class="fish-btn" id="wsLoadBtn">Load</button>
+            </div>
+            <p id="wsStatus" class="fish-meta" aria-live="polite"></p>
+        </section>
+
+        <section id="wsSummary" class="fish-card" hidden>
+            <h2>Summary</h2>
+            <p id="wsSummaryText" class="fish-meta"></p>
+            <div id="wsOverallTop" class="fish-ws-highlight"></div>
+        </section>
+
+        <section id="wsChartSection" class="fish-card" hidden>
+            <h2>By station</h2>
+            <div id="wsChart" class="fish-ws-chart" aria-label="Bar chart by weigh station"></div>
+        </section>
+
+        <section id="wsTableSection" class="fish-card" hidden>
+            <h2>Table</h2>
+            <div class="fish-table-wrap">
+                <table class="fish-table" id="wsTable">
+                    <thead>
+                        <tr>
+                            <th>Station</th>
+                            <th>Count</th>
+                            <th>Total lb</th>
+                            <th>Max lb</th>
+                            <th>Top fish</th>
+                        </tr>
+                    </thead>
+                    <tbody id="wsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <p class="fish-meta"><a href="weigh-station-map.html">Map view (needs lat/lng in <code>weigh-station-locations.json</code>) →</a></p>
+
+        <div class="cta">
+            <p><a href="index.html">← Weigh-in helper</a> · <a href="training-leaderboards.html">Training leaderboards</a></p>
+        </div>
+
+        <footer>
+            <p><a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-of-service.html">Terms of Service</a></p>
+            <p>&copy; 2026 314 Apps. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="weigh-station-charts.js?v=1" type="module"></script>
+</body>
+</html>
