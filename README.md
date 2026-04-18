@@ -176,6 +176,17 @@ npm run compare:reco-to-final -- --date=2026-04-18
 # optional: --places=46  --period=Saturday-W1
 ```
 
+**Ground truth and rank.** Offline scripts (`compare:reco-to-final`, `evaluate:predictions`, `fit:cutoff-constants`) need a **complete** pay period: at least `PAYOUT_PLACES_HEURISTIC` fish (default 46) so the cutoff weight is defined. For each period, the evaluator builds a sorted list of fish weights:
+
+- **Merged (preferred):** all snapshots in that day’s `live-training` JSONL are scanned; each **angler** (see `anglerKey` or name + weigh station, same idea as training capture) contributes **one** weight, taken from the **latest** snapshot that includes them. That multiset is the best reconstruction of “everyone who appeared” for cutoff and rank.
+- **Single snapshot (fallback):** if any row with a valid weight lacks angler identity, that period falls back to one **richest** scrape (most rows), tie-break by latest `fetchedAtMs` — the historical behavior.
+
+**Rank** is computed as one plus the count of listed weights **strictly greater** than the query weight (`rankForWeight` in `server/scripts/evalShared.ts`). That ordinal is the fish’s true place **relative to that multiset**. It can differ from published standings if the capture is incomplete or if many fish tie at a weight (official tie rules may differ). **Cutoff** uses the same sorted list (Nth-largest weight).
+
+```bash
+npm run evaluate:predictions -- --date=2026-04-18
+```
+
 ---
 
 ## Scripts reference
@@ -193,6 +204,8 @@ npm run compare:reco-to-final -- --date=2026-04-18
 | `npm run train:historical`      | Scrape historical widgets → update payout stats JSON                                              |
 | `npm run sweep:predictions`     | Loop: grid-call `/api/recommendation` on an interval (second terminal; see section above)         |
 | `npm run compare:reco-to-final` | Offline: compare reco JSONL to live-training JSONL for a given `--date`                           |
+| `npm run evaluate:predictions`  | Offline: cutoff MAE, pay-band calibration, stratified rank MAE vs merged/single ground truth       |
+| `npm run fit:cutoff-constants`  | Grid-search bubble blend vs true cutoffs from live-training (merged when possible)              |
 
 
 ---

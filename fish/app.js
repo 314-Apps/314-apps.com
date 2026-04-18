@@ -49,6 +49,11 @@ let leaderboardPollTimer = null;
 /** Whether last /api/health reported mock mode (faster poll). */
 let apiMockMode = false;
 
+/** Last `payoutConsiderFloor` from leaderboard (for pay-chance scale + marker). */
+let lastConsiderFloorSnapshot = null;
+/** 0–100: vertical position on floor scale from last “Get recommendation”; cleared on leaderboard refresh. */
+let considerFloorMarkerPercent = null;
+
 /** Ignore checkbox change while syncing from server. */
 let settingsHydrating = false;
 
@@ -266,16 +271,49 @@ function startMockClock() {
   clockTimer = setInterval(tickMockClock, 1000);
 }
 
-async function fetchJson(path, options) {
+/** Default request timeout so tunnels / bad API base cannot leave the UI stuck on “Loading…”. */
+const FETCH_JSON_TIMEOUT_MS = 25000;
+
+async function fetchJson(path, options = {}) {
   const base = getApiBase();
   const url = `${base}${path}`;
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      Accept: "application/json",
-      ...(options?.headers || {}),
-    },
-  });
+  const { timeoutMs = FETCH_JSON_TIMEOUT_MS, signal: userSignal, ...rest } = options;
+  const ctrl = new AbortController();
+  const tid =
+    timeoutMs > 0
+      ? setTimeout(() => {
+          ctrl.abort();
+        }, timeoutMs)
+      : 0;
+  if (userSignal) {
+    if (userSignal.aborted) ctrl.abort();
+    else
+      userSignal.addEventListener("abort", () => ctrl.abort(), {
+        once: true,
+      });
+  }
+  let res;
+  try {
+    res = await fetch(url, {
+      ...rest,
+      signal: ctrl.signal,
+      headers: {
+        Accept: "application/json",
+        ...(rest.headers || {}),
+      },
+    });
+  } catch (e) {
+    if (e instanceof Error && e.name === "AbortError") {
+      throw new Error(
+        timeoutMs > 0
+          ? `Request timed out after ${timeoutMs}ms (${url}). Check API base (same origin as this page for tunnels) and that the server is running.`
+          : `Request aborted (${url}).`,
+      );
+    }
+    throw e;
+  } finally {
+    if (tid) clearTimeout(tid);
+  }
   const text = await res.text();
   let data;
   try {
@@ -435,6 +473,57 @@ function leaderboardQueryString() {
 }
 
 /**
+ * Render vertical pay-chance vs weight scale; optional horizontal marker at modeled % (from recommendation).
+ * @param {object | null | undefined} s
+ * @param {number | null | undefined} markerPct
+ */
+function renderConsiderFloorScale(s, markerPct) {
+  const wrap = safeEl("considerFloorScaleWrap");
+  const mount = safeEl("considerFloorScale");
+  if (!wrap || !mount) return;
+
+  const ticks = s && Array.isArray(s.payChanceScaleTicks) ? s.payChanceScaleTicks : [];
+  if (ticks.length === 0) {
+    wrap.hidden = true;
+    mount.innerHTML = "";
+    return;
+  }
+
+  wrap.hidden = false;
+  const th = s.payoutConsiderFloorThresholdPercent ?? 10;
+  let pctHtml = "";
+  let lbHtml = "";
+  for (const t of ticks) {
+    const top = 100 - t.displayPercent;
+    const wt =
+      t.weightLb != null && Number.isFinite(t.weightLb) ? `${Number(t.weightLb).toFixed(2)} lb` : "—";
+    const isFloor = Math.round(t.displayPercent) === Math.round(th);
+    const extra = isFloor ? " fish-floor-scale-tick--floor" : "";
+    pctHtml += `<div class="fish-floor-scale-tick${extra}" style="top:${top}%">${t.displayPercent}%</div>`;
+    lbHtml += `<div class="fish-floor-scale-tick${extra}" style="top:${top}%">${escapeHtml(wt)}</div>`;
+  }
+
+  let markerHtml = "";
+  let ariaScale = "Modeled pay chance by fish weight; top is higher pay chance.";
+  if (markerPct != null && Number.isFinite(markerPct)) {
+    const p = Math.max(0, Math.min(100, markerPct));
+    const mtop = 100 - p;
+    markerHtml = `<div class="fish-floor-scale-marker-line" style="top:${mtop}%"></div>`;
+    ariaScale += ` Your fish about ${Math.round(p)} percent.`;
+  }
+  mount.innerHTML = `
+    <div class="fish-floor-scale-chart">
+      ${markerHtml}
+      <div class="fish-floor-scale-labels fish-floor-scale-labels--pct">${pctHtml}</div>
+      <div class="fish-floor-scale-bar-column"><div class="fish-floor-scale-bar"></div></div>
+      <div class="fish-floor-scale-labels fish-floor-scale-labels--lb">${lbHtml}</div>
+    </div>
+    <p class="fish-floor-scale-legend">Top = higher modeled pay chance at window close. Weights are model estimates for each level. Blue line: your fish from the last “Get recommendation”. Threshold ~${th}% is highlighted.</p>
+  `;
+  mount.setAttribute("aria-label", ariaScale);
+}
+
+/**
  * @param {object | null | undefined} s - `payoutConsiderFloor` from leaderboard or recommendation-shaped fields
  * @param {{ loading?: boolean }} [opts]
  */
@@ -449,16 +538,33 @@ function applyConsiderFloorSnapshot(s, opts = {}) {
     w.textContent = "Loading…";
     if (ctx) ctx.textContent = "";
     hint.textContent = "";
+    const sw = safeEl("considerFloorScaleWrap");
+    if (sw) sw.hidden = true;
     return;
   }
 
   if (!s) {
+    lastConsiderFloorSnapshot = null;
     w.textContent = "—";
     if (ctx) ctx.textContent = "";
     label.textContent = "Approx. minimum weight to consider weighing in";
     hint.textContent = "Leaderboard data not available.";
+    renderConsiderFloorScale(null, null);
     return;
   }
+
+  const prev = lastConsiderFloorSnapshot;
+  let store = s;
+  if (
+    (!Array.isArray(s.payChanceScaleTicks) || s.payChanceScaleTicks.length === 0) &&
+    prev &&
+    Array.isArray(prev.payChanceScaleTicks) &&
+    prev.payChanceScaleTicks.length > 0
+  ) {
+    store = { ...s, payChanceScaleTicks: prev.payChanceScaleTicks };
+  }
+  lastConsiderFloorSnapshot = store;
+  s = store;
 
   const th = s.payoutConsiderFloorThresholdPercent ?? 10;
   const fl = s.payoutConsiderFloorLb;
@@ -482,6 +588,14 @@ function applyConsiderFloorSnapshot(s, opts = {}) {
         ? "Not enough data to estimate a floor yet (need history or a fuller board)."
         : "";
   }
+
+  try {
+    renderConsiderFloorScale(s, considerFloorMarkerPercent);
+  } catch (scaleErr) {
+    console.error("[fish] consider floor scale:", scaleErr);
+    const sw = safeEl("considerFloorScaleWrap");
+    if (sw) sw.hidden = true;
+  }
 }
 
 /**
@@ -490,12 +604,13 @@ function applyConsiderFloorSnapshot(s, opts = {}) {
  */
 async function loadLeaderboard(opts = {}) {
   const silent = opts.silent === true;
-  const meta = el("leaderboardMeta");
-  if (!silent) {
-    meta.textContent = "Loading…";
-    applyConsiderFloorSnapshot(null, { loading: true });
-  }
+  let meta;
   try {
+    meta = el("leaderboardMeta");
+    if (!silent) {
+      meta.textContent = "Loading…";
+      applyConsiderFloorSnapshot(null, { loading: true });
+    }
     const data = await fetchJson(`/api/leaderboard${leaderboardQueryString()}`);
     const pollLabel = formatAutoRefreshLabel(
       apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE,
@@ -504,20 +619,35 @@ async function loadLeaderboard(opts = {}) {
     meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt})${staleBit} · Auto-refresh every ${pollLabel}.`;
     startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
+    if (!silent) considerFloorMarkerPercent = null;
     applyConsiderFloorSnapshot(data.payoutConsiderFloor);
   } catch (e) {
     clearScrapeCountdownUi();
-    meta.textContent = e instanceof Error ? e.message : String(e);
-    if (!silent) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (meta) meta.textContent = msg;
+    else {
+      const m = safeEl("leaderboardMeta");
+      if (m) m.textContent = msg;
+    }
+    const w = safeEl("considerFloorWeight");
+    const stuckLoading = w && w.textContent === "Loading…";
+    if (!silent || stuckLoading) {
+      considerFloorMarkerPercent = null;
       applyConsiderFloorSnapshot(null);
+      const h = safeEl("considerFloorHint");
+      if (stuckLoading && h) {
+        h.textContent =
+          "Could not load leaderboard — leave API base empty (same origin as this page for tunnels) and check the network tab.";
+      }
     }
   }
 }
 
 async function refreshLeaderboard() {
-  const meta = el("leaderboardMeta");
-  meta.textContent = "Refreshing…";
+  let meta;
   try {
+    meta = el("leaderboardMeta");
+    meta.textContent = "Refreshing…";
     const data = await fetchJson(`/api/leaderboard/refresh${leaderboardQueryString()}`, {
       method: "POST",
     });
@@ -528,10 +658,18 @@ async function refreshLeaderboard() {
     meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt}${staleBit} · Auto-refresh every ${pollLabel}`;
     startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
+    considerFloorMarkerPercent = null;
     applyConsiderFloorSnapshot(data.payoutConsiderFloor);
   } catch (e) {
     clearScrapeCountdownUi();
-    meta.textContent = e instanceof Error ? e.message : String(e);
+    const msg = e instanceof Error ? e.message : String(e);
+    if (meta) meta.textContent = msg;
+    else {
+      const m = safeEl("leaderboardMeta");
+      if (m) m.textContent = msg;
+    }
+    considerFloorMarkerPercent = null;
+    applyConsiderFloorSnapshot(null);
   }
 }
 
@@ -619,7 +757,8 @@ async function submitReco(ev) {
     el("recoSummary").textContent = r.summary;
     el("recoDetail").textContent = r.detail;
     renderActionPill(r.action);
-    renderLikelihood(r);
+    considerFloorMarkerPercent = r.payoutLikelihoodPercent ?? null;
+    renderLikelihood(r, { snapshotStale: data.snapshotStale === true });
     renderForecasts(r);
     el("recoDisclaimer").textContent = r.disclaimer;
   } catch (e) {
@@ -627,7 +766,7 @@ async function submitReco(ev) {
     el("recoSummary").textContent = "Error";
     el("recoDetail").textContent = e instanceof Error ? e.message : String(e);
     renderActionPill(null);
-    renderLikelihood(null);
+    renderLikelihood(null, {});
     renderForecasts(null);
     el("recoDisclaimer").textContent = "";
   }
@@ -660,7 +799,8 @@ function renderActionPill(action) {
   pill.textContent = ACTION_LABELS[action];
 }
 
-function renderLikelihood(r) {
+function renderLikelihood(r, opts = {}) {
+  const snapshotStale = opts.snapshotStale === true;
   const wrap = el("recoLikelihood");
   const pctEl = el("recoLikelihoodPct");
   const label = el("recoLikelihoodLabel");
@@ -720,6 +860,11 @@ function renderLikelihood(r) {
   }
 
   const metaBits = [];
+  if (snapshotStale) {
+    metaBits.push(
+      "Leaderboard snapshot is older than the freshness window — pay chance uses extra uncertainty.",
+    );
+  }
   if (r.payoutLikelihoodDetail) metaBits.push(r.payoutLikelihoodDetail);
   if (r.currentRank != null) {
     metaBits.push(`If weighed now: rank #${r.currentRank}.`);
@@ -968,7 +1113,17 @@ function init() {
       }
     });
 
-    void boot();
+    void boot().catch((err) => {
+      console.error("[fish] boot failed:", err);
+      try {
+        considerFloorMarkerPercent = null;
+        applyConsiderFloorSnapshot(null);
+        const hint = safeEl("considerFloorHint");
+        if (hint) hint.textContent = err instanceof Error ? err.message : String(err);
+      } catch (_) {
+        /* ignore */
+      }
+    });
   } catch (err) {
     console.error("[fish] init failed:", err);
     const banner = document.createElement("div");

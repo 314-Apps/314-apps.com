@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
@@ -31,6 +31,11 @@ import {
   recommendWeighIn,
   type RecommendationInput,
 } from "./lib/recommendation.js";
+import {
+  buildTrainingDayLeaderboards,
+  loadJsonl,
+  type TrainingSnap,
+} from "../scripts/evalShared.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
@@ -178,6 +183,7 @@ async function getFreshSnapshot(): Promise<{ payload: SnapshotPayload; stale: bo
 function payoutConsiderFloorForRequest(
   req: Request,
   leaderboard: SnapshotPayload["leaderboard"],
+  snapshotStale?: boolean,
 ) {
   const q = req.query;
   const shirtPurchased =
@@ -192,6 +198,7 @@ function payoutConsiderFloorForRequest(
     shirtPurchased,
     manualMinutesLeft,
     now,
+    snapshotStale: snapshotStale === true,
   });
 }
 
@@ -257,6 +264,39 @@ app.post("/api/settings", (req, res) => {
   });
 });
 
+/**
+ * Reconstructed leaderboards from `server/data/live-training/{date}.jsonl` (merged by angler when possible).
+ * Query: `?date=YYYY-MM-DD`
+ */
+app.get("/api/training-leaderboards", (req, res) => {
+  const date = String(req.query.date ?? "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    res.status(400).json({ error: "Query parameter date=YYYY-MM-DD is required." });
+    return;
+  }
+  const dir = trainingDataDirectory();
+  const file = path.join(dir, `${date}.jsonl`);
+  if (!existsSync(file)) {
+    res.status(404).json({
+      error: `No live-training file for ${date}.`,
+      path: file,
+      hint:
+        "Enable training capture during scrapes, or place a capture JSONL under server/data/live-training/.",
+    });
+    return;
+  }
+  const placesPaid = Number.parseInt(process.env.PAYOUT_PLACES_HEURISTIC || "46", 10);
+  const places = Number.isFinite(placesPaid) && placesPaid > 0 ? placesPaid : 46;
+  const snaps = loadJsonl(file) as TrainingSnap[];
+  const periods = buildTrainingDayLeaderboards(snaps, places);
+  res.json({
+    date,
+    placesPaidHeuristic: places,
+    trainingFile: file,
+    periods,
+  });
+});
+
 app.get("/api/payout-status", (_req, res) => {
   const now = mockMode ? getMockSimulatedDate() : new Date();
   const active = getActiveWindow(now);
@@ -284,7 +324,7 @@ app.get("/api/leaderboard", async (req, res) => {
       stale,
       sourceUrl: payload.leaderboard.sourceUrl,
       leaderboard: payload.leaderboard,
-      payoutConsiderFloor: payoutConsiderFloorForRequest(req, payload.leaderboard),
+      payoutConsiderFloor: payoutConsiderFloorForRequest(req, payload.leaderboard, stale),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -349,6 +389,7 @@ app.post("/api/recommendation", async (req, res) => {
           ? manualMinutesLeft
           : undefined,
       shirtPurchased,
+      snapshotStale,
       now: body.now
         ? new Date(String(body.now))
         : mockMode
@@ -385,8 +426,8 @@ app.post("/api/recommendation", async (req, res) => {
 const FISH_PUBLIC_BASE_URL = process.env.FISH_PUBLIC_BASE_URL?.trim();
 
 /**
- * When the app is reached through a reverse proxy / tunnel, relative assets (`../style.css`)
- * may resolve incorrectly unless the browser has a correct `<base href>`.
+ * When the app is reached through a reverse proxy / tunnel, relative assets (`style.css`, `app.js`)
+ * resolve against `<base href>` when set. CSS is also served at `/fish/style.css` for tunnel paths.
  * Set FISH_PUBLIC_BASE_URL to the **public** URL of the `/fish/` folder, e.g.
  * `https://abc123.trycloudflare.com/fish` (no trailing slash required).
  */
@@ -409,12 +450,29 @@ app.get(["/fish", "/fish/", "/fish/index.html"], (req, res, next) => {
   }
 });
 
+/**
+ * Fish HTML uses `href="style.css"` so CSS loads from `/fish/style.css`. Tunnels (Cloudflare,
+ * Twin Gate, etc.) often only expose `/fish/*`; a root `/style.css` request never reaches the app
+ * and the page loads unstyled — including the weigh-in floor scale.
+ */
+app.get("/fish/style.css", (_req, res, next) => {
+  res.type("text/css");
+  res.sendFile(path.join(repoRoot, "style.css"), (err) => {
+    if (err) next(err);
+  });
+});
+
 // Serve /fish/* from ./fish (HTML, app.js) without conflicting with repo-root static below.
 app.use(
   "/fish",
   express.static(path.join(repoRoot, "fish"), {
     index: "index.html",
     fallthrough: true,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith("index.html")) {
+        res.setHeader("Cache-Control", "no-cache, private");
+      }
+    },
   }),
 );
 

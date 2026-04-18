@@ -1,0 +1,21 @@
+{
+  "input": {
+    "fishWeightLb": 3.45,
+    "day": "Saturday",
+    "windowId": 2,
+    "currentBubbleLb": 3.05,
+    "rowCount": 50,
+    "currentWeightsLb": [],
+    "minutesElapsedInWindow": 55,
+    "windowTotalMinutes": 119,
+    "placesPaidOverride": 45
+  },
+  "expected": {
+    "muMin": 2.5,
+    "muMax": 5.0,
+    "sigmaMin": 0.05,
+    "sigmaMax": 0.8,
+    "pctMin": 0,
+    "pctMax": 100
+  }
+}

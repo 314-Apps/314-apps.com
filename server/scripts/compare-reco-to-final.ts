@@ -5,8 +5,13 @@
  * (default: PAYOUT_PLACES_HEURISTIC or 46), so the payout-depth cutoff is observable.
  *
  * Every complete period on the day is evaluated separately (e.g. Saturday W1, Saturday W2, …).
- * Ground truth for a period = snapshot with the **most rows** for that period, breaking ties
- * by **latest** `fetchedAtMs` (fullest, then most recent complete capture).
+ * Ground truth for a period = **merged** across all snapshots when each row has angler identity
+ * (`anglerKey` or name + weigh station): one weight per angler, latest snapshot wins. Otherwise
+ * **single snapshot**: richest scrape for that period (≥ `places` fish), tie-break by latest
+ * `fetchedAtMs` (same as historical behavior).
+ *
+ * **Every** recommendation-query JSONL line that matches the period is evaluated (no dedupe by
+ * weight): sweeps and repeat queries at the same weight show how predictions evolved over time.
  *
  * Usage:
  *   npx tsx server/scripts/compare-reco-to-final.ts --date=2026-04-18
@@ -16,102 +21,23 @@
  *   --date=YYYY-MM-DD     (required)
  *   --places=N            Override paid places / completeness threshold (default: env or 46)
  *   --period=Saturday-W1  Limit to one or more periods (repeat flag). Omit = all complete periods.
+ *
+ * See also: evaluate-predictions.ts (cutoff MAE, calibration, stratified rank MAE).
  */
-import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA = path.join(__dirname, "..", "data");
-
-type DayKind = "Saturday" | "Sunday";
-type PeriodKey = `${DayKind}-W${1 | 2 | 3 | 4}`;
-
-type JsonlRow = Record<string, unknown>;
-
-interface TrainingPeriod {
-  day?: string;
-  label?: string;
-  rows?: Array<{ weightLb?: number | null }>;
-}
-
-interface TrainingSnap {
-  fetchedAtMs?: number;
-  capturedAt?: string;
-  activeWindow?: { day?: string; windowId?: number } | null;
-  periods?: TrainingPeriod[];
-}
-
-interface RecoQuery {
-  capturedAt?: string;
-  input?: { fishWeightLb?: number };
-  prediction?: {
-    activeDay?: string | null;
-    windowLabel?: string | null;
-    projectedRank?: number | null;
-    currentRank?: number | null;
-    comparedToPlace?: number;
-    bestWindowKey?: string | null;
-    /** Modeled weigh-in floor (lb); compare to final cutoff when evaluating the floor heuristic. */
-    payoutConsiderFloorLb?: number | null;
-    payoutConsiderFloorThresholdPercent?: number;
-  };
-}
-
-function parseArgs(): { date: string; places: number; periodFilters: PeriodKey[] } {
-  const raw = process.argv.slice(2);
-  let date = "";
-  let places = Number.parseInt(process.env.PAYOUT_PLACES_HEURISTIC || "46", 10);
-  const periodFilters: PeriodKey[] = [];
-
-  for (const a of raw) {
-    if (a.startsWith("--date=")) date = a.slice("--date=".length).trim();
-    else if (a.startsWith("--places=")) {
-      const n = Number.parseInt(a.slice("--places=".length), 10);
-      if (Number.isFinite(n) && n > 0) places = n;
-    } else if (a.startsWith("--period=")) {
-      const p = a.slice("--period=".length).trim() as PeriodKey;
-      if (/^(Saturday|Sunday)-W[1-4]$/.test(p)) periodFilters.push(p);
-    }
-  }
-
-  if (!date) {
-    console.error(
-      "Usage: npx tsx server/scripts/compare-reco-to-final.ts --date=YYYY-MM-DD [--places=46] [--period=Saturday-W1] ...",
-    );
-    process.exit(1);
-  }
-
-  return { date, places, periodFilters };
-}
-
-/** Match scraped period labels to a payout window (1–4). */
-function periodMatchesWindow(period: TrainingPeriod, day: string, windowId: number): boolean {
-  if (period.day !== day) return false;
-  const L = (period.label ?? "").toLowerCase();
-  switch (windowId) {
-    case 1:
-      return L.includes("6:30") && L.includes("9");
-    case 2:
-      return L.includes("9:01") && L.includes("11");
-    case 3:
-      return L.includes("11:01") && (L.includes("1pm") || L.includes("1:00") || L.includes("1 pm"));
-    case 4:
-      return L.includes("1:01") && L.includes("3");
-    default:
-      return false;
-  }
-}
-
-function weightsForPeriod(snap: TrainingSnap, day: DayKind, windowId: number): number[] {
-  const periods = snap.periods ?? [];
-  const p = periods.find((x) => periodMatchesWindow(x, day, windowId));
-  if (!p?.rows) return [];
-  const ws = p.rows
-    .map((r) => r.weightLb)
-    .filter((w): w is number => w != null && Number.isFinite(w));
-  return ws.sort((a, b) => b - a);
-}
+import {
+  EVAL_DATA_DIR,
+  parseEvalArgs,
+  loadJsonl,
+  discoverCompletePeriods,
+  recoMatchesPeriod,
+  rankForWeight,
+  maxRowsSeenPerPeriod,
+  parsePeriodKey,
+  type TrainingSnap,
+  type RecoQuery,
+  type PeriodKey,
+} from "./evalShared.js";
 
 const WINDOW_LABELS: Record<number, string> = {
   1: "6:30am–9:00am",
@@ -120,110 +46,54 @@ const WINDOW_LABELS: Record<number, string> = {
   4: "1:01pm–3:00pm",
 };
 
-function parsePeriodKey(key: PeriodKey): { day: DayKind; windowId: 1 | 2 | 3 | 4 } | null {
-  const m = key.match(/^(Saturday|Sunday)-W([1-4])$/);
-  if (!m) return null;
-  return { day: m[1] as DayKind, windowId: Number(m[2]) as 1 | 2 | 3 | 4 };
-}
-
-/** 1-based rank: 1 + count of weights strictly greater than w. */
-function rankForWeight(sortedDesc: number[], w: number): number {
-  return sortedDesc.filter((x) => x > w).length + 1;
-}
-
-function loadJsonl(file: string): JsonlRow[] {
-  if (!existsSync(file)) return [];
-  const text = readFileSync(file, "utf8");
-  const out: JsonlRow[] = [];
-  for (const line of text.split("\n")) {
-    const t = line.trim();
-    if (!t) continue;
-    try {
-      out.push(JSON.parse(t) as JsonlRow);
-    } catch {
-      /* skip */
-    }
-  }
-  return out;
-}
-
-/**
- * For each (day, window), find the best snapshot where the board is **complete** (>= places fish).
- * Among complete snapshots, prefer **most rows**, then **latest** fetchedAtMs.
- */
-/** Max fish seen in training data per period (for reporting incomplete windows). */
-function maxRowsSeenPerPeriod(snaps: TrainingSnap[]): Map<PeriodKey, number> {
-  const maxRows = new Map<PeriodKey, number>();
-  const days: DayKind[] = ["Saturday", "Sunday"];
-  const windows = [1, 2, 3, 4] as const;
-  for (const day of days) {
-    for (const wid of windows) {
-      const key = `${day}-W${wid}` as PeriodKey;
-      let m = 0;
-      for (const snap of snaps) {
-        const weights = weightsForPeriod(snap, day, wid);
-        if (weights.length > m) m = weights.length;
-      }
-      maxRows.set(key, m);
-    }
-  }
-  return maxRows;
-}
-
-function discoverCompletePeriods(
-  snaps: TrainingSnap[],
+function printPerWeightRollup(
+  rows: RecoQuery[],
+  finalWeights: number[],
   places: number,
-  onlyKeys: PeriodKey[] | null,
-): Map<PeriodKey, { weights: number[]; fetchedAtMs: number; rowCount: number }> {
-  const out = new Map<PeriodKey, { weights: number[]; fetchedAtMs: number; rowCount: number }>();
-  const days: DayKind[] = ["Saturday", "Sunday"];
-  const windows = [1, 2, 3, 4] as const;
-
-  for (const day of days) {
-    for (const wid of windows) {
-      const key = `${day}-W${wid}` as PeriodKey;
-      if (onlyKeys && onlyKeys.length > 0 && !onlyKeys.includes(key)) continue;
-
-      let best: { weights: number[]; fetchedAtMs: number; rowCount: number } | null = null;
-
-      for (const snap of snaps) {
-        const weights = weightsForPeriod(snap, day, wid);
-        if (weights.length < places) continue;
-        const ms = typeof snap.fetchedAtMs === "number" ? snap.fetchedAtMs : 0;
-        if (
-          !best ||
-          weights.length > best.rowCount ||
-          (weights.length === best.rowCount && ms > best.fetchedAtMs)
-        ) {
-          best = { weights, fetchedAtMs: ms, rowCount: weights.length };
-        }
-      }
-
-      if (best) {
-        out.set(key, best);
-      }
+): void {
+  type Agg = { n: number; errN: number; sumAbs: number; minPred: number; maxPred: number };
+  const byW = new Map<number, Agg>();
+  for (const q of rows) {
+    const w = q.input?.fishWeightLb;
+    if (w == null || !Number.isFinite(w)) continue;
+    const pred = q.prediction?.projectedRank;
+    const actual = rankForWeight(finalWeights, w);
+    const err = pred != null ? actual - pred : NaN;
+    let a = byW.get(w);
+    if (!a) {
+      a = { n: 0, errN: 0, sumAbs: 0, minPred: Infinity, maxPred: -Infinity };
+      byW.set(w, a);
+    }
+    a.n += 1;
+    if (Number.isFinite(err)) {
+      a.errN += 1;
+      a.sumAbs += Math.abs(err);
+    }
+    if (pred != null && Number.isFinite(pred)) {
+      a.minPred = Math.min(a.minPred, pred);
+      a.maxPred = Math.max(a.maxPred, pred);
     }
   }
+  if (byW.size === 0) return;
 
-  return out;
-}
-
-function recoMatchesPeriod(q: RecoQuery, key: PeriodKey): boolean {
-  const pred = q.prediction;
-  if (!pred) return false;
-  const bk = pred.bestWindowKey?.trim();
-  if (bk === key) return true;
-
-  const parsed = parsePeriodKey(key);
-  if (!parsed) return false;
-  const { day, windowId } = parsed;
-  if (pred.activeDay && pred.activeDay !== day) return false;
-  const label = pred.windowLabel ?? "";
-  if (windowId === 1 && label.includes("6:30")) return true;
-  if (windowId === 2 && label.includes("9:01")) return true;
-  if (windowId === 3 && label.includes("11:01")) return true;
-  if (windowId === 4 && label.includes("1:01") && label.includes("3")) return true;
-  return false;
+  console.log(
+    `--- Per fish weight (${places}-place bubble vs final board): n queries, mean |err|, min–max pred_rank ---`,
+  );
+  const sortedW = Array.from(byW.keys()).sort((a, b) => a - b);
+  for (const w of sortedW) {
+    const a = byW.get(w)!;
+    const meanAbs = a.errN > 0 ? a.sumAbs / a.errN : 0;
+    const predRange =
+      a.minPred === Infinity
+        ? "—"
+        : a.minPred === a.maxPred
+          ? String(a.minPred)
+          : `${a.minPred}–${a.maxPred}`;
+    console.log(
+      `  ${w.toFixed(2).padEnd(6)} lb   n=${String(a.n).padStart(4)}   mean|err|=${meanAbs.toFixed(2).padStart(6)}   pred_rank ${predRange}   (actual_rank=${rankForWeight(finalWeights, w)})`,
+    );
+  }
+  console.log("");
 }
 
 function printPeriodTable(
@@ -233,6 +103,7 @@ function printPeriodTable(
   rowCount: number,
   places: number,
   queries: RecoQuery[],
+  groundTruth: "merged" | "single_snapshot",
 ): { sumAbsErr: number; n: number; pairCount: number } {
   const label = parsePeriodKey(key);
   const wlabel = label ? WINDOW_LABELS[label.windowId] ?? `W${label.windowId}` : key;
@@ -240,33 +111,45 @@ function printPeriodTable(
   const bubbleActual =
     finalWeights.length >= places ? finalWeights[places - 1]! : finalWeights[finalWeights.length - 1]!;
 
-  console.log(`=== ${key} (${wlabel}) — complete board: ${rowCount} fish (≥${places}), fetchedAtMs=${fetchedAtMs} ===`);
+  const gt =
+    groundTruth === "merged"
+      ? "merged snapshots (deduped by angler)"
+      : "single snapshot (richest scrape)";
+  console.log(
+    `=== ${key} (${wlabel}) — complete board: ${rowCount} fish (≥${places}), groundTruth=${gt}, fetchedAtMs=${fetchedAtMs} ===`,
+  );
   console.log(`Actual ~${places}th-place (bubble) weight: ${bubbleActual?.toFixed(2) ?? "n/a"} lb`);
   console.log("");
 
   const matching = queries.filter((q) => recoMatchesPeriod(q, key));
-  if (matching.length === 0) {
+  const rows = matching
+    .filter((q) => {
+      const w = q.input?.fishWeightLb;
+      return w != null && Number.isFinite(w);
+    })
+    .sort((a, b) => String(a.capturedAt ?? "").localeCompare(String(b.capturedAt ?? "")));
+
+  if (rows.length === 0) {
     console.log(`(No recommendation queries for this period.)`);
     console.log("");
     return { sumAbsErr: 0, n: 0, pairCount: 0 };
   }
 
-  const byWeight = new Map<number, RecoQuery>();
-  for (const q of matching.sort((a, b) => String(a.capturedAt).localeCompare(String(b.capturedAt)))) {
-    const w = q.input?.fishWeightLb;
-    if (w == null || !Number.isFinite(w)) continue;
-    byWeight.set(w, q);
-  }
-
   console.log(
-    `${"weight_lb".padEnd(10)} ${"pred_rank".padStart(10)} ${"actual_rank".padStart(12)} ${"err".padStart(6)}  current_rank@query`,
+    `All ${rows.length} query row(s), chronological (same weight may appear many times as the window evolves).`,
   );
-  console.log("-".repeat(62));
+  console.log("");
+
+  const capW = 28;
+  const head =
+    `${"captured_at".padEnd(capW)} ${"lb".padEnd(7)} ${"pred_r".padStart(7)} ${"act_r".padStart(7)} ${"err".padStart(6)} ${"cur".padStart(5)} ${"pay%".padStart(5)} ${"floor".padStart(7)} ${"proj_μ".padStart(7)}`;
+  console.log(head);
+  console.log("-".repeat(head.length));
 
   let sumAbsErr = 0;
   let n = 0;
-  for (const w of Array.from(byWeight.keys()).sort((a, b) => a - b)) {
-    const q = byWeight.get(w)!;
+  for (const q of rows) {
+    const w = q.input!.fishWeightLb!;
     const pred = q.prediction?.projectedRank;
     const actual = rankForWeight(finalWeights, w);
     const err = pred != null ? actual - pred : NaN;
@@ -275,23 +158,36 @@ function printPeriodTable(
       n += 1;
     }
     const cur = q.prediction?.currentRank ?? "—";
+    const pay = q.prediction?.payoutLikelihoodPercent;
+    const payS = pay != null && Number.isFinite(pay) ? String(Math.round(pay)) : "—";
+    const floor = q.prediction?.payoutConsiderFloorLb;
+    const floorS = floor != null && Number.isFinite(floor) ? floor.toFixed(2) : "—";
+    const mu = q.prediction?.projectedFinalBubbleLb;
+    const muS = mu != null && Number.isFinite(mu) ? mu.toFixed(2) : "—";
+    const cap = (q.capturedAt ?? "—").slice(0, capW).padEnd(capW);
+    const errS = Number.isFinite(err) ? String(err).padStart(6) : "    —";
     console.log(
-      `${w.toFixed(2).padEnd(10)} ${String(pred ?? "—").padStart(10)} ${String(actual).padStart(12)} ${Number.isFinite(err) ? String(err).padStart(6) : "   —".padStart(6)}  ${cur}`,
+      `${cap} ${w.toFixed(2).padEnd(7)} ${String(pred ?? "—").padStart(7)} ${String(actual).padStart(7)} ${errS} ${String(cur).padStart(5)} ${payS.padStart(5)} ${floorS.padStart(7)} ${muS.padStart(7)}`,
     );
   }
 
-  console.log("-".repeat(62));
+  console.log("-".repeat(head.length));
   if (n > 0) {
-    console.log(`Mean absolute rank error (this period): ${(sumAbsErr / n).toFixed(2)} (n=${n})`);
+    console.log(
+      `Mean absolute rank error (this period, all rows): ${(sumAbsErr / n).toFixed(2)} (n=${n} finite-error rows of ${rows.length} total)`,
+    );
   }
   console.log("");
-  return { sumAbsErr, n, pairCount: n };
+
+  printPerWeightRollup(rows, finalWeights, places);
+
+  return { sumAbsErr, n, pairCount: rows.length };
 }
 
 function main(): void {
-  const { date, places, periodFilters } = parseArgs();
-  const trainFile = path.join(DATA, "live-training", `${date}.jsonl`);
-  const recoFile = path.join(DATA, "recommendation-queries", `${date}.jsonl`);
+  const { date, places, periodFilters } = parseEvalArgs();
+  const trainFile = path.join(EVAL_DATA_DIR, "live-training", `${date}.jsonl`);
+  const recoFile = path.join(EVAL_DATA_DIR, "recommendation-queries", `${date}.jsonl`);
 
   const trainSnaps = loadJsonl(trainFile) as TrainingSnap[];
   const recoRows = loadJsonl(recoFile) as RecoQuery[];
@@ -336,15 +232,23 @@ function main(): void {
 
   const keys = Array.from(complete.keys()).sort();
   for (const key of keys) {
-    const { weights, fetchedAtMs, rowCount } = complete.get(key)!;
-    const { sumAbsErr, n } = printPeriodTable(key, weights, fetchedAtMs, rowCount, places, recoRows);
+    const { weights, fetchedAtMs, rowCount, groundTruth } = complete.get(key)!;
+    const { sumAbsErr, n } = printPeriodTable(
+      key,
+      weights,
+      fetchedAtMs,
+      rowCount,
+      places,
+      recoRows,
+      groundTruth,
+    );
     totalAbs += sumAbsErr;
     totalN += n;
   }
 
-  if (keys.length > 1 && totalN > 0) {
-    console.log("--- Across all complete periods with at least one query ---");
-    console.log(`Mean absolute rank error: ${(totalAbs / totalN).toFixed(2)} (n=${totalN})`);
+  if (totalN > 0) {
+    console.log("--- Across all complete period(s) ---");
+    console.log(`Mean absolute rank error (every query row): ${(totalAbs / totalN).toFixed(2)} (n=${totalN})`);
   }
 }
 

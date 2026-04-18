@@ -5,7 +5,11 @@ import {
   effectiveMinutesLeft,
   type TournamentDayKind,
 } from "./payoutWindows.js";
-import { estimatePayoutLikelihood, weightAtPayoutLikelihoodPercent } from "./payoutProbability.js";
+import { estimatePayoutLikelihood } from "./payoutProbability.js";
+import {
+  calibratePayoutPercent,
+  weightAtCalibratedPayoutLikelihoodPercent,
+} from "./payoutCalibration.js";
 import {
   forecastAllWindows,
   type DailyTrend,
@@ -21,6 +25,8 @@ export interface RecommendationInput {
   /** Whether the angler bought a tournament shirt (bumps paid spots from 45 → 46). */
   shirtPurchased?: boolean;
   now?: Date;
+  /** Leaderboard snapshot is older than the freshness window (wider σ in the model). */
+  snapshotStale?: boolean;
 }
 
 export type RecommendationAction =
@@ -44,8 +50,10 @@ export interface RecommendationResult {
   projectedFinalBubbleLb: number | null;
   projectedFinalBubbleSigmaLb: number | null;
   comparedToPlace: number;
-  /** 0–100: blended likelihood your fish is still paid at window end. */
+  /** 0–100: blended likelihood your fish is still paid at window end (calibrated for display). */
   payoutLikelihoodPercent: number | null;
+  /** Same model, pre-calibration (0–100); for analysis / regression testing. */
+  payoutLikelihoodPercentRaw: number | null;
   /**
    * Approx. minimum fish weight (lb) where modeled pay chance reaches `payoutConsiderFloorThresholdPercent`
    * (same μ/σ as payout %). Below this, weighing in is usually not worth the trip; above, run the full prediction.
@@ -275,6 +283,7 @@ export function recommendWeighIn(
     fishWeightLb: input.fishWeightLb,
     placesPaid: places,
     now,
+    snapshotStale: input.snapshotStale === true,
   });
 
   const floorTh = payoutConsiderFloorThresholdPercent();
@@ -296,6 +305,7 @@ export function recommendWeighIn(
       projectedFinalBubbleSigmaLb: null,
       comparedToPlace: places,
       payoutLikelihoodPercent: null,
+      payoutLikelihoodPercentRaw: null,
       payoutConsiderFloorLb: null,
       payoutConsiderFloorThresholdPercent: floorTh,
       historicalOnlyPercent: null,
@@ -342,16 +352,19 @@ export function recommendWeighIn(
     minutesElapsedInWindow: minutesElapsed,
     windowTotalMinutes,
     placesPaidOverride: places,
+    snapshotStale: input.snapshotStale === true,
   });
 
-  const considerFloorLb = weightAtPayoutLikelihoodPercent(
+  const considerFloorLb = weightAtCalibratedPayoutLikelihoodPercent(
     likelihood.projectedFinalBubbleLb,
     likelihood.projectedFinalBubbleSigmaLb,
     floorTh,
   );
 
   const currentKey = `${active.day}-W${active.window.id}`;
-  const currentPercent = likelihood.percent ?? null;
+  const rawPercent = likelihood.percent ?? null;
+  const displayPercent = calibratePayoutPercent(rawPercent);
+  const currentPercent = displayPercent;
 
   // Identify a meaningfully-better future window that starts reasonably soon.
   const reachableFuture = windowForecasts.filter(
@@ -383,7 +396,7 @@ export function recommendWeighIn(
     };
   } else {
     decision = decide({
-      likelihoodPercent: likelihood.percent,
+      likelihoodPercent: displayPercent,
       projectedBubble: likelihood.projectedFinalBubbleLb,
       sigma: likelihood.projectedFinalBubbleSigmaLb,
       fishWeight: input.fishWeightLb,
@@ -424,7 +437,8 @@ export function recommendWeighIn(
     projectedFinalBubbleLb: likelihood.projectedFinalBubbleLb,
     projectedFinalBubbleSigmaLb: likelihood.projectedFinalBubbleSigmaLb,
     comparedToPlace: places,
-    payoutLikelihoodPercent: likelihood.percent,
+    payoutLikelihoodPercent: displayPercent,
+    payoutLikelihoodPercentRaw: rawPercent,
     payoutConsiderFloorLb: considerFloorLb,
     payoutConsiderFloorThresholdPercent: floorTh,
     historicalOnlyPercent: likelihood.historicalOnlyPercent,
@@ -443,12 +457,41 @@ export function recommendWeighIn(
   };
 }
 
+/** One point on the modeled pay-chance vs weight scale (calibrated display %). */
+export interface PayChanceScaleTick {
+  displayPercent: number;
+  weightLb: number | null;
+}
+
+function buildPayChanceScaleTicks(
+  mu: number | null,
+  sigma: number | null,
+  floorThresholdPercent: number,
+): PayChanceScaleTick[] {
+  const candidates = [99, 75, 50, 25, Math.round(floorThresholdPercent), 10, 1];
+  const seen = new Set<number>();
+  const percents: number[] = [];
+  for (const raw of candidates) {
+    const p = Math.max(1, Math.min(99, Math.round(raw)));
+    if (seen.has(p)) continue;
+    seen.add(p);
+    percents.push(p);
+  }
+  percents.sort((a, b) => b - a);
+  return percents.map((displayPercent) => ({
+    displayPercent,
+    weightLb: weightAtCalibratedPayoutLikelihoodPercent(mu, sigma, displayPercent),
+  }));
+}
+
 /** Snapshot of the modeled “bother weighing in” floor without a full recommendation. */
 export interface PayoutConsiderFloorSnapshot {
   payoutConsiderFloorLb: number | null;
   payoutConsiderFloorThresholdPercent: number;
   activeDay: TournamentDayKind | null;
   windowLabel: string | null;
+  /** Weights (lb) at several modeled pay-chance levels for the vertical scale UI. */
+  payChanceScaleTicks: PayChanceScaleTick[];
 }
 
 /**
@@ -457,7 +500,12 @@ export interface PayoutConsiderFloorSnapshot {
  */
 export function computePayoutConsiderFloor(
   leaderboard: ParsedLeaderboard,
-  opts: { shirtPurchased?: boolean; now?: Date; manualMinutesLeft?: number | null } = {},
+  opts: {
+    shirtPurchased?: boolean;
+    now?: Date;
+    manualMinutesLeft?: number | null;
+    snapshotStale?: boolean;
+  } = {},
 ): PayoutConsiderFloorSnapshot {
   const now = opts.now ?? new Date();
   const shirt = opts.shirtPurchased === true;
@@ -470,6 +518,7 @@ export function computePayoutConsiderFloor(
       payoutConsiderFloorThresholdPercent: floorTh,
       activeDay: null,
       windowLabel: null,
+      payChanceScaleTicks: [],
     };
   }
 
@@ -495,9 +544,16 @@ export function computePayoutConsiderFloor(
     minutesElapsedInWindow: minutesElapsed,
     windowTotalMinutes,
     placesPaidOverride: places,
+    snapshotStale: opts.snapshotStale === true,
   });
 
-  const considerFloorLb = weightAtPayoutLikelihoodPercent(
+  const considerFloorLb = weightAtCalibratedPayoutLikelihoodPercent(
+    likelihood.projectedFinalBubbleLb,
+    likelihood.projectedFinalBubbleSigmaLb,
+    floorTh,
+  );
+
+  const payChanceScaleTicks = buildPayChanceScaleTicks(
     likelihood.projectedFinalBubbleLb,
     likelihood.projectedFinalBubbleSigmaLb,
     floorTh,
@@ -508,6 +564,7 @@ export function computePayoutConsiderFloor(
     payoutConsiderFloorThresholdPercent: floorTh,
     activeDay: active.day,
     windowLabel: active.window.label,
+    payChanceScaleTicks,
   };
 }
 

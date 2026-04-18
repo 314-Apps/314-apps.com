@@ -563,6 +563,96 @@ footer {
 }
 .fish-floor-tile-standalone { margin-top: 0; }
 
+/* Vertical pay-chance scale (weights at calibrated % levels) */
+.fish-floor-scale-wrap {
+    margin: 12px 0 14px;
+}
+.fish-floor-scale-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #495057;
+    margin-bottom: 8px;
+}
+.fish-floor-scale {
+    position: relative;
+    min-height: 220px;
+    max-width: 100%;
+}
+.fish-floor-scale-chart {
+    height: 240px;
+    display: grid;
+    grid-template-columns: minmax(2.5rem, 3rem) 20px minmax(3.25rem, 4rem);
+    gap: 6px 10px;
+    align-items: stretch;
+}
+.fish-floor-scale-labels {
+    position: relative;
+    height: 100%;
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    color: #212529;
+}
+.fish-floor-scale-labels--pct {
+    text-align: right;
+}
+.fish-floor-scale-labels--lb {
+    text-align: left;
+}
+.fish-floor-scale-bar-column {
+    position: relative;
+    height: 100%;
+    width: 20px;
+    justify-self: center;
+}
+.fish-floor-scale-bar {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 12px;
+    border-radius: 6px;
+    background: linear-gradient(180deg, #0d5c2e 0%, #94d4a8 45%, #f0d090 100%);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    z-index: 1;
+}
+.fish-floor-scale-tick {
+    position: absolute;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    line-height: 1.2;
+    z-index: 3;
+}
+.fish-floor-scale-tick--floor {
+    font-weight: 800;
+    color: #0d5c2e;
+}
+.fish-floor-scale-tick--muted {
+    color: #6c757d;
+    font-size: 0.74rem;
+}
+.fish-floor-scale-marker-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #0066cc;
+    border-radius: 1px;
+    transform: translateY(-50%);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+    z-index: 2;
+}
+.fish-floor-scale-legend {
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: #6c757d;
+    line-height: 1.35;
+}
+
 .fish-disclaimer { font-size: 0.82rem; color: #6c757d; margin: 12px 0 0; }
 
 /* Forecast card */
@@ -741,6 +831,27 @@ footer {
 }
 .fish-settings-note.is-warn { color: #856404; }
 .fish-settings-note.is-ok { color: #1a5f2a; }
+
+/* Offline training leaderboard viewer (/fish/training-leaderboards.html) */
+.fish-training-periods {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+.fish-training-period .fish-period-title {
+    font-size: 1.02rem;
+    line-height: 1.35;
+}
+.fish-training-key {
+    font-weight: 500;
+    color: #6c757d;
+    font-size: 0.88rem;
+}
+.fish-training-empty { margin: 0; }
+.fish-training-details-inner {
+    padding: 0 4px 8px;
+}
 
 @media (max-width: 600px) {
     .container {

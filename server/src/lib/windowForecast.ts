@@ -13,6 +13,7 @@ import {
   normalCdf,
   statsKeyForWindow,
 } from "./payoutProbability.js";
+import { calibratePayoutPercent } from "./payoutCalibration.js";
 
 const TZ = "America/Chicago";
 
@@ -196,6 +197,8 @@ export interface ForecastOptions {
    * The daily trend signal still considers both days for context.
    */
   sameDayOnly?: boolean;
+  /** Inflates cutoff σ in `estimatePayoutLikelihood` for the active window. */
+  snapshotStale?: boolean;
 }
 
 /** Forecast a single future window using history blended with today's observed trend. */
@@ -228,7 +231,8 @@ function forecastFutureWindow(
   let percent: number | null = null;
   if (mu != null && sigma != null && sigma > 0) {
     const z = (fishAtWeighIn - mu) / sigma;
-    percent = Math.round(clamp(normalCdf(z), 0, 1) * 100);
+    const raw = Math.round(clamp(normalCdf(z), 0, 1) * 100);
+    percent = calibratePayoutPercent(raw);
   }
 
   return {
@@ -347,6 +351,7 @@ export function forecastAllWindows(
           minutesElapsedInWindow: elapsed,
           windowTotalMinutes: totalMin,
           placesPaidOverride: opts.placesPaid,
+          snapshotStale: opts.snapshotStale === true,
         });
         fc = {
           day,
@@ -365,7 +370,7 @@ export function forecastAllWindows(
           projectedFinalBubbleLb: live.projectedFinalBubbleLb,
           projectedFinalBubbleSigmaLb: live.projectedFinalBubbleSigmaLb,
           fishWeightAtWeighInLb: opts.fishWeightLb,
-          payoutLikelihoodPercent: live.percent,
+          payoutLikelihoodPercent: calibratePayoutPercent(live.percent),
           projectedRank: live.projectedRank,
           pastFinalRank: null,
         };

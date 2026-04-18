@@ -13,7 +13,10 @@
     "fish:mock": "bash scripts/fish-mock-dev.sh",
     "train:historical": "tsx server/scripts/train-historical.ts",
     "compare:reco-to-final": "tsx server/scripts/compare-reco-to-final.ts",
-    "sweep:predictions": "tsx server/scripts/prediction-weight-sweep.ts"
+    "evaluate:predictions": "tsx server/scripts/evaluate-predictions.ts",
+    "fit:cutoff-constants": "tsx server/scripts/fit-cutoff-constants.ts",
+    "sweep:predictions": "tsx server/scripts/prediction-weight-sweep.ts",
+    "test": "node --import tsx --test server/src/lib/payoutProbability.test.ts server/src/lib/payoutCalibration.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.758.0",

@@ -100,6 +100,70 @@ function clamp(x: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, x));
 }
 
+/** Tunable coefficients for the projected-cutoff blend (offline-fit targets). */
+export interface BubbleBlendParams {
+  notFullSigmaElapsedCoeff: number;
+  notFullSigmaSqrtFloor: number;
+  noHistMulFMin: number;
+  noHistAddRemainder: number;
+  noHistMuAddW: number;
+  noHistMuMulW: number;
+  noHistSigmaCoeff: number;
+  noHistSigmaElapsedCoeff: number;
+  fullHistAddExtrapScale: number;
+  fullHistMulFMin: number;
+  fullHistMulCapSigMult: number;
+  fullHistMuAddW: number;
+  fullHistMuMulW: number;
+  fullHistWLiveIntercept: number;
+  fullHistWLiveSlope: number;
+  fullHistWLiveMin: number;
+  fullHistWLiveMax: number;
+  fullHistSigmaElapsedCoeff: number;
+  fullHistSigmaSqrtFloor: number;
+  fullHistAgreementScale: number;
+  fullHistAgreementDivSigMult: number;
+  fullHistSigmaFloor: number;
+}
+
+export const DEFAULT_BUBBLE_BLEND: BubbleBlendParams = {
+  notFullSigmaElapsedCoeff: 0.4,
+  notFullSigmaSqrtFloor: 0.3,
+  noHistMulFMin: 0.25,
+  noHistAddRemainder: 0.6,
+  noHistMuAddW: 0.55,
+  noHistMuMulW: 0.45,
+  noHistSigmaCoeff: 0.35,
+  noHistSigmaElapsedCoeff: 0.7,
+  fullHistAddExtrapScale: 0.5,
+  fullHistMulFMin: 0.2,
+  fullHistMulCapSigMult: 3,
+  fullHistMuAddW: 0.55,
+  fullHistMuMulW: 0.45,
+  fullHistWLiveIntercept: 0.25,
+  fullHistWLiveSlope: 0.75,
+  fullHistWLiveMin: 0.25,
+  fullHistWLiveMax: 0.95,
+  fullHistSigmaElapsedCoeff: 0.7,
+  fullHistSigmaSqrtFloor: 0.12,
+  fullHistAgreementScale: 0.5,
+  fullHistAgreementDivSigMult: 2,
+  fullHistSigmaFloor: 0.08,
+};
+
+export function mergeBubbleBlend(partial?: Partial<BubbleBlendParams>): BubbleBlendParams {
+  return { ...DEFAULT_BUBBLE_BLEND, ...partial };
+}
+
+export interface EstimatePayoutLikelihoodOptions {
+  blend?: Partial<BubbleBlendParams>;
+}
+
+/** Rank band widens when σ is high or the board is not yet full (conservative UX). */
+const RANK_UNSTABLE_SIGMA_LB = 0.35;
+const RANK_BAND_WIDEN_NOT_FULL = 1.85;
+const RANK_BAND_WIDEN_HIGH_SIGMA = 1.45;
+
 export interface SmartLikelihoodInput {
   fishWeightLb: number;
   day: TournamentDayKind;
@@ -119,6 +183,11 @@ export interface SmartLikelihoodInput {
    * Big Bass Bash. When omitted, uses `placesPaid` from the calibration JSON.
    */
   placesPaidOverride?: number;
+  /**
+   * When the leaderboard snapshot is older than the freshness window, σ is inflated so
+   * pay % and rank bands are not over-trusted.
+   */
+  snapshotStale?: boolean;
 }
 
 export interface SmartLikelihoodResult {
@@ -269,7 +338,11 @@ function placesStats(row: HistoricalWindowRow | undefined, places: number): Plac
  *
  * Then returns P(fishWeight > finalBubble) using a normal CDF.
  */
-export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLikelihoodResult {
+export function estimatePayoutLikelihood(
+  input: SmartLikelihoodInput,
+  options?: EstimatePayoutLikelihoodOptions,
+): SmartLikelihoodResult {
+  const b = mergeBubbleBlend(options?.blend);
   const key = statsKeyForWindow(input.day, input.windowId);
   const stats = loadStats();
   const basePlaces =
@@ -325,13 +398,17 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
     // Board hasn't filled to `places`; no meaningful live "cutoff" yet.
     // Use historical prior; σ shrinks mildly as time elapses.
     mu = muHist!;
-    sigma = (sigmaHist ?? DEFAULT_FALLBACK_STD) * Math.sqrt(clamp(1 - 0.4 * f, 0.3, 1));
+    sigma =
+      (sigmaHist ?? DEFAULT_FALLBACK_STD) *
+      Math.sqrt(clamp(1 - b.notFullSigmaElapsedCoeff * f, b.notFullSigmaSqrtFloor, 1));
   } else if (!hasHist) {
     // Full board, no history. Assume bubble grows roughly linearly to final.
-    const mulExtrap = (cb ?? 0) / Math.max(f, 0.25);
-    const addExtrap = (cb ?? 0) + (1 - f) * 0.6;
-    mu = Math.max(cb ?? 0, 0.55 * addExtrap + 0.45 * mulExtrap);
-    sigma = 0.35 * Math.sqrt(clamp(1 - 0.7 * f, 0.15, 1));
+    const mulExtrap = (cb ?? 0) / Math.max(f, b.noHistMulFMin);
+    const addExtrap = (cb ?? 0) + (1 - f) * b.noHistAddRemainder;
+    mu = Math.max(cb ?? 0, b.noHistMuAddW * addExtrap + b.noHistMuMulW * mulExtrap);
+    sigma =
+      b.noHistSigmaCoeff *
+      Math.sqrt(clamp(1 - b.noHistSigmaElapsedCoeff * f, 0.15, 1));
   } else {
     // Full board + history: blend historical prior with live extrapolation.
     const muH = muHist!;
@@ -339,25 +416,44 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
     const cbVal = cb!;
 
     // Additive model: bubble rises by ~μ_h from start to end, scaled by remaining time.
-    const addExtrap = cbVal + (1 - f) * muH * 0.5;
+    const addExtrap = cbVal + (1 - f) * muH * b.fullHistAddExtrapScale;
     // Multiplicative model: bubble grows ~linearly from 0 → final.
-    const mulExtrap = cbVal / Math.max(f, 0.2);
+    const mulExtrap = cbVal / Math.max(f, b.fullHistMulFMin);
     // Cap multiplicative so an early hot start doesn't explode projection.
-    const mulCapped = Math.min(mulExtrap, muH + 3 * sigH);
+    const mulCapped = Math.min(mulExtrap, muH + b.fullHistMulCapSigMult * sigH);
 
-    const muLive = Math.max(cbVal, 0.55 * addExtrap + 0.45 * mulCapped);
+    const muLive = Math.max(cbVal, b.fullHistMuAddW * addExtrap + b.fullHistMuMulW * mulCapped);
 
     // Weight: trust live more as window progresses.
-    const wLive = clamp(0.25 + 0.75 * f, 0.25, 0.95);
+    const wLive = clamp(
+      b.fullHistWLiveIntercept + b.fullHistWLiveSlope * f,
+      b.fullHistWLiveMin,
+      b.fullHistWLiveMax,
+    );
     mu = wLive * muLive + (1 - wLive) * muH;
     // Floor at current — final can't be less than the current 45th place.
     mu = Math.max(mu, cbVal);
 
     // Posterior σ shrinks with elapsed time; shrinks more when live+history agree.
     const disagreement = Math.abs(muLive - muH);
-    const agreementShrink = clamp(1 - 0.5 * Math.max(0, 1 - disagreement / (2 * sigH)), 0.6, 1);
-    sigma = sigH * Math.sqrt(clamp(1 - 0.7 * f, 0.12, 1)) * agreementShrink;
-    sigma = Math.max(sigma, 0.08);
+    const agreementShrink = clamp(
+      1 -
+        b.fullHistAgreementScale *
+          Math.max(0, 1 - disagreement / (b.fullHistAgreementDivSigMult * sigH)),
+      0.6,
+      1,
+    );
+    sigma =
+      sigH *
+      Math.sqrt(clamp(1 - b.fullHistSigmaElapsedCoeff * f, b.fullHistSigmaSqrtFloor, 1)) *
+      agreementShrink;
+    sigma = Math.max(sigma, b.fullHistSigmaFloor);
+  }
+
+  if (input.snapshotStale) {
+    const m = Number.parseFloat(process.env.SNAPSHOT_STALE_SIGMA_MULT || "1.2");
+    const mult = Number.isFinite(m) && m > 1 ? m : 1.2;
+    sigma *= mult;
   }
 
   // P(fish > finalBubble) = 1 - Φ((mu - fish) / sigma) = Φ((fish - mu) / sigma)
@@ -408,7 +504,11 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
       yearVar =
         yearRanks.reduce((s, r) => s + (r - meanR) ** 2, 0) / (yearRanks.length - 1);
     }
-    const rankSd = Math.sqrt(binomVar + 0.5 * yearVar);
+    let rankSd = Math.sqrt(binomVar + 0.5 * yearVar);
+    const rankWiden =
+      (!boardFull ? RANK_BAND_WIDEN_NOT_FULL : 1) *
+      (sigma > RANK_UNSTABLE_SIGMA_LB ? RANK_BAND_WIDEN_HIGH_SIGMA : 1);
+    rankSd *= rankWiden;
 
     projectedRank = Math.max(1, Math.round(projected));
     projectedRankLow = Math.max(1, Math.round(projected - rankSd));
@@ -416,8 +516,9 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
   } else if (currentWeights.length > 0) {
     // No historical distribution: project only from the live board as a lower bound.
     projectedRank = Math.max(1, aboveNow + 1);
-    projectedRankLow = projectedRank;
-    projectedRankHigh = projectedRank;
+    const pad = !boardFull ? 3 : sigma > RANK_UNSTABLE_SIGMA_LB ? 2 : 0;
+    projectedRankLow = Math.max(1, projectedRank - pad);
+    projectedRankHigh = projectedRank + pad;
   }
 
   // Historical-only rank (what would rank have been in the average past year's final board).
@@ -454,9 +555,16 @@ export function estimatePayoutLikelihood(input: SmartLikelihoodInput): SmartLike
 
   if (projectedRank != null) {
     const paidStr = projectedRank <= places ? "inside" : "outside";
+    const band =
+      projectedRankLow != null && projectedRankHigh != null && projectedRankHigh > projectedRankLow
+        ? ` (${projectedRankLow}–${projectedRankHigh})`
+        : "";
     parts.push(
-      `Projected final rank ≈ ${projectedRank}${projectedRankLow != null && projectedRankHigh != null && projectedRankHigh > projectedRankLow ? ` (${projectedRankLow}–${projectedRankHigh})` : ""} (${paidStr} ${places}-paid).`,
+      `Projected final rank ≈ ${projectedRank}${band} (${paidStr} ${places}-paid).`,
     );
+    if (!boardFull || sigma > RANK_UNSTABLE_SIGMA_LB) {
+      parts.push("Rank estimate is less certain when the board is short or cutoff uncertainty is high.");
+    }
   }
   if (currentRank != null) {
     parts.push(`Would slot in at rank ${currentRank} right now.`);

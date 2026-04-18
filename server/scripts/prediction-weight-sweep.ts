@@ -15,7 +15,7 @@
  *   PREDICTION_SWEEP_INTERVAL_MS  default 60000 (1 minute)
  *   PREDICTION_SWEEP_MIN_LB       default 2
  *   PREDICTION_SWEEP_MAX_LB       default 6
- *   PREDICTION_SWEEP_STEP_LB      default 0.25
+ *   PREDICTION_SWEEP_STEP_LB      default 0.1 (tenth-pound; use 0.25 for quarter-pound)
  *   PREDICTION_SWEEP_TRAVEL_MIN   default 15
  *   PREDICTION_SWEEP_LIVEWELL     default 1  (1 or 2)
  *   PREDICTION_SWEEP_SHIRT        default false
@@ -170,7 +170,7 @@ async function mainAsync(): Promise<void> {
   const intervalMs = envNum("PREDICTION_SWEEP_INTERVAL_MS", 60_000);
   const minLb = envNum("PREDICTION_SWEEP_MIN_LB", 2);
   const maxLb = envNum("PREDICTION_SWEEP_MAX_LB", 6);
-  const stepLb = envNum("PREDICTION_SWEEP_STEP_LB", 0.25);
+  const stepLb = envNum("PREDICTION_SWEEP_STEP_LB", 0.1);
   const travelMinutes = envNum("PREDICTION_SWEEP_TRAVEL_MIN", 15);
   const livewellRaw = envNum("PREDICTION_SWEEP_LIVEWELL", 1);
   const livewellCount: 1 | 2 = livewellRaw >= 2 ? 2 : 1;

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training leaderboards — Big Bass Bash helper</title>
+    <meta name="description" content="Reconstructed leaderboards per payout window from captured live-training JSONL.">
+    <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+    <div class="container fish-container">
+        <div class="fish-hero">
+            <h1>Training leaderboards</h1>
+            <p class="fish-hero-tag">Reconstructed from <code>live-training/{date}.jsonl</code> (merged by angler when possible)</p>
+        </div>
+
+        <section class="fish-card fish-card-form">
+            <h2>Load a capture day</h2>
+            <p class="fish-meta">Uses the same file as offline <code>evaluate:predictions</code>. Server must be running (same origin as this page).</p>
+            <div class="fish-form-row">
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Date</span>
+                    <input type="date" id="trainDate" name="trainDate" required>
+                </label>
+                <button type="button" class="fish-btn" id="loadBtn">Load</button>
+            </div>
+            <p id="trainStatus" class="fish-meta" aria-live="polite"></p>
+        </section>
+
+        <div id="periodsRoot" class="fish-training-periods" aria-live="polite"></div>
+
+        <div class="cta">
+            <p><a href="index.html">← Weigh-in helper</a> · <a href="../index.html">314 Apps home</a></p>
+        </div>
+
+        <footer>
+            <p><a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-of-service.html">Terms of Service</a></p>
+            <p>&copy; 2026 314 Apps. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="training-leaderboards.js?v=3" type="module"></script>
+</body>
+</html>

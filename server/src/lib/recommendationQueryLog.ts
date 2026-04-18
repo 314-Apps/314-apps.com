@@ -6,8 +6,8 @@ import type { RecommendationInput, RecommendationResult } from "./recommendation
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const QUERIES_DIR = path.resolve(__dirnamePath, "..", "..", "data", "recommendation-queries");
 
-/** v2: adds `payoutConsiderFloorLb` / `payoutConsiderFloorThresholdPercent` on `prediction` for floor calibration. */
-const SCHEMA_VERSION = 2 as const;
+/** v2: floor fields; v3: `payoutLikelihoodPercentRaw` alongside calibrated `payoutLikelihoodPercent`. */
+const SCHEMA_VERSION = 3 as const;
 
 export interface RecommendationQueryRecord {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -38,6 +38,8 @@ export interface RecommendationQueryRecord {
     windowLabel: RecommendationResult["windowLabel"];
     comparedToPlace: number;
     payoutLikelihoodPercent: number | null;
+    /** Pre-calibration model percent (0–100), for offline calibration fits. */
+    payoutLikelihoodPercentRaw: number | null;
     historicalOnlyPercent: number | null;
     projectedRank: number | null;
     projectedRankLow: number | null;
@@ -99,6 +101,7 @@ function buildRecord(
       windowLabel: result.windowLabel,
       comparedToPlace: result.comparedToPlace,
       payoutLikelihoodPercent: result.payoutLikelihoodPercent,
+      payoutLikelihoodPercentRaw: result.payoutLikelihoodPercentRaw,
       historicalOnlyPercent: result.historicalOnlyPercent,
       projectedRank: result.projectedRank,
       projectedRankLow: result.projectedRankLow,
