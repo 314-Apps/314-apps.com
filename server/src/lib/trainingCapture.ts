@@ -3,11 +3,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { LeaderboardRow, ParsedLeaderboard, PeriodSection } from "./types.js";
 import type { TournamentDayKind } from "./payoutWindows.js";
+import { computePayoutConsiderFloor, type PayoutConsiderFloorSnapshot } from "./recommendation.js";
 
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const TRAINING_DIR = path.resolve(__dirnamePath, "..", "..", "data", "live-training");
 
-const SCHEMA_VERSION = 1 as const;
+/** v2: adds `payoutConsiderFloor` for offline evaluation vs final cutoffs. */
+const SCHEMA_VERSION = 2 as const;
 
 function minIntervalMs(): number {
   const n = Number.parseInt(process.env.TRAINING_CAPTURE_MIN_INTERVAL_MS || "0", 10);
@@ -54,6 +56,11 @@ export interface TrainingSnapshotRecord {
   tournamentDay: string | null;
   activeWindow: TrainingSnapshotMeta["activeWindow"];
   periods: ReturnType<typeof enrichPeriod>[];
+  /**
+   * Modeled “bother weighing in” floor at snapshot time (same model as UI; μ/σ from current board).
+   * Uses base paid depth only (no shirt bump), so it matches default `PAYOUT_PLACES_HEURISTIC`.
+   */
+  payoutConsiderFloor: PayoutConsiderFloorSnapshot;
 }
 
 const lastAppendByWindow = new Map<string, number>();
@@ -86,6 +93,11 @@ export function maybeAppendTrainingSnapshot(
   const isoDay = new Date(meta.fetchedAtMs).toISOString().slice(0, 10);
   const file = path.join(TRAINING_DIR, `${isoDay}.jsonl`);
 
+  const floor = computePayoutConsiderFloor(leaderboard, {
+    shirtPurchased: false,
+    now: new Date(meta.fetchedAtMs),
+  });
+
   const record: TrainingSnapshotRecord = {
     schemaVersion: SCHEMA_VERSION,
     capturedAt: new Date(meta.fetchedAtMs).toISOString(),
@@ -94,6 +106,7 @@ export function maybeAppendTrainingSnapshot(
     tournamentDay: meta.tournamentDay,
     activeWindow: meta.activeWindow,
     periods: leaderboard.periods.map((p) => enrichPeriod(p)),
+    payoutConsiderFloor: floor,
   };
 
   appendFileSync(file, `${JSON.stringify(record)}\n`, "utf8");

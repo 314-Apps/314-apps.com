@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express from "express";
+import type { Request } from "express";
 import {
   createDdbClient,
   ensureTableExists,
@@ -25,7 +26,11 @@ import {
 } from "./lib/recommendationQueryLog.js";
 import type { SnapshotPayload } from "./lib/types.js";
 import { getActiveWindow, tournamentDayKind } from "./lib/payoutWindows.js";
-import { recommendWeighIn, type RecommendationInput } from "./lib/recommendation.js";
+import {
+  computePayoutConsiderFloor,
+  recommendWeighIn,
+  type RecommendationInput,
+} from "./lib/recommendation.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
@@ -170,6 +175,26 @@ async function getFreshSnapshot(): Promise<{ payload: SnapshotPayload; stale: bo
   );
 }
 
+function payoutConsiderFloorForRequest(
+  req: Request,
+  leaderboard: SnapshotPayload["leaderboard"],
+) {
+  const q = req.query;
+  const shirtPurchased =
+    q.shirtPurchased === "true" || q.shirtPurchased === "1" || q.shirt === "1";
+  let manualMinutesLeft: number | undefined;
+  if (q.manualMinutesLeft != null && String(q.manualMinutesLeft).trim() !== "") {
+    const n = Number(q.manualMinutesLeft);
+    if (Number.isFinite(n)) manualMinutesLeft = n;
+  }
+  const now = mockMode ? getMockSimulatedDate() : new Date();
+  return computePayoutConsiderFloor(leaderboard, {
+    shirtPurchased,
+    manualMinutesLeft,
+    now,
+  });
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -249,7 +274,7 @@ app.get("/api/payout-status", (_req, res) => {
   });
 });
 
-app.get("/api/leaderboard", async (_req, res) => {
+app.get("/api/leaderboard", async (req, res) => {
   try {
     await maybeEnsureTable();
     const { payload, stale } = await getFreshSnapshot();
@@ -259,6 +284,7 @@ app.get("/api/leaderboard", async (_req, res) => {
       stale,
       sourceUrl: payload.leaderboard.sourceUrl,
       leaderboard: payload.leaderboard,
+      payoutConsiderFloor: payoutConsiderFloorForRequest(req, payload.leaderboard),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -266,7 +292,7 @@ app.get("/api/leaderboard", async (_req, res) => {
   }
 });
 
-app.post("/api/leaderboard/refresh", async (_req, res) => {
+app.post("/api/leaderboard/refresh", async (req, res) => {
   try {
     await maybeEnsureTable();
     if (!mockMode && !getRuntimeSettings().liveScrapeEnabled) {
@@ -283,6 +309,7 @@ app.post("/api/leaderboard/refresh", async (_req, res) => {
       stale: false,
       sourceUrl: snap.leaderboard.sourceUrl,
       leaderboard: snap.leaderboard,
+      payoutConsiderFloor: payoutConsiderFloorForRequest(req, snap.leaderboard),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

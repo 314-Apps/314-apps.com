@@ -420,6 +420,70 @@ function escapeHtml(s) {
     .replace(/"/g, "&quot;");
 }
 
+/** Query params so the weigh-in floor matches shirt + optional minutes override. */
+function leaderboardQueryString() {
+  const params = new URLSearchParams();
+  const shirt = safeEl("shirtPurchased");
+  if (shirt && shirt.checked) params.set("shirtPurchased", "true");
+  const manual = safeEl("manualMinutesLeft");
+  if (manual && manual.value !== "") {
+    const n = Number(manual.value);
+    if (Number.isFinite(n)) params.set("manualMinutesLeft", String(n));
+  }
+  const s = params.toString();
+  return s ? `?${s}` : "";
+}
+
+/**
+ * @param {object | null | undefined} s - `payoutConsiderFloor` from leaderboard or recommendation-shaped fields
+ * @param {{ loading?: boolean }} [opts]
+ */
+function applyConsiderFloorSnapshot(s, opts = {}) {
+  const w = safeEl("considerFloorWeight");
+  const hint = safeEl("considerFloorHint");
+  const label = safeEl("considerFloorLabel");
+  const ctx = safeEl("considerFloorContext");
+  if (!w || !hint || !label) return;
+
+  if (opts.loading) {
+    w.textContent = "Loading…";
+    if (ctx) ctx.textContent = "";
+    hint.textContent = "";
+    return;
+  }
+
+  if (!s) {
+    w.textContent = "—";
+    if (ctx) ctx.textContent = "";
+    label.textContent = "Approx. minimum weight to consider weighing in";
+    hint.textContent = "Leaderboard data not available.";
+    return;
+  }
+
+  const th = s.payoutConsiderFloorThresholdPercent ?? 10;
+  const fl = s.payoutConsiderFloorLb;
+  label.textContent = `Approx. minimum weight to bother weighing in (~${th}% modeled pay chance)`;
+
+  if (s.windowLabel != null && s.activeDay) {
+    if (ctx) {
+      ctx.textContent = `Based on ${s.activeDay} · ${s.windowLabel} — updates with each leaderboard refresh.`;
+    }
+  } else if (ctx) {
+    ctx.textContent = "No payout window right now — floor is not available.";
+  }
+
+  if (fl != null && Number.isFinite(fl)) {
+    w.textContent = `${fl.toFixed(2)} lb`;
+    hint.textContent = `Below this, modeled odds of cashing are under ${th}%. At or above, use “Get recommendation” for your exact chance at your fish weight.`;
+  } else {
+    w.textContent = "—";
+    hint.textContent =
+      s.windowLabel != null && s.activeDay
+        ? "Not enough data to estimate a floor yet (need history or a fuller board)."
+        : "";
+  }
+}
+
 /**
  * @param {object} [opts]
  * @param {boolean} [opts.silent] If true, no "Loading…" flash (used for auto-refresh).
@@ -429,9 +493,10 @@ async function loadLeaderboard(opts = {}) {
   const meta = el("leaderboardMeta");
   if (!silent) {
     meta.textContent = "Loading…";
+    applyConsiderFloorSnapshot(null, { loading: true });
   }
   try {
-    const data = await fetchJson("/api/leaderboard");
+    const data = await fetchJson(`/api/leaderboard${leaderboardQueryString()}`);
     const pollLabel = formatAutoRefreshLabel(
       apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE,
     );
@@ -439,9 +504,13 @@ async function loadLeaderboard(opts = {}) {
     meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt} (cache to ${data.expiresAt})${staleBit} · Auto-refresh every ${pollLabel}.`;
     startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
+    applyConsiderFloorSnapshot(data.payoutConsiderFloor);
   } catch (e) {
     clearScrapeCountdownUi();
     meta.textContent = e instanceof Error ? e.message : String(e);
+    if (!silent) {
+      applyConsiderFloorSnapshot(null);
+    }
   }
 }
 
@@ -449,7 +518,9 @@ async function refreshLeaderboard() {
   const meta = el("leaderboardMeta");
   meta.textContent = "Refreshing…";
   try {
-    const data = await fetchJson("/api/leaderboard/refresh", { method: "POST" });
+    const data = await fetchJson(`/api/leaderboard/refresh${leaderboardQueryString()}`, {
+      method: "POST",
+    });
     const pollLabel = formatAutoRefreshLabel(
       apiMockMode ? LEADERBOARD_POLL_MS_MOCK : LEADERBOARD_POLL_MS_LIVE,
     );
@@ -457,6 +528,7 @@ async function refreshLeaderboard() {
     meta.textContent = `Source: ${data.sourceUrl} — fetched ${data.fetchedAt}${staleBit} · Auto-refresh every ${pollLabel}`;
     startScrapeCountdownFromLeaderboardPayload(data);
     renderPeriods(data.leaderboard);
+    applyConsiderFloorSnapshot(data.payoutConsiderFloor);
   } catch (e) {
     clearScrapeCountdownUi();
     meta.textContent = e instanceof Error ? e.message : String(e);
@@ -590,7 +662,7 @@ function renderActionPill(action) {
 
 function renderLikelihood(r) {
   const wrap = el("recoLikelihood");
-  const pct = el("recoLikelihoodPct");
+  const pctEl = el("recoLikelihoodPct");
   const label = el("recoLikelihoodLabel");
   const meta = el("recoLikelihoodMeta");
   const rankWrap = el("recoRankWrap");
@@ -604,12 +676,19 @@ function renderLikelihood(r) {
 
   wrap.hidden = false;
   if (r.payoutLikelihoodPercent != null) {
-    pct.textContent = `${r.payoutLikelihoodPercent}%`;
+    pctEl.textContent = `${r.payoutLikelihoodPercent}%`;
     label.textContent = `chance still paid at window close (~${r.comparedToPlace ?? 45} spots)`;
   } else {
-    pct.textContent = "—";
+    pctEl.textContent = "—";
     label.textContent = "(insufficient data for probability)";
   }
+
+  applyConsiderFloorSnapshot({
+    payoutConsiderFloorLb: r.payoutConsiderFloorLb,
+    payoutConsiderFloorThresholdPercent: r.payoutConsiderFloorThresholdPercent,
+    activeDay: r.activeDay,
+    windowLabel: r.windowLabel,
+  });
 
   if (r.projectedRank != null) {
     rankWrap.hidden = false;
@@ -623,9 +702,9 @@ function renderLikelihood(r) {
         ? ` (${r.projectedRankLow}–${r.projectedRankHigh})`
         : "";
     rankEl.textContent = `#${r.projectedRank}${range}`;
-    const pct = r.payoutLikelihoodPercent;
+    const payPct = r.payoutLikelihoodPercent;
     const rankInside = !out;
-    const pctSaysCash = pct != null && pct > 0;
+    const pctSaysCash = payPct != null && payPct > 0;
     let rankNote;
     if (out) {
       rankNote = ` — outside top ${paid}`;
@@ -859,6 +938,14 @@ function init() {
         } catch {
           /* ignore */
         }
+        void loadLeaderboard({ silent: true });
+      });
+    }
+
+    const manualMinutesInput = safeEl("manualMinutesLeft");
+    if (manualMinutesInput) {
+      manualMinutesInput.addEventListener("change", () => {
+        void loadLeaderboard({ silent: true });
       });
     }
 

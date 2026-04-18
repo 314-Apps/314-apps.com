@@ -65,6 +65,37 @@ export function normalCdf(z: number): number {
   return 0.5 * (1 + erf(z / Math.SQRT2));
 }
 
+/** Inverse of the standard normal CDF (quantile). Bisection on `normalCdf`. */
+export function normalPpf(p: number): number {
+  const eps = 1e-12;
+  const x = clamp(p, eps, 1 - eps);
+  let lo = -8;
+  let hi = 8;
+  for (let i = 0; i < 80; i++) {
+    const mid = (lo + hi) / 2;
+    if (normalCdf(mid) < x) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
+/**
+ * Fish weight w* such that the modeled P(paid at window end) ≈ thresholdPercent,
+ * using the same normal approximation as `estimatePayoutLikelihood` (cutoff ~ N(mu, sigma)).
+ * Heavier fish → higher pay chance; w* is the weight at the threshold (fish below → lower chance).
+ */
+export function weightAtPayoutLikelihoodPercent(
+  mu: number | null,
+  sigma: number | null,
+  thresholdPercent: number,
+): number | null {
+  if (mu == null || sigma == null || !Number.isFinite(mu) || !Number.isFinite(sigma)) return null;
+  if (sigma <= 0) return null;
+  const p = clamp(thresholdPercent / 100, 0.001, 0.999);
+  const w = mu + sigma * normalPpf(p);
+  return Math.max(0, w);
+}
+
 function clamp(x: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, x));
 }

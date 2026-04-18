@@ -5,7 +5,7 @@ import {
   effectiveMinutesLeft,
   type TournamentDayKind,
 } from "./payoutWindows.js";
-import { estimatePayoutLikelihood } from "./payoutProbability.js";
+import { estimatePayoutLikelihood, weightAtPayoutLikelihoodPercent } from "./payoutProbability.js";
 import {
   forecastAllWindows,
   type DailyTrend,
@@ -46,6 +46,13 @@ export interface RecommendationResult {
   comparedToPlace: number;
   /** 0–100: blended likelihood your fish is still paid at window end. */
   payoutLikelihoodPercent: number | null;
+  /**
+   * Approx. minimum fish weight (lb) where modeled pay chance reaches `payoutConsiderFloorThresholdPercent`
+   * (same μ/σ as payout %). Below this, weighing in is usually not worth the trip; above, run the full prediction.
+   */
+  payoutConsiderFloorLb: number | null;
+  /** Threshold used for `payoutConsiderFloorLb` (default 10). From `PAYOUT_CONSIDER_FLOOR_PERCENT`. */
+  payoutConsiderFloorThresholdPercent: number;
   /** 0–100: pure historical comparison for context. */
   historicalOnlyPercent: number | null;
   /** Projected final rank at window close (1-based). */
@@ -84,6 +91,12 @@ function basePlaces(): number {
 
 function effectivePlaces(shirtPurchased: boolean): number {
   return basePlaces() + (shirtPurchased ? SHIRT_BONUS_PLACES : 0);
+}
+
+function payoutConsiderFloorThresholdPercent(): number {
+  const n = Number.parseInt(process.env.PAYOUT_CONSIDER_FLOOR_PERCENT || "10", 10);
+  if (!Number.isFinite(n) || n <= 0 || n >= 100) return 10;
+  return n;
 }
 
 function weightsForPeriod(
@@ -264,6 +277,8 @@ export function recommendWeighIn(
     now,
   });
 
+  const floorTh = payoutConsiderFloorThresholdPercent();
+
   if (!active) {
     return {
       summary: "No active payout window (or not a tournament day).",
@@ -281,6 +296,8 @@ export function recommendWeighIn(
       projectedFinalBubbleSigmaLb: null,
       comparedToPlace: places,
       payoutLikelihoodPercent: null,
+      payoutConsiderFloorLb: null,
+      payoutConsiderFloorThresholdPercent: floorTh,
       historicalOnlyPercent: null,
       projectedRank: null,
       projectedRankLow: null,
@@ -326,6 +343,12 @@ export function recommendWeighIn(
     windowTotalMinutes,
     placesPaidOverride: places,
   });
+
+  const considerFloorLb = weightAtPayoutLikelihoodPercent(
+    likelihood.projectedFinalBubbleLb,
+    likelihood.projectedFinalBubbleSigmaLb,
+    floorTh,
+  );
 
   const currentKey = `${active.day}-W${active.window.id}`;
   const currentPercent = likelihood.percent ?? null;
@@ -402,6 +425,8 @@ export function recommendWeighIn(
     projectedFinalBubbleSigmaLb: likelihood.projectedFinalBubbleSigmaLb,
     comparedToPlace: places,
     payoutLikelihoodPercent: likelihood.percent,
+    payoutConsiderFloorLb: considerFloorLb,
+    payoutConsiderFloorThresholdPercent: floorTh,
     historicalOnlyPercent: likelihood.historicalOnlyPercent,
     projectedRank: likelihood.projectedRank,
     projectedRankLow: likelihood.projectedRankLow,
@@ -415,6 +440,74 @@ export function recommendWeighIn(
     waitCandidate,
     trend,
     disclaimer,
+  };
+}
+
+/** Snapshot of the modeled “bother weighing in” floor without a full recommendation. */
+export interface PayoutConsiderFloorSnapshot {
+  payoutConsiderFloorLb: number | null;
+  payoutConsiderFloorThresholdPercent: number;
+  activeDay: TournamentDayKind | null;
+  windowLabel: string | null;
+}
+
+/**
+ * Modeled minimum weight (~threshold% pay chance) for the active window, using the same μ/σ as payout %.
+ * Independent of fish weight (pass any weight into the likelihood; bubble distribution is identical).
+ */
+export function computePayoutConsiderFloor(
+  leaderboard: ParsedLeaderboard,
+  opts: { shirtPurchased?: boolean; now?: Date; manualMinutesLeft?: number | null } = {},
+): PayoutConsiderFloorSnapshot {
+  const now = opts.now ?? new Date();
+  const shirt = opts.shirtPurchased === true;
+  const places = effectivePlaces(shirt);
+  const floorTh = payoutConsiderFloorThresholdPercent();
+  const active = getActiveWindow(now);
+  if (!active) {
+    return {
+      payoutConsiderFloorLb: null,
+      payoutConsiderFloorThresholdPercent: floorTh,
+      activeDay: null,
+      windowLabel: null,
+    };
+  }
+
+  const period = leaderboard.periods.find((p) => periodMatchesWindow(p, active.window, active.day));
+  const sorted = weightsForPeriod(leaderboard, period);
+  const bubble = bubbleWeight(sorted, places);
+
+  const minutesLeft =
+    opts.manualMinutesLeft != null && Number.isFinite(opts.manualMinutesLeft)
+      ? Math.max(0, opts.manualMinutesLeft)
+      : active.minutesLeftInPeriod;
+
+  const windowTotalMinutes = Math.max(1, active.window.endMinutes - active.window.startMinutes);
+  const minutesElapsed = Math.max(0, windowTotalMinutes - minutesLeft);
+
+  const likelihood = estimatePayoutLikelihood({
+    fishWeightLb: 0,
+    day: active.day,
+    windowId: active.window.id,
+    currentBubbleLb: bubble,
+    rowCount: sorted.length,
+    currentWeightsLb: sorted,
+    minutesElapsedInWindow: minutesElapsed,
+    windowTotalMinutes,
+    placesPaidOverride: places,
+  });
+
+  const considerFloorLb = weightAtPayoutLikelihoodPercent(
+    likelihood.projectedFinalBubbleLb,
+    likelihood.projectedFinalBubbleSigmaLb,
+    floorTh,
+  );
+
+  return {
+    payoutConsiderFloorLb: considerFloorLb,
+    payoutConsiderFloorThresholdPercent: floorTh,
+    activeDay: active.day,
+    windowLabel: active.window.label,
   };
 }
 

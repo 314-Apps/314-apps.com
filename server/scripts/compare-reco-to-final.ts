@@ -52,6 +52,9 @@ interface RecoQuery {
     currentRank?: number | null;
     comparedToPlace?: number;
     bestWindowKey?: string | null;
+    /** Modeled weigh-in floor (lb); compare to final cutoff when evaluating the floor heuristic. */
+    payoutConsiderFloorLb?: number | null;
+    payoutConsiderFloorThresholdPercent?: number;
   };
 }
 

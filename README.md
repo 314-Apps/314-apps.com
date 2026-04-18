@@ -17,11 +17,11 @@ Manual **Refresh** triggers `/api/leaderboard/refresh`, which fetches immediatel
 **Summary**
 
 
-| Setting               | Default | Role                                                        |
-| --------------------- | ------- | ----------------------------------------------------------- |
+| Setting               | Default | Role                                                          |
+| --------------------- | ------- | ------------------------------------------------------------- |
 | `CACHE_TTL_SECONDS`   | `300`   | Cache lifetime + default background scrape interval (seconds) |
-| Fish page poll (live) | `5 min` | How often the UI asks the API for data (may hit cache only) |
-| Fish page poll (mock) | `2s`    | Faster polling against synthetic data                       |
+| Fish page poll (live) | `5 min` | How often the UI asks the API for data (may hit cache only)   |
+| Fish page poll (mock) | `2s`    | Faster polling against synthetic data                         |
 
 
 Tune `CACHE_TTL_SECONDS` in `.env` if you need fewer scrapes (higher value) or fresher data (lower value).
@@ -83,7 +83,7 @@ This script sets `**DEFAULT_LIVE_SCRAPE_ENABLED=true**` for that process (unless
 
 ### `npm run fish:dev` — common mistakes
 
-1. **Wrong URL / port** — The script binds `**http://127.0.0.1:8787`** by default (not `3000` from `.env`). Open `**http://127.0.0.1:8787/fish/`** (or the port shown in the terminal). Use `**http://127.0.0.1**`, not `https://`, unless you terminate TLS elsewhere.
+1. **Wrong URL / port** — The script binds `**http://127.0.0.1:8787`** by default (not `3000` from `.env`). Open `**http://127.0.0.1:8787/fish/`** (or the port shown in the terminal). Use `**http://127.0.0.1`**, not `https://`, unless you terminate TLS elsewhere.
 2. **Opening the HTML file directly** — Don’t use `file:///.../fish/index.html`. The app must load from the **same origin** as the API so `/api/health` works. Always use the URL the server prints.
 3. **API base field** — In Advanced options, leave **API base URL** **empty** unless the API really runs on another host/port. A wrong value here breaks health, leaderboard, and recommendations.
 4. **Docker** — `fish:dev` starts DynamoDB via Compose. If Docker isn’t running, the script fails before the dev server starts.
@@ -158,7 +158,7 @@ While the API is running, you can capture **live leaderboard JSONL** (`server/da
 
 Run in a **second terminal** while the server is up. It repeatedly `POST`s `/api/recommendation` for a range of fish weights (default **2–6 lb**, step **0.25**, every **60s**). Successful calls are logged like manual “Get recommendation” requests when training capture is enabled.
 
-Default API URL is **`http://127.0.0.1:8787`** (same as `npm run fish:dev`). If your server uses another port, set `PREDICTION_SWEEP_API_BASE` or `PREDICTION_SWEEP_PORT` (see `.env.example`).
+Default API URL is `**http://127.0.0.1:8787`** (same as `npm run fish:dev`). If your server uses another port, set `PREDICTION_SWEEP_API_BASE` or `PREDICTION_SWEEP_PORT` (see `.env.example`).
 
 ```bash
 npm run sweep:predictions
@@ -181,18 +181,18 @@ npm run compare:reco-to-final -- --date=2026-04-18
 ## Scripts reference
 
 
-| Script                         | Purpose                                                                                           |
-| ------------------------------ | ------------------------------------------------------------------------------------------------- |
-| `npm run dev`                  | Live API + static, **watch** mode (`tsx watch`)                                                 |
-| `npm start`                    | Live API + static, **no** watch                                                                   |
-| `npm run fish:dev`             | Docker DynamoDB → create table → smoke test → `npm run dev` on `FISH_DEV_PORT` (default **8787**) |
-| `npm run dev:mock`             | Mock leaderboard, watch mode                                                                      |
-| `npm run start:mock`           | Mock leaderboard, no watch                                                                        |
-| `npm run fish:mock`            | Smoke test mock server → `dev:mock` on **8787**                                                   |
-| `npm run ddb:create-table`     | Create DynamoDB table (local or AWS per `.env`)                                                 |
-| `npm run train:historical`     | Scrape historical widgets → update payout stats JSON                                              |
-| `npm run sweep:predictions`    | Loop: grid-call `/api/recommendation` on an interval (second terminal; see section above)         |
-| `npm run compare:reco-to-final` | Offline: compare reco JSONL to live-training JSONL for a given `--date`                            |
+| Script                          | Purpose                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `npm run dev`                   | Live API + static, **watch** mode (`tsx watch`)                                                   |
+| `npm start`                     | Live API + static, **no** watch                                                                   |
+| `npm run fish:dev`              | Docker DynamoDB → create table → smoke test → `npm run dev` on `FISH_DEV_PORT` (default **8787**) |
+| `npm run dev:mock`              | Mock leaderboard, watch mode                                                                      |
+| `npm run start:mock`            | Mock leaderboard, no watch                                                                        |
+| `npm run fish:mock`             | Smoke test mock server → `dev:mock` on **8787**                                                   |
+| `npm run ddb:create-table`      | Create DynamoDB table (local or AWS per `.env`)                                                   |
+| `npm run train:historical`      | Scrape historical widgets → update payout stats JSON                                              |
+| `npm run sweep:predictions`     | Loop: grid-call `/api/recommendation` on an interval (second terminal; see section above)         |
+| `npm run compare:reco-to-final` | Offline: compare reco JSONL to live-training JSONL for a given `--date`                           |
 
 
 ---

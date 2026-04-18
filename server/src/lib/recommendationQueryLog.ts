@@ -6,7 +6,8 @@ import type { RecommendationInput, RecommendationResult } from "./recommendation
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const QUERIES_DIR = path.resolve(__dirnamePath, "..", "..", "data", "recommendation-queries");
 
-const SCHEMA_VERSION = 1 as const;
+/** v2: adds `payoutConsiderFloorLb` / `payoutConsiderFloorThresholdPercent` on `prediction` for floor calibration. */
+const SCHEMA_VERSION = 2 as const;
 
 export interface RecommendationQueryRecord {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -47,6 +48,10 @@ export interface RecommendationQueryRecord {
     bubbleWeightLb: number | null;
     projectedFinalBubbleLb: number | null;
     projectedFinalBubbleSigmaLb: number | null;
+    /** Weight (lb) at ~threshold% modeled pay chance; same μ/σ as payout %. For training floor accuracy. */
+    payoutConsiderFloorLb: number | null;
+    /** Env `PAYOUT_CONSIDER_FLOOR_PERCENT` (default 10). */
+    payoutConsiderFloorThresholdPercent: number;
     effectiveMinutesLeft: number;
     minutesLeftInPeriod: number;
     fractionWindowElapsed: number;
@@ -104,6 +109,8 @@ function buildRecord(
       bubbleWeightLb: result.bubbleWeightLb,
       projectedFinalBubbleLb: result.projectedFinalBubbleLb,
       projectedFinalBubbleSigmaLb: result.projectedFinalBubbleSigmaLb,
+      payoutConsiderFloorLb: result.payoutConsiderFloorLb,
+      payoutConsiderFloorThresholdPercent: result.payoutConsiderFloorThresholdPercent,
       effectiveMinutesLeft: result.effectiveMinutesLeft,
       minutesLeftInPeriod: result.minutesLeftInPeriod,
       fractionWindowElapsed: result.fractionWindowElapsed,
