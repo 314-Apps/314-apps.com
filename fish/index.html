@@ -6,7 +6,7 @@
     <title>Big Bass Bash weigh-in helper — 314 Apps</title>
     <meta name="description" content="Unofficial helper for Big Bass Bash payout windows and weigh-in timing, with cross-window forecasts.">
     <!-- Bump FISH_ASSET_VERSION when deploying fish CSS/JS changes (cache bust for Cloudflare/browsers). -->
-    <link rel="stylesheet" href="style.css?v=1">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
     <div class="container fish-container">
@@ -133,6 +133,23 @@
                     </div>
                 </div>
                 <div class="fish-likelihood-meta" id="recoLikelihoodMeta"></div>
+                <details class="fish-details fish-shadow-algos" id="recoShadowAlgosWrap" hidden>
+                    <summary>Shadow algorithms (beta)</summary>
+                    <div class="fish-details-body">
+                        <p class="fish-meta fish-shadow-algos-hint">Same query; multiple models. Primary row drives the summary above. Hover a row for μ/σ tooltip.</p>
+                        <table class="fish-shadow-algos-table" aria-label="Shadow algorithm comparison">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Model</th>
+                                    <th scope="col">Display %</th>
+                                    <th scope="col">Raw %</th>
+                                    <th scope="col">Δ vs primary</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recoShadowAlgosTbody"></tbody>
+                        </table>
+                    </div>
+                </details>
             </div>
             <p id="recoDisclaimer" class="fish-disclaimer"></p>
         </section>
@@ -159,7 +176,7 @@
         <section class="fish-card">
             <h2>Offline training data</h2>
             <p class="fish-meta">View reconstructed leaderboards (per payout window) from captured <code>live-training</code> JSONL.</p>
-            <p><a href="training-leaderboards.html">Training leaderboards</a> · <a href="weigh-station-charts.html">Weigh station charts</a> · <a href="weigh-station-map.html">Map</a></p>
+            <p><a href="training-leaderboards.html">Training leaderboards</a> · <a href="angler-search.html">Angler search</a> · <a href="weigh-station-charts.html">Weigh station charts</a> · <a href="weigh-station-map.html">Map</a></p>
         </section>
 
         <div class="cta">
@@ -200,6 +217,6 @@
   window.__fishInlineClockInterval = setInterval(tick, 1000);
 })();
     </script>
-    <script src="app.js?v=1" type="module"></script>
+    <script src="app.js?v=2" type="module"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# [314-apps.com](http://314-apps.com)
+# [314-apps.comp](http://314-apps.com)
 
 Static marketing site and the **Big Bass Bash weigh-in helper** (`/fish/`) — a Node/Express API that scrapes (or mocks) A Leaderboard widgets, caches snapshots in DynamoDB, and serves the fish helper UI from the same process.
 
@@ -185,7 +185,56 @@ npm run compare:reco-to-final -- --date=2026-04-18
 
 ```bash
 npm run evaluate:predictions -- --date=2026-04-18
+# Re-run pay-band metrics with the **current** pay model (σ mult, etc.), not frozen JSONL percents:
+# npm run evaluate:predictions -- --date=2026-04-18 --recompute
 ```
+
+Pay-band output includes **Mean pred** (average modeled probability in each 10% band) and two **ECE** summaries: vs band midpoint (coarse) and vs mean predicted (better when queries pile up in a few bands).
+
+### Shadow algorithms (beta) & per-elapsed calibration
+
+Each `POST /api/recommendation` runs several **pay-chance models** in parallel. The **primary** model (`normalBlend`, same as before) still drives the summary text and weigh-in advice. Others are for comparison:
+
+- **`normalBlendElapsedWide`** — same projected μ/σ as primary, but widens σ for the pay CDF early in the window (`PAYOUT_EARLY_SIGMA_WIDEN_K`, default **0.6**) and applies **per elapsed-bucket** calibration knots when `server/data/payout-calibration.json` is **v2** (see below).
+- **`historicalEmpirical`** — fraction of past-year final cutoffs this weight beats.
+- **`liveEmpirical`** — maps blended expected final rank to a pay chance (`≈ 1 − E[rank]/places`).
+
+The `/fish/` result includes a **Shadow algorithms (beta)** table. When training capture is on, `recommendation-queries` JSONL is **schema v4** and logs `algorithmPredictions[]` plus `projectedRankExpected` for offline evaluation.
+
+**Calibration file v2.** `payout-calibration.json` may use:
+
+```json
+{ "version": 2, "default": { "knots": [[0,0],[100,100]] }, "byElapsedBucket": { "0-25": { "knots": [] }, ... } }
+```
+
+v1 files with top-level `knots` still load. Regenerate v2 (pooled default + per 0–25% / 25–50% / 50–75% / 75–100% window fraction) with:
+
+```bash
+npm run fit:payout-calibration -- --date=2026-04-18
+# optional: --min-samples=50  --min-per-bucket=8  --out=server/data/payout-calibration.json
+```
+
+### Data collection (arrivals + weather + water temp)
+
+Three foundation datasets feed the next iteration of the pay-chance model. **Nothing consumes them yet** — they are collection-only.
+
+- **Fish arrivals** — `server/data/fish-arrivals/{date}.jsonl`. Derived from existing `live-training/*.jsonl` snapshots with no new scraping. Each row records when a unique `fishEntryKey` first appeared, the previous snapshot's `fetchedAtMs` (an upper bound is the current snap, a lower bound is the previous — so arrivals are bracketed), and `fractionElapsedAtFirstSeen` within that payout window. A cull (same angler, different weight) emits two arrivals.
+- **Per-station weather** — `server/data/weather/{date}.json`. Once-per-hour pull from Open-Meteo (forecast for near-realtime, archive for historical) for every weigh station in `server/data/weigh-station-locations.json`. One file per date with a `stations[<canonical-key>].hourly[]` map; join to arrivals via the same canonical `weighStation` key. Units: °F, mph, hPa, mm, %.
+- **Lake surface water temperature** — `server/data/water-temp/{date}.json`. Once-per-day scrape of Ameren's Lake Level Reports page (single lake-wide value, measured near Bagnell Dam). Historical backfill walks the Wayback Machine's availability API.
+
+```bash
+# Rebuild arrivals from JSONL (idempotent per date):
+npm run extract:arrivals -- --all
+npm run extract:arrivals -- --date=2026-04-18
+
+# Backfill historical tournament weekends (edit server/data/historical-tournament-dates.json first):
+npm run backfill:weather                # every year × Saturday + Sunday
+npm run backfill:weather -- --year=2024 # one year only
+npm run backfill:water-temp             # Wayback-archived Ameren snapshots (±3d drift tolerance)
+npm run backfill:water-temp -- --max-drift-days=5
+```
+
+Relevant env vars (see `.env.example`): `WEATHER_COLLECT_ENABLED`, `WEATHER_HOURLY_INTERVAL_MS`, `WATER_TEMP_COLLECT_ENABLED`. Live collection runs in-process alongside the leaderboard auto-scraper when the server starts (skipped in mock mode). Wayback's Ameren snapshot density is thin prior to late 2025; older years may write `surfaceTempF: null` with an `unavailableReason` when no snapshot is within drift.
 
 ---
 
@@ -204,8 +253,12 @@ npm run evaluate:predictions -- --date=2026-04-18
 | `npm run train:historical`      | Scrape historical widgets → update payout stats JSON                                              |
 | `npm run sweep:predictions`     | Loop: grid-call `/api/recommendation` on an interval (second terminal; see section above)         |
 | `npm run compare:reco-to-final` | Offline: compare reco JSONL to live-training JSONL for a given `--date`                           |
-| `npm run evaluate:predictions`  | Offline: cutoff MAE, pay-band calibration, stratified rank MAE vs merged/single ground truth       |
-| `npm run fit:cutoff-constants`  | Grid-search bubble blend vs true cutoffs from live-training (merged when possible)              |
+| `npm run evaluate:predictions`  | Offline: per-algorithm pay calibration + cutoff MAE, elapsed-bucket ECE winner table, rank MAE      |
+| `npm run fit:payout-calibration` | Fit v2 `payout-calibration.json` (default + by elapsed bucket) from recommendation-queries + ground truth |
+| `npm run fit:cutoff-constants`  | Grid-search bubble blend vs true cutoffs from live-training (merged when possible)                |
+| `npm run extract:arrivals`      | Derive `server/data/fish-arrivals/{date}.jsonl` (first-seen per fish) from live-training snapshots  |
+| `npm run backfill:weather`      | Fetch Open-Meteo archive hourly observations for every weigh station × historical tournament date  |
+| `npm run backfill:water-temp`   | Recover historical Ameren surface water temp via Wayback Machine                                  |
 
 
 ---
@@ -220,9 +273,13 @@ Copy `**.env.example`** to `**.env`** and adjust. Important variables:
 - `**CACHE_TTL_SECONDS**` — cache / scrape cadence (see above); optional `AUTO_SCRAPE_*` for background scrapes  
 - `**PREDICTION_SWEEP_***` — sweep client URL/port/interval when using `npm run sweep:predictions`  
 - `**USE_MOCK_LEADERBOARD**` — set to `1` for mock mode  
-- `**DEFAULT_LIVE_SCRAPE_ENABLED**` / `**DEFAULT_TRAINING_CAPTURE**` — defaults for live scrape and training JSONL capture
+- `**DEFAULT_LIVE_SCRAPE_ENABLED**` / `**DEFAULT_TRAINING_CAPTURE**` — defaults for live scrape and training JSONL capture  
+- `**PAYOUT_LIKELIHOOD_SIGMA_MULT**` — optional multiplier (default **1.28**) on σ **only** for pay‑chance Φ(z); widens tail probabilities toward 50% so modeled % better matches offline ECE. Tune after `npm run evaluate:predictions`.
+- `**PAYOUT_EARLY_SIGMA_WIDEN_K**` — optional (default **0.6**). Extra early-window σ scaling for the shadow algorithm `normalBlendElapsedWide` only (`σ_pay *= 1 + K(1−f)²` where `f` is fraction of window elapsed).
+- `**WEATHER_COLLECT_ENABLED**` / `**WEATHER_HOURLY_INTERVAL_MS**` — optional (defaults **true** / **3600000**). In-process hourly Open-Meteo pull for every weigh station in `server/data/weigh-station-locations.json`.
+- `**WATER_TEMP_COLLECT_ENABLED**` — optional (default **true**). Once-per-day Ameren surface water temp scrape.
 
-Runtime toggles are persisted in `**server/data/runtime-settings.json**` (gitignored). The server creates this file on startup if it is missing, using the effective defaults (env + any prior file). Use the `/fish/` Advanced section (POST `/api/settings`) to change values; toggling updates the same file.
+Runtime toggles are persisted in `**server/data/runtime-settings.json`** (gitignored). The server creates this file on startup if it is missing, using the effective defaults (env + any prior file). Use the `/fish/` Advanced section (POST `/api/settings`) to change values; toggling updates the same file.
 
 ---
 

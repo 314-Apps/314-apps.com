@@ -59,14 +59,29 @@ export interface TrainingSnap {
   periods?: TrainingPeriod[];
 }
 
+/** Logged shadow algorithm row (schema v4 `algorithmPredictions`). */
+export interface RecoAlgorithmPredictionRow {
+  id?: string;
+  label?: string;
+  primary?: boolean;
+  rawPercent?: number | null;
+  displayPercent?: number | null;
+  projectedFinalBubbleLb?: number | null;
+  projectedFinalBubbleSigmaLb?: number | null;
+  projectedRank?: number | null;
+}
+
 export interface RecoQuery {
   kind?: string;
   capturedAt?: string;
+  schemaVersion?: number;
   input?: { fishWeightLb?: number };
+  algorithmPredictions?: RecoAlgorithmPredictionRow[];
   prediction?: {
     activeDay?: string | null;
     windowLabel?: string | null;
     projectedRank?: number | null;
+    projectedRankExpected?: number | null;
     currentRank?: number | null;
     comparedToPlace?: number;
     bestWindowKey?: string | null;
@@ -77,6 +92,7 @@ export interface RecoQuery {
     payoutConsiderFloorLb?: number | null;
     payoutConsiderFloorThresholdPercent?: number;
     fractionWindowElapsed?: number;
+    historicalOnlyPercent?: number | null;
   };
 }
 

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   poolAdjacentViolators,
   buildCalibrationKnotsFromSamples,
+  buildCalibrationFileV2FromSamples,
   rawPercentBinIndex,
 } from "./payoutCalibrationFit.js";
 
@@ -47,4 +48,20 @@ test("buildCalibrationKnotsFromSamples produces monotone display knots", () => {
     assert.ok(y >= lastY);
     lastY = y;
   }
+});
+
+test("buildCalibrationFileV2FromSamples returns version 2 with four elapsed buckets", () => {
+  const samples = Array.from({ length: 40 }, (_, i) => ({
+    rawPercent: (i % 10) * 10 + 5,
+    paid: i % 3 === 0,
+    fractionElapsed: i < 10 ? 0.1 : i < 20 ? 0.35 : i < 30 ? 0.55 : 0.9,
+  }));
+  const { file, perBucketSampleCounts } = buildCalibrationFileV2FromSamples(samples, {
+    minSamplesTotal: 10,
+    minPerBucket: 3,
+  });
+  assert.equal(file.version, 2);
+  assert.ok(Array.isArray(file.default.knots));
+  assert.ok(file.byElapsedBucket);
+  assert.equal(Object.keys(perBucketSampleCounts).length, 4);
 });

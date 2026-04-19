@@ -1,7 +1,7 @@
 /**
  * Fit `server/data/payout-calibration.json` from live-training ground truth + recommendation-queries.
  * Bins **raw** model pay % (payoutLikelihoodPercentRaw when logged; else payoutLikelihoodPercent),
- * applies isotonic regression (PAV) on empirical pay rates, writes piecewise-linear knots.
+ * applies isotonic regression (PAV) on empirical pay rates, writes **v2** JSON: `default` + `byElapsedBucket`.
  *
  * Usage:
  *   npx tsx server/scripts/fit-payout-calibration.ts --date=2026-04-18
@@ -10,6 +10,11 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import {
+  buildCalibrationFileV2FromSamples,
+  binCenterForIndex,
+  type PayCalibrationSampleWithElapsed,
+} from "../src/lib/payoutCalibrationFit.js";
 import {
   EVAL_DATA_DIR,
   parseEvalArgs,
@@ -20,11 +25,6 @@ import {
   type TrainingSnap,
   type RecoQuery,
 } from "./evalShared.js";
-import {
-  buildCalibrationKnotsFromSamples,
-  binCenterForIndex,
-  type PayCalibrationSample,
-} from "../src/lib/payoutCalibrationFit.js";
 
 function parseOutPath(): string {
   const raw = process.argv.slice(2);
@@ -45,10 +45,22 @@ function parseMinSamples(): number {
   return 30;
 }
 
+function parseMinPerBucket(): number {
+  const raw = process.argv.slice(2);
+  for (const a of raw) {
+    if (a.startsWith("--min-per-bucket=")) {
+      const n = Number.parseInt(a.slice("--min-per-bucket=".length), 10);
+      if (Number.isFinite(n) && n >= 1) return n;
+    }
+  }
+  return 5;
+}
+
 function main(): void {
   const { date, places, periodFilters } = parseEvalArgs();
   const outPath = parseOutPath();
   const minSamples = parseMinSamples();
+  const minPerBucket = parseMinPerBucket();
 
   const trainFile = path.join(EVAL_DATA_DIR, "live-training", `${date}.jsonl`);
   const recoFile = path.join(EVAL_DATA_DIR, "recommendation-queries", `${date}.jsonl`);
@@ -69,7 +81,7 @@ function main(): void {
     process.exit(1);
   }
 
-  const samples: PayCalibrationSample[] = [];
+  const samples: PayCalibrationSampleWithElapsed[] = [];
   let nUsedRaw = 0;
   let nFallbackDisplay = 0;
 
@@ -96,24 +108,32 @@ function main(): void {
       if (rawPercent == null) continue;
 
       const paid = rankForWeight(finalWeights, w) <= places;
-      samples.push({ rawPercent, paid });
+      const f = q.prediction?.fractionWindowElapsed;
+      samples.push({
+        rawPercent,
+        paid,
+        fractionElapsed: f != null && Number.isFinite(f) ? f : undefined,
+      });
     }
   }
 
-  const { file, binCounts, binRatesRaw, binRatesIso } = buildCalibrationKnotsFromSamples(samples, {
-    minSamplesTotal: minSamples,
-  });
+  const { file, binCounts, binRatesRaw, binRatesIso, perBucketSampleCounts } =
+    buildCalibrationFileV2FromSamples(samples, {
+      minSamplesTotal: minSamples,
+      minPerBucket,
+    });
 
   mkdirSync(path.dirname(outPath), { recursive: true });
   writeFileSync(outPath, `${JSON.stringify(file, null, 2)}\n`, "utf8");
 
-  console.log(`=== Fit payout calibration (${date}, places=${places}) ===`);
+  console.log(`=== Fit payout calibration v2 (${date}, places=${places}) ===`);
   console.log("");
   console.log(`  Samples: ${samples.length}  (raw field: ${nUsedRaw}, fallback display: ${nFallbackDisplay})`);
-  console.log(`  Min samples threshold: ${minSamples}  →  ${file.knots.length} knots`);
+  console.log(`  Min samples (pooled default): ${minSamples}   Min per elapsed bucket: ${minPerBucket}`);
+  console.log(`  Per-bucket sample counts: ${JSON.stringify(perBucketSampleCounts)}`);
   console.log(`  Wrote: ${outPath}`);
   console.log("");
-  console.log("  Bin (center)   n    raw rate   iso rate");
+  console.log("  Bin (center)   n    raw rate   iso rate  (pooled / default)");
   for (let i = 0; i < binCounts.length; i++) {
     const c = binCenterForIndex(i);
     const n = binCounts[i]!;
@@ -125,7 +145,7 @@ function main(): void {
   }
   console.log("");
   console.log(
-    "Restart the server (or rely on process reload) so payout calibration JSON is re-read from disk.",
+    "Restart the server so payout calibration JSON is re-read. Shadow algo normalBlendElapsedWide uses byElapsedBucket when present.",
   );
 }
 

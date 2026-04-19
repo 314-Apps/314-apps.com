@@ -526,6 +526,38 @@ footer {
 .fish-likelihood-sublabel { font-size: 0.82rem; color: #495057; margin-top: 2px; }
 .fish-likelihood-meta { margin-top: 10px; font-size: 0.88rem; color: #495057; line-height: 1.45; }
 
+.fish-shadow-algos {
+    margin-top: 12px;
+}
+.fish-shadow-algos-hint {
+    margin: 0 0 10px 0;
+    font-size: 0.82rem;
+}
+.fish-shadow-algos-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+.fish-shadow-algos-table th,
+.fish-shadow-algos-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e7ef;
+}
+.fish-shadow-algos-table th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6c757d;
+}
+.fish-shadow-algos-table tr.is-primary td {
+    background: #eef6ff;
+    font-weight: 600;
+}
+.fish-shadow-algos-table tr:hover td {
+    background: #f0f4f8;
+}
+
 .fish-floor-tile {
     margin-top: 14px;
     padding: 12px 14px;

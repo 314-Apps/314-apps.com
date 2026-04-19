@@ -34,6 +34,28 @@ test("estimatePayoutLikelihood snapshot: μ, σ, and percent in expected ranges"
   assert.ok(r.percent! >= pctMin && r.percent! <= pctMax, `percent=${r.percent} not in [${pctMin},${pctMax}]`);
 });
 
+test("payProbabilitySigmaMult pulls pay % toward 50% (less tail overconfidence)", () => {
+  const input = {
+    fishWeightLb: 4.5,
+    day: "Saturday" as const,
+    windowId: 2,
+    currentBubbleLb: 3.05,
+    rowCount: 50,
+    currentWeightsLb: [] as number[],
+    minutesElapsedInWindow: 55,
+    windowTotalMinutes: 119,
+    placesPaidOverride: 45,
+  };
+  const tight = estimatePayoutLikelihood(input, { payProbabilitySigmaMult: 1 });
+  const wide = estimatePayoutLikelihood(input, { payProbabilitySigmaMult: 1.8 });
+  assert.ok(tight.percent != null && wide.percent != null);
+  assert.notEqual(wide.percent, tight.percent);
+  assert.ok(
+    Math.abs(wide.percent! - 50) <= Math.abs(tight.percent! - 50),
+    `wider σ_pay should move rounded % toward 50; got ${tight.percent} vs ${wide.percent}`,
+  );
+});
+
 test("snapshotStale inflates σ vs identical input without stale", () => {
   const input = {
     fishWeightLb: 3.4,

@@ -5,11 +5,10 @@ import {
   effectiveMinutesLeft,
   type TournamentDayKind,
 } from "./payoutWindows.js";
-import { estimatePayoutLikelihood } from "./payoutProbability.js";
-import {
-  calibratePayoutPercent,
-  weightAtCalibratedPayoutLikelihoodPercent,
-} from "./payoutCalibration.js";
+import { runAllAlgorithmPredictions } from "./algorithms/index.js";
+import type { AlgorithmPrediction } from "./algorithms/types.js";
+import { estimatePayoutLikelihood, type SmartLikelihoodInput } from "./payoutProbability.js";
+import { weightAtCalibratedPayoutLikelihoodPercent } from "./payoutCalibration.js";
 import {
   forecastAllWindows,
   type DailyTrend,
@@ -63,6 +62,8 @@ export interface RecommendationResult {
   payoutConsiderFloorThresholdPercent: number;
   /** 0–100: pure historical comparison for context. */
   historicalOnlyPercent: number | null;
+  /** Expected final rank (fractional, 1-based) when pooled rank blend is available. */
+  projectedRankExpected: number | null;
   /** Projected final rank at window close (1-based). */
   projectedRank: number | null;
   projectedRankLow: number | null;
@@ -88,6 +89,8 @@ export interface RecommendationResult {
   } | null;
   trend: DailyTrend;
   disclaimer: string;
+  /** Shadow / comparison algorithms (beta); primary entry has `primary: true`. */
+  algorithmPredictions: AlgorithmPrediction[];
 }
 
 const SHIRT_BONUS_PLACES = 1;
@@ -309,6 +312,7 @@ export function recommendWeighIn(
       payoutConsiderFloorLb: null,
       payoutConsiderFloorThresholdPercent: floorTh,
       historicalOnlyPercent: null,
+      projectedRankExpected: null,
       projectedRank: null,
       projectedRankLow: null,
       projectedRankHigh: null,
@@ -321,6 +325,7 @@ export function recommendWeighIn(
       waitCandidate: null,
       trend,
       disclaimer,
+      algorithmPredictions: [],
     };
   }
 
@@ -342,7 +347,7 @@ export function recommendWeighIn(
   const windowTotalMinutes = Math.max(1, active.window.endMinutes - active.window.startMinutes);
   const minutesElapsed = Math.max(0, windowTotalMinutes - minutesLeft);
 
-  const likelihood = estimatePayoutLikelihood({
+  const likelihoodInput: SmartLikelihoodInput = {
     fishWeightLb: input.fishWeightLb,
     day: active.day,
     windowId: active.window.id,
@@ -353,7 +358,19 @@ export function recommendWeighIn(
     windowTotalMinutes,
     placesPaidOverride: places,
     snapshotStale: input.snapshotStale === true,
+  };
+  const likelihood = estimatePayoutLikelihood(likelihoodInput);
+
+  const algorithmPredictions = runAllAlgorithmPredictions({
+    likelihoodInput,
+    baseLikelihood: likelihood,
+    fishWeightLb: input.fishWeightLb,
+    placesPaid: places,
   });
+  const primaryPred =
+    algorithmPredictions.find((p) => p.primary) ?? algorithmPredictions[0] ?? null;
+  const displayPercent = primaryPred?.displayPercent ?? null;
+  const rawPercent = primaryPred?.rawPercent ?? null;
 
   const considerFloorLb = weightAtCalibratedPayoutLikelihoodPercent(
     likelihood.projectedFinalBubbleLb,
@@ -362,8 +379,6 @@ export function recommendWeighIn(
   );
 
   const currentKey = `${active.day}-W${active.window.id}`;
-  const rawPercent = likelihood.percent ?? null;
-  const displayPercent = calibratePayoutPercent(rawPercent);
   const currentPercent = displayPercent;
 
   // Identify a meaningfully-better future window that starts reasonably soon.
@@ -442,6 +457,7 @@ export function recommendWeighIn(
     payoutConsiderFloorLb: considerFloorLb,
     payoutConsiderFloorThresholdPercent: floorTh,
     historicalOnlyPercent: likelihood.historicalOnlyPercent,
+    projectedRankExpected: likelihood.projectedRankExpected,
     projectedRank: likelihood.projectedRank,
     projectedRankLow: likelihood.projectedRankLow,
     projectedRankHigh: likelihood.projectedRankHigh,
@@ -454,6 +470,7 @@ export function recommendWeighIn(
     waitCandidate,
     trend,
     disclaimer,
+    algorithmPredictions,
   };
 }
 

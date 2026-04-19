@@ -8,10 +8,19 @@
  *   npx tsx server/scripts/evaluate-predictions.ts --date=2026-04-18
  *   npx tsx server/scripts/evaluate-predictions.ts --date=2026-04-18 --period=Saturday-W2
  *
- * When logs include `payoutLikelihoodPercentRaw`, a second calibration table compares outcomes to **raw**
- * model bands (separate from displayed / post-calibration bands).
+ * Schema v4 logs `algorithmPredictions[]` — this script reports **per algorithm** display/raw calibration,
+ * cutoff MAE using each algo’s logged μ when present, and ECE stratified by elapsed-window bucket.
+ *
+ * `--recompute` — recompute `normalBlend` and `normalBlendElapsedWide` from logged μ/σ, weight, and
+ * current Φ + calibration. `historicalEmpirical` / `liveEmpirical` use logged % or `historicalOnlyPercent` /
+ * `projectedRankExpected` when available.
  */
 import path from "node:path";
+import { ALGORITHMS } from "../src/lib/algorithms/index.js";
+import {
+  recomputeNormalBlendElapsedWidePercents,
+  recomputeNormalBlendPercents,
+} from "../src/lib/algorithms/recompute.js";
 import {
   EVAL_DATA_DIR,
   parseEvalArgs,
@@ -20,9 +29,18 @@ import {
   recoMatchesPeriod,
   rankForWeight,
   trueCutoffLb,
+  type RecoAlgorithmPredictionRow,
   type TrainingSnap,
   type RecoQuery,
 } from "./evalShared.js";
+
+const STRAT_SEP = "###";
+
+const ALGO_IDS = ALGORITHMS.map((a) => a.id) as string[];
+const ALGO_LABEL_BY_ID = Object.fromEntries(ALGORITHMS.map((a) => [a.id, a.label])) as Record<
+  string,
+  string
+>;
 
 function weightBucket(w: number): string {
   if (w < 3) return "<3";
@@ -48,6 +66,8 @@ function payPercentBucket(pct: number): string {
   return `${b}–${b + 10}`;
 }
 
+type PayCalibBucket = { n: number; sumPaid: number; sumPredFrac: number };
+
 /** Midpoint of band as a fraction in [0,1], e.g. 0–10 → 0.05, 90–100 → 0.95 */
 function bucketMidpointFraction(bucket: string): number {
   const parts = bucket.split(/[–-]/u);
@@ -69,7 +89,178 @@ function printSection(title: string, lines: string[]): void {
   console.log("");
 }
 
+function emptyAgg(): {
+  calibBuckets: Map<string, PayCalibBucket>;
+  rawCalibBuckets: Map<string, PayCalibBucket>;
+  stratifiedDisplay: Map<string, PayCalibBucket>;
+  cutoffAbsErrs: number[];
+} {
+  return {
+    calibBuckets: new Map(),
+    rawCalibBuckets: new Map(),
+    stratifiedDisplay: new Map(),
+    cutoffAbsErrs: [],
+  };
+}
+
+function getAlgoRow(q: RecoQuery, algoId: string): RecoAlgorithmPredictionRow | undefined {
+  return q.algorithmPredictions?.find((a) => a.id === algoId);
+}
+
+function clamp(x: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, x));
+}
+
+/**
+ * Resolve display/raw pay % and μ used for cutoff error for one algorithm row.
+ */
+function resolvePayForAlgo(
+  q: RecoQuery,
+  algoId: string,
+  recompute: boolean,
+  w: number,
+  places: number,
+): { display: number | null; raw: number | null; muForCutoff: number | null } {
+  const pred = q.prediction;
+  const row = getAlgoRow(q, algoId);
+  const mu = pred?.projectedFinalBubbleLb;
+  const sig = pred?.projectedFinalBubbleSigmaLb;
+  const f = pred?.fractionWindowElapsed ?? 0;
+
+  if (recompute && mu != null && sig != null && Number.isFinite(mu) && Number.isFinite(sig) && sig > 0) {
+    if (algoId === "normalBlend") {
+      const r = recomputeNormalBlendPercents(w, mu, sig);
+      return { display: r.display, raw: r.raw, muForCutoff: mu };
+    }
+    if (algoId === "normalBlendElapsedWide") {
+      const r = recomputeNormalBlendElapsedWidePercents(w, mu, sig, Number.isFinite(f) ? f : 0);
+      return { display: r.display, raw: r.raw, muForCutoff: mu };
+    }
+    if (algoId === "historicalEmpirical") {
+      const hist = pred?.historicalOnlyPercent;
+      const raw = row?.rawPercent ?? (hist != null && Number.isFinite(hist) ? hist : null);
+      const disp = row?.displayPercent ?? raw;
+      const muH = row?.projectedFinalBubbleLb ?? pred?.projectedFinalBubbleLb ?? null;
+      return { display: disp, raw, muForCutoff: muH };
+    }
+    if (algoId === "liveEmpirical") {
+      const rExp = pred?.projectedRankExpected;
+      if (rExp != null && Number.isFinite(rExp) && places > 0) {
+        const p = clamp(1 - rExp / places, 0, 1);
+        const pct = Math.round(p * 100);
+        return { display: pct, raw: pct, muForCutoff: mu };
+      }
+      const raw = row?.rawPercent ?? null;
+      const disp = row?.displayPercent ?? raw;
+      return { display: disp, raw, muForCutoff: row?.projectedFinalBubbleLb ?? mu ?? null };
+    }
+  }
+
+  if (row?.displayPercent != null || row?.rawPercent != null) {
+    const raw = row.rawPercent ?? null;
+    const disp = row.displayPercent ?? raw;
+    const muR = row.projectedFinalBubbleLb ?? pred?.projectedFinalBubbleLb ?? null;
+    return { display: disp, raw, muForCutoff: muR };
+  }
+
+  if (algoId === "normalBlend") {
+    const raw = pred?.payoutLikelihoodPercentRaw ?? pred?.payoutLikelihoodPercent ?? null;
+    const disp = pred?.payoutLikelihoodPercent ?? null;
+    return { display: disp, raw, muForCutoff: pred?.projectedFinalBubbleLb ?? null };
+  }
+
+  return { display: null, raw: null, muForCutoff: null };
+}
+
+function bumpBucket(
+  map: Map<string, PayCalibBucket>,
+  bucket: string,
+  paidActually: number,
+  predFrac: number,
+): void {
+  const c = map.get(bucket) ?? { n: 0, sumPaid: 0, sumPredFrac: 0 };
+  c.n += 1;
+  c.sumPaid += paidActually;
+  c.sumPredFrac += predFrac;
+  map.set(bucket, c);
+}
+
+function eceFromCalibBuckets(map: Map<string, PayCalibBucket>): { eceMid: number; ecePred: number; n: number } {
+  let eceMid = 0;
+  let ecePred = 0;
+  let totalN = 0;
+  for (const [b, { n, sumPaid, sumPredFrac }] of map) {
+    if (n === 0) continue;
+    const mid = bucketMidpointFraction(b);
+    const frac = sumPaid / n;
+    const meanPred = sumPredFrac / n;
+    eceMid += n * Math.abs(frac - mid);
+    ecePred += n * Math.abs(frac - meanPred);
+    totalN += n;
+  }
+  return { eceMid, ecePred, n: totalN };
+}
+
+function eceFromStratifiedForElapsed(
+  stratified: Map<string, PayCalibBucket>,
+  elapsedPrefix: string,
+): { ecePred: number; n: number } {
+  let ecePred = 0;
+  let totalN = 0;
+  const p = `${elapsedPrefix}${STRAT_SEP}`;
+  for (const [k, { n, sumPaid, sumPredFrac }] of stratified) {
+    if (!k.startsWith(p) || n === 0) continue;
+    const frac = sumPaid / n;
+    const meanPred = sumPredFrac / n;
+    ecePred += n * Math.abs(frac - meanPred);
+    totalN += n;
+  }
+  return { ecePred, n: totalN };
+}
+
+function printCalibBlock(
+  title: string,
+  calibBuckets: Map<string, PayCalibBucket>,
+  recompute: boolean,
+  isRaw: boolean,
+): void {
+  const calibOrder = Array.from(calibBuckets.keys()).sort((a, b) => bucketSortKey(a) - bucketSortKey(b));
+  if (calibOrder.length === 0) {
+    printSection(title, ["  (no rows in any band)"]);
+    return;
+  }
+  const lines: string[] = [
+    isRaw
+      ? recompute
+        ? "  Buckets use **recomputed** raw Φ pay % (before calibration)."
+        : "  Buckets use **logged** raw model pay %."
+      : recompute
+        ? "  Buckets use **recomputed** display pay % (after calibration)."
+        : "  Buckets use **logged** display pay %.",
+    '  “Paid” = true final rank ≤ paid places.',
+    "",
+    `  ${"Band".padEnd(10)} ${"n".padStart(6)}  ${"Frac paid".padStart(10)}  ${"Mean pred".padStart(10)}  ${"Target ~".padStart(10)}`,
+  ];
+  for (const b of calibOrder) {
+    const { n, sumPaid, sumPredFrac } = calibBuckets.get(b)!;
+    const frac = n > 0 ? sumPaid / n : 0;
+    const meanPred = n > 0 ? sumPredFrac / n : 0;
+    const mid = bucketMidpointFraction(b);
+    lines.push(
+      `  ${b.padEnd(10)} ${String(n).padStart(6)}  ${frac.toFixed(3).padStart(10)}  ${meanPred.toFixed(3).padStart(10)}  ${mid.toFixed(3).padStart(10)}`,
+    );
+  }
+  const { eceMid, ecePred, n: eceN } = eceFromCalibBuckets(calibBuckets);
+  if (eceN > 0) {
+    lines.push("");
+    lines.push(`  ECE vs band midpoint:   ${(eceMid / eceN).toFixed(4)}`);
+    lines.push(`  ECE vs mean predicted: ${(ecePred / eceN).toFixed(4)}`);
+  }
+  printSection(title, lines);
+}
+
 function main(): void {
+  const recompute = process.argv.includes("--recompute");
   const { date, places, periodFilters } = parseEvalArgs();
   const trainFile = path.join(EVAL_DATA_DIR, "live-training", `${date}.jsonl`);
   const recoFile = path.join(EVAL_DATA_DIR, "recommendation-queries", `${date}.jsonl`);
@@ -97,9 +288,9 @@ function main(): void {
     else nSingle += 1;
   }
 
-  const cutoffAbsErrs: number[] = [];
-  const calibBuckets = new Map<string, { n: number; sumPaid: number }>();
-  const rawCalibBuckets = new Map<string, { n: number; sumPaid: number }>();
+  const byAlgo = new Map<string, ReturnType<typeof emptyAgg>>();
+  for (const id of ALGO_IDS) byAlgo.set(id, emptyAgg());
+
   const rankByWeight = new Map<string, { sumAbs: number; n: number }>();
   const rankByElapsed = new Map<string, { sumAbs: number; n: number }>();
 
@@ -116,11 +307,6 @@ function main(): void {
 
     for (const q of rows) {
       const w = q.input!.fishWeightLb!;
-      const mu = q.prediction?.projectedFinalBubbleLb;
-      if (mu != null && Number.isFinite(mu)) {
-        cutoffAbsErrs.push(Math.abs(mu - cutoff));
-      }
-
       const pred = q.prediction?.projectedRank;
       const actual = rankForWeight(finalWeights, w);
       const err = pred != null ? actual - pred : NaN;
@@ -132,30 +318,35 @@ function main(): void {
         rw.n += 1;
         rankByWeight.set(wb, rw);
 
-        const eb = elapsedBucket(q.prediction?.fractionWindowElapsed);
-        const re = rankByElapsed.get(eb) ?? { sumAbs: 0, n: 0 };
+        const ebRank = elapsedBucket(q.prediction?.fractionWindowElapsed);
+        const re = rankByElapsed.get(ebRank) ?? { sumAbs: 0, n: 0 };
         re.sumAbs += absE;
         re.n += 1;
-        rankByElapsed.set(eb, re);
+        rankByElapsed.set(ebRank, re);
       }
 
-      const payPct = q.prediction?.payoutLikelihoodPercent;
       const paidActually = rankForWeight(finalWeights, w) <= places ? 1 : 0;
-      if (payPct != null && Number.isFinite(payPct)) {
-        const bucket = payPercentBucket(payPct);
-        const c = calibBuckets.get(bucket) ?? { n: 0, sumPaid: 0 };
-        c.n += 1;
-        c.sumPaid += paidActually;
-        calibBuckets.set(bucket, c);
-      }
+      const eb = elapsedBucket(q.prediction?.fractionWindowElapsed);
 
-      const rawPayPct = q.prediction?.payoutLikelihoodPercentRaw;
-      if (rawPayPct != null && Number.isFinite(rawPayPct)) {
-        const rawBucket = payPercentBucket(rawPayPct);
-        const rc = rawCalibBuckets.get(rawBucket) ?? { n: 0, sumPaid: 0 };
-        rc.n += 1;
-        rc.sumPaid += paidActually;
-        rawCalibBuckets.set(rawBucket, rc);
+      for (const algoId of ALGO_IDS) {
+        const agg = byAlgo.get(algoId)!;
+        const { display, raw, muForCutoff } = resolvePayForAlgo(q, algoId, recompute, w, places);
+
+        if (muForCutoff != null && Number.isFinite(muForCutoff)) {
+          agg.cutoffAbsErrs.push(Math.abs(muForCutoff - cutoff));
+        }
+
+        if (display != null && Number.isFinite(display)) {
+          const bucket = payPercentBucket(display);
+          bumpBucket(agg.calibBuckets, bucket, paidActually, display / 100);
+          const sk = `${eb}${STRAT_SEP}${bucket}`;
+          bumpBucket(agg.stratifiedDisplay, sk, paidActually, display / 100);
+        }
+
+        if (raw != null && Number.isFinite(raw)) {
+          const rawBucket = payPercentBucket(raw);
+          bumpBucket(agg.rawCalibBuckets, rawBucket, paidActually, raw / 100);
+        }
       }
     }
   }
@@ -165,109 +356,79 @@ function main(): void {
     `  • live-training/${date}.jsonl  → final leaderboards (ground truth).`,
     `  • recommendation-queries/${date}.jsonl  → each “Get recommendation” query and what the model logged.`,
     `  • “Complete” periods only: at least ${places} fish so the true ${places}th-place cutoff is known.`,
-    "  • Ground truth per period: merged across snapshots (one row per fish = angler + weight; anglers can have multiple fish; duplicate keys use newest scrape) when",
+    "  • Ground truth per period: merged across snapshots (one row per fish = angler + weight; duplicate keys use newest scrape) when",
     "    rows have angler identity; otherwise one richest snapshot. See README for rank semantics.",
     `  • This run: ${nMerged} period(s) merged, ${nSingle} period(s) single-snapshot fallback.`,
-    "  • Larger n = more query rows matched to those periods (sweeps count as many rows).",
+    `  • Algorithms: ${ALGO_IDS.join(", ")} (see schema v4 \`algorithmPredictions\`; v3 logs fall back for normalBlend only).`,
+    recompute
+      ? "  • --recompute: normalBlend + normalBlendElapsedWide Φ from logged μ, σ; historical/live use logged fields where needed."
+      : "  • Pay % tables use **logged** values per algorithm row when present.",
   ]);
 
-  if (cutoffAbsErrs.length > 0) {
-    const mean = cutoffAbsErrs.reduce((a, b) => a + b, 0) / cutoffAbsErrs.length;
-    const sorted = [...cutoffAbsErrs].sort((a, b) => a - b);
-    const p50 = sorted[Math.floor(sorted.length * 0.5)] ?? 0;
-    const p90 = sorted[Math.floor(sorted.length * 0.9)] ?? 0;
-    printSection("Cutoff accuracy (logged μ vs true bubble weight)", [
-      "  For each row we compare projectedFinalBubbleLb (μ) to the true Nth-place weight on the final board.",
-      "  Lower mean / p50 / p90 = closer cutoff estimates (all in lb).",
-      "",
-      `  Rows: ${cutoffAbsErrs.length}`,
-      `  mean |μ − true cutoff|: ${mean.toFixed(3)} lb`,
-      `  p50:                  ${p50.toFixed(3)} lb`,
-      `  p90:                  ${p90.toFixed(3)} lb`,
-    ]);
-  } else {
-    printSection("Cutoff accuracy", [
-      "  No rows with projectedFinalBubbleLb — nothing to report here.",
-    ]);
+  for (const algoId of ALGO_IDS) {
+    const label = ALGO_LABEL_BY_ID[algoId] ?? algoId;
+    const agg = byAlgo.get(algoId)!;
+
+    if (agg.cutoffAbsErrs.length > 0) {
+      const mean = agg.cutoffAbsErrs.reduce((a, b) => a + b, 0) / agg.cutoffAbsErrs.length;
+      const sorted = [...agg.cutoffAbsErrs].sort((a, b) => a - b);
+      const p50 = sorted[Math.floor(sorted.length * 0.5)] ?? 0;
+      const p90 = sorted[Math.floor(sorted.length * 0.9)] ?? 0;
+      printSection(`Cutoff accuracy — ${algoId} (${label})`, [
+        "  |μ − true cutoff| using this algorithm’s logged μ (projectedFinalBubbleLb on its row, else primary).",
+        "",
+        `  Rows: ${agg.cutoffAbsErrs.length}`,
+        `  mean: ${mean.toFixed(3)} lb   p50: ${p50.toFixed(3)} lb   p90: ${p90.toFixed(3)} lb`,
+      ]);
+    } else {
+      printSection(`Cutoff accuracy — ${algoId} (${label})`, ["  No μ rows for this algorithm."]);
+    }
+
+    printCalibBlock(
+      `Pay % calibration (display) — ${algoId}`,
+      agg.calibBuckets,
+      recompute,
+      false,
+    );
+    printCalibBlock(`Pay % calibration (raw) — ${algoId}`, agg.rawCalibBuckets, recompute, true);
   }
 
-  const calibOrder = Array.from(calibBuckets.keys()).sort((a, b) => bucketSortKey(a) - bucketSortKey(b));
-
-  const calibLines: string[] = [
-    "  Each row: queries whose modeled pay % (rounded into a 10% band) fell in that band.",
-    '  “Paid” = that fish’s true final rank was within the paid places (rank ≤ places).',
-    "  Rough ideal: fraction paid ≈ midpoint of the band (e.g. 30–40% band → ~35% paid). Sweeps and",
-    "  which weights people ask about can skew buckets — use this for before/after comparisons.",
+  const elapsedOrder = ["0–25%", "25–50%", "50–75%", "75–100%", "unknown"];
+  const winnerLines: string[] = [
+    "  For each elapsed-window bucket, ECE vs **mean predicted** in that bucket (display %), lower is better.",
+    "  Only algorithms with n > 0 in that bucket are compared.",
     "",
-    `  ${"Band".padEnd(10)} ${"n".padStart(6)}  ${"Frac paid".padStart(10)}  ${"Target ~".padStart(10)}`,
   ];
-
-  for (const b of calibOrder) {
-    const { n, sumPaid } = calibBuckets.get(b)!;
-    const frac = n > 0 ? sumPaid / n : 0;
-    const mid = bucketMidpointFraction(b);
-    calibLines.push(
-      `  ${b.padEnd(10)} ${String(n).padStart(6)}  ${frac.toFixed(3).padStart(10)}  ${mid.toFixed(3).padStart(10)}`,
-    );
-  }
-
-  let ece = 0;
-  let eceN = 0;
-  for (const b of calibOrder) {
-    const { n, sumPaid } = calibBuckets.get(b)!;
-    if (n === 0) continue;
-    const mid = bucketMidpointFraction(b);
-    const frac = sumPaid / n;
-    ece += n * Math.abs(frac - mid);
-    eceN += n;
-  }
-  if (eceN > 0) {
-    const eceVal = ece / eceN;
-    calibLines.push("");
-    calibLines.push(
-      `  Approximate ECE: ${eceVal.toFixed(4)}  (weighted mean |fraction paid − band midpoint|; lower = better calibration).`,
-    );
-  }
-
-  printSection("Pay % calibration (outcomes vs predicted band)", calibLines);
-
-  const rawCalibOrder = Array.from(rawCalibBuckets.keys()).sort((a, b) => bucketSortKey(a) - bucketSortKey(b));
-  if (rawCalibOrder.length > 0) {
-    const rawLines: string[] = [
-      "  Same as above, but buckets use **raw** model pay % (payoutLikelihoodPercentRaw) when logged.",
-      "  Use this to judge the base model; the block above reflects **display** % after calibration.",
-      "",
-      `  ${"Band".padEnd(10)} ${"n".padStart(6)}  ${"Frac paid".padStart(10)}  ${"Target ~".padStart(10)}`,
-    ];
-    for (const b of rawCalibOrder) {
-      const { n, sumPaid } = rawCalibBuckets.get(b)!;
-      const frac = n > 0 ? sumPaid / n : 0;
-      const mid = bucketMidpointFraction(b);
-      rawLines.push(
-        `  ${b.padEnd(10)} ${String(n).padStart(6)}  ${frac.toFixed(3).padStart(10)}  ${mid.toFixed(3).padStart(10)}`,
+  for (const eb of elapsedOrder) {
+    let bestId: string | null = null;
+    let bestEce = Number.POSITIVE_INFINITY;
+    let bestN = 0;
+    const parts: string[] = [];
+    for (const algoId of ALGO_IDS) {
+      const strat = byAlgo.get(algoId)!.stratifiedDisplay;
+      const { ecePred, n } = eceFromStratifiedForElapsed(strat, eb);
+      if (n <= 0) continue;
+      const ece = ecePred / n;
+      parts.push(`${algoId}=${ece.toFixed(4)} (n=${n})`);
+      if (ece < bestEce) {
+        bestEce = ece;
+        bestId = algoId;
+        bestN = n;
+      }
+    }
+    if (parts.length === 0) {
+      winnerLines.push(`  ${eb.padEnd(12)}  (no display-bucket data)`);
+    } else {
+      winnerLines.push(
+        `  ${eb.padEnd(12)}  best: ${bestId ?? "?"}  ECE=${(bestEce === Number.POSITIVE_INFINITY ? 0 : bestEce).toFixed(4)} (n=${bestN})   [${parts.join("  ")}]`,
       );
     }
-    let rawEce = 0;
-    let rawEceN = 0;
-    for (const b of rawCalibOrder) {
-      const { n, sumPaid } = rawCalibBuckets.get(b)!;
-      if (n === 0) continue;
-      const mid = bucketMidpointFraction(b);
-      const frac = sumPaid / n;
-      rawEce += n * Math.abs(frac - mid);
-      rawEceN += n;
-    }
-    if (rawEceN > 0) {
-      rawLines.push("");
-      rawLines.push(`  Approximate ECE (raw): ${(rawEce / rawEceN).toFixed(4)}`);
-    }
-    printSection("Pay % calibration — raw model % (when logged)", rawLines);
   }
+  printSection("Winner by elapsed bucket (lowest ECE vs mean pred, display %)", winnerLines);
 
   const rankWeightLines: string[] = [
     "  Compares logged projectedRank to the true rank from the final board for the same fish weight.",
     "  Mean |error| = average number of rank slots wrong. Lower is better.",
-    "  Ranks are often noisiest in the ~3.5–4.5 lb “bubble” range.",
     "",
   ];
   for (const wb of ["<3", "3–3.5", "3.5–4", "4–4.5", "≥4.5"]) {
@@ -282,10 +443,9 @@ function main(): void {
 
   const rankElapsedLines: string[] = [
     "  fractionWindowElapsed = how far through the payout window the query was (0 = start, 1 = end).",
-    "  Early in the window, rank estimates are usually noisier than late.",
     "",
   ];
-  for (const eb of ["0–25%", "25–50%", "50–75%", "75–100%", "unknown"]) {
+  for (const eb of elapsedOrder) {
     const r = rankByElapsed.get(eb);
     if (r && r.n > 0) {
       rankElapsedLines.push(
@@ -296,7 +456,7 @@ function main(): void {
   printSection("Rank error by time in window", rankElapsedLines);
 
   console.log(
-    "Tip: Re-run with the same --date after model changes; lower cutoff error and ECE usually mean better pay/cutoff behavior.",
+    "Tip: Use --recompute to refresh normalBlend / normalBlendElapsedWide from logged μ, σ without re-capturing JSONL.",
   );
 }
 

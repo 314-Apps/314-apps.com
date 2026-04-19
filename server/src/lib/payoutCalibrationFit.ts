@@ -2,7 +2,12 @@
  * Fit monotonic piecewise-linear payout calibration from (raw %, paid?) samples.
  * Used by `fit-payout-calibration.ts`; knots feed `payout-calibration.json`.
  */
-import type { PayoutCalibrationFile } from "./payoutCalibration.js";
+import type {
+  ElapsedCalibrationBucketKey,
+  PayoutCalibrationFile,
+  PayoutCalibrationFileV2,
+} from "./payoutCalibration.js";
+import { fractionElapsedToBucketKey } from "./payoutCalibration.js";
 
 const BIN_COUNT = 10;
 
@@ -58,6 +63,12 @@ export function poolAdjacentViolators(y: number[], w: number[]): number[] {
 }
 
 export type PayCalibrationSample = { rawPercent: number; paid: boolean };
+
+export type PayCalibrationSampleWithElapsed = PayCalibrationSample & {
+  fractionElapsed?: number | null;
+};
+
+const ALL_BUCKET_KEYS: ElapsedCalibrationBucketKey[] = ["0-25", "25-50", "50-75", "75-100"];
 
 /**
  * Build calibration knots [raw, display] in [0,100] from labeled samples.
@@ -180,4 +191,67 @@ function identityKnots(): [number, number][] {
     [0, 0],
     [100, 100],
   ];
+}
+
+/**
+ * Build v2 calibration: pooled `default` knots plus optional per elapsed-bucket fits.
+ * Buckets with fewer than `minPerBucket` samples reuse `default.knots`.
+ */
+export function buildCalibrationFileV2FromSamples(
+  samples: PayCalibrationSampleWithElapsed[],
+  options?: { minSamplesTotal?: number; minPerBucket?: number },
+): {
+  file: PayoutCalibrationFileV2;
+  binCounts: number[];
+  binRatesRaw: number[];
+  binRatesIso: number[];
+  perBucketSampleCounts: Record<ElapsedCalibrationBucketKey, number>;
+} {
+  const minTotal = options?.minSamplesTotal ?? 30;
+  const minPerBucket = options?.minPerBucket ?? 5;
+
+  const pooled: PayCalibrationSample[] = samples.map(({ rawPercent, paid }) => ({
+    rawPercent,
+    paid,
+  }));
+  const { file: v1file, binCounts, binRatesRaw, binRatesIso } = buildCalibrationKnotsFromSamples(
+    pooled,
+    { minSamplesTotal: minTotal },
+  );
+  const defaultKnots = v1file.knots.length > 0 ? v1file.knots : identityKnots();
+
+  const perBucketSampleCounts = {
+    "0-25": 0,
+    "25-50": 0,
+    "50-75": 0,
+    "75-100": 0,
+  } as Record<ElapsedCalibrationBucketKey, number>;
+
+  const byElapsedBucket: PayoutCalibrationFileV2["byElapsedBucket"] = {};
+
+  for (const key of ALL_BUCKET_KEYS) {
+    const sub = samples.filter((s) => fractionElapsedToBucketKey(s.fractionElapsed) === key);
+    perBucketSampleCounts[key] = sub.length;
+    if (sub.length >= minPerBucket) {
+      const built = buildCalibrationKnotsFromSamples(
+        sub.map(({ rawPercent, paid }) => ({ rawPercent, paid })),
+        { minSamplesTotal: minPerBucket },
+      );
+      byElapsedBucket[key] = { knots: built.file.knots };
+    } else {
+      byElapsedBucket[key] = { knots: [...defaultKnots] };
+    }
+  }
+
+  return {
+    file: {
+      version: 2,
+      default: { knots: [...defaultKnots] },
+      byElapsedBucket,
+    },
+    binCounts,
+    binRatesRaw,
+    binRatesIso,
+    perBucketSampleCounts,
+  };
 }

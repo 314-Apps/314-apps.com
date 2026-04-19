@@ -811,6 +811,7 @@ function renderLikelihood(r, opts = {}) {
 
   if (!r || (r.payoutLikelihoodPercent == null && !r.payoutLikelihoodDetail)) {
     wrap.hidden = true;
+    renderShadowAlgorithms(null);
     return;
   }
 
@@ -882,6 +883,59 @@ function renderLikelihood(r, opts = {}) {
     );
   }
   meta.textContent = metaBits.join(" ");
+  renderShadowAlgorithms(r);
+}
+
+function escAttr(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+function renderShadowAlgorithms(r) {
+  const wrap = el("recoShadowAlgosWrap");
+  const tbody = el("recoShadowAlgosTbody");
+  if (!wrap || !tbody) return;
+  if (!r || !Array.isArray(r.algorithmPredictions) || r.algorithmPredictions.length === 0) {
+    wrap.hidden = true;
+    tbody.innerHTML = "";
+    return;
+  }
+  wrap.hidden = false;
+  const primary = r.algorithmPredictions.find((p) => p.primary) ?? r.algorithmPredictions[0];
+  const primaryDisp =
+    primary && primary.displayPercent != null && Number.isFinite(primary.displayPercent)
+      ? primary.displayPercent
+      : r.payoutLikelihoodPercent != null && Number.isFinite(r.payoutLikelihoodPercent)
+        ? r.payoutLikelihoodPercent
+        : null;
+
+  const rows = r.algorithmPredictions.map((a) => {
+    const label = a.label || a.id || "—";
+    const disp = a.displayPercent != null && Number.isFinite(a.displayPercent) ? `${a.displayPercent}%` : "—";
+    const raw = a.rawPercent != null && Number.isFinite(a.rawPercent) ? `${a.rawPercent}%` : "—";
+    let delta = "—";
+    if (
+      primaryDisp != null &&
+      a.displayPercent != null &&
+      Number.isFinite(primaryDisp) &&
+      Number.isFinite(a.displayPercent)
+    ) {
+      const d = a.displayPercent - primaryDisp;
+      delta = (d >= 0 ? "+" : "") + String(d);
+    }
+    const mu = a.projectedFinalBubbleLb;
+    const sig = a.projectedFinalBubbleSigmaLb;
+    const mus =
+      mu != null && sig != null && Number.isFinite(mu) && Number.isFinite(sig)
+        ? `μ=${Number(mu).toFixed(2)} lb, σ=${Number(sig).toFixed(2)} lb`
+        : "";
+    const tip = [mus, a.detail].filter(Boolean).join(" — ");
+    const cls = a.primary ? "is-primary" : "";
+    return `<tr class="${cls}" title="${escAttr(tip || label)}"><td>${escAttr(label)}</td><td>${escAttr(disp)}</td><td>${escAttr(raw)}</td><td>${escAttr(delta)}</td></tr>`;
+  });
+  tbody.innerHTML = rows.join("");
 }
 
 function formatLeadTime(mins) {

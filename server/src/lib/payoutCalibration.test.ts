@@ -5,7 +5,13 @@ import {
   inverseCalibratePayoutPercent,
 } from "./payoutCalibration.js";
 
-test("identity calibration round-trips", () => {
-  assert.equal(calibratePayoutPercent(37), 37);
-  assert.equal(inverseCalibratePayoutPercent(37), 37);
+test("calibrate maps raw endpoints through loaded knots", () => {
+  assert.equal(calibratePayoutPercent(0), 0);
+  assert.equal(calibratePayoutPercent(100), 100);
+});
+
+test("inverseCalibratePayoutPercent returns finite raw in valid range", () => {
+  const r = inverseCalibratePayoutPercent(50);
+  assert.ok(Number.isFinite(r));
+  assert.ok(r >= 0 && r <= 100);
 });

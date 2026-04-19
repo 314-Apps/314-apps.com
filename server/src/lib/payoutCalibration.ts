@@ -1,34 +1,60 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { normalPpf } from "./payoutProbability.js";
+import { weightAtPayoutLikelihoodPercent } from "./payoutProbability.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CAL_PATH = path.join(__dirname, "..", "..", "data", "payout-calibration.json");
 
+/** v1 on-disk: top-level `knots`. */
 export interface PayoutCalibrationFile {
   version: number;
   /** Monotonic knots [rawPercent, calibratedPercent] in [0,100], sorted by raw. */
   knots: [number, number][];
 }
 
-let cached: PayoutCalibrationFile | undefined;
+export type ElapsedCalibrationBucketKey = "0-25" | "25-50" | "50-75" | "75-100";
 
-function loadCalibration(): PayoutCalibrationFile {
-  if (cached !== undefined) return cached;
-  try {
-    const raw = readFileSync(CAL_PATH, "utf8");
-    const parsed = JSON.parse(raw) as PayoutCalibrationFile;
-    if (!Array.isArray(parsed.knots) || parsed.knots.length === 0) {
-      cached = { version: 1, knots: identityKnots() };
-    } else {
-      cached = parsed;
-    }
-    return cached;
-  } catch {
-    cached = { version: 1, knots: identityKnots() };
-    return cached;
-  }
+export interface PayoutCalibrationBucketSlice {
+  knots: [number, number][];
+}
+
+/** v2 on-disk: default knots + optional per elapsed-fraction bucket. */
+export interface PayoutCalibrationFileV2 {
+  version: 2;
+  default: PayoutCalibrationBucketSlice;
+  byElapsedBucket?: Partial<Record<ElapsedCalibrationBucketKey, PayoutCalibrationBucketSlice>>;
+}
+
+export type PayoutCalibrationOnDisk = PayoutCalibrationFile | PayoutCalibrationFileV2;
+
+export interface CalibratePayoutPercentOptions {
+  /**
+   * When true and the loaded file has `byElapsedBucket` for this fraction’s bucket,
+   * use that slice’s knots; otherwise `default` knots from v2, or v1 top-level knots.
+   */
+  useElapsedBucket?: boolean;
+  /** Window fraction elapsed [0,1], from `SmartLikelihoodResult.fractionElapsed`. */
+  fractionElapsed?: number | null;
+}
+
+interface LoadedCalibration {
+  version: number;
+  defaultKnots: [number, number][];
+  byBucket: Partial<Record<ElapsedCalibrationBucketKey, [number, number][]>>;
+}
+
+let cached: LoadedCalibration | undefined;
+
+export function fractionElapsedToBucketKey(
+  f: number | undefined | null,
+): ElapsedCalibrationBucketKey | null {
+  if (f == null || !Number.isFinite(f)) return null;
+  const x = Math.max(0, Math.min(1, f));
+  if (x < 0.25) return "0-25";
+  if (x < 0.5) return "25-50";
+  if (x < 0.75) return "50-75";
+  return "75-100";
 }
 
 function identityKnots(): [number, number][] {
@@ -38,22 +64,95 @@ function identityKnots(): [number, number][] {
   ];
 }
 
+function normalizeKnots(k: unknown): [number, number][] {
+  if (!Array.isArray(k) || k.length === 0) return identityKnots();
+  const out: [number, number][] = [];
+  for (const pair of k) {
+    if (!Array.isArray(pair) || pair.length < 2) continue;
+    const a = Number(pair[0]);
+    const b = Number(pair[1]);
+    if (Number.isFinite(a) && Number.isFinite(b)) out.push([a, b]);
+  }
+  return out.length > 0 ? out : identityKnots();
+}
+
+function parseCalibrationFile(raw: string): LoadedCalibration {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw) as unknown;
+  } catch {
+    return { version: 1, defaultKnots: identityKnots(), byBucket: {} };
+  }
+  if (!parsed || typeof parsed !== "object") {
+    return { version: 1, defaultKnots: identityKnots(), byBucket: {} };
+  }
+  const o = parsed as Record<string, unknown>;
+  const ver = Number(o.version);
+
+  // v2: { version: 2, default: { knots }, byElapsedBucket?: { ... } }
+  if (ver >= 2 && o.default && typeof o.default === "object") {
+    const def = o.default as Record<string, unknown>;
+    const defaultKnots = normalizeKnots(def.knots);
+    const byBucket: Partial<Record<ElapsedCalibrationBucketKey, [number, number][]>> = {};
+    const be = o.byElapsedBucket;
+    if (be && typeof be === "object") {
+      for (const key of ["0-25", "25-50", "50-75", "75-100"] as ElapsedCalibrationBucketKey[]) {
+        const slice = (be as Record<string, unknown>)[key];
+        if (slice && typeof slice === "object") {
+          const knots = normalizeKnots((slice as Record<string, unknown>).knots);
+          if (knots.length > 0) byBucket[key] = knots;
+        }
+      }
+    }
+    return { version: 2, defaultKnots, byBucket };
+  }
+
+  // v1: { version: 1, knots: [...] } or legacy { knots }
+  const knots = normalizeKnots(o.knots);
+  return { version: 1, defaultKnots: knots, byBucket: {} };
+}
+
+function loadCalibration(): LoadedCalibration {
+  if (cached !== undefined) return cached;
+  try {
+    const raw = readFileSync(CAL_PATH, "utf8");
+    cached = parseCalibrationFile(raw);
+    return cached;
+  } catch {
+    cached = { version: 1, defaultKnots: identityKnots(), byBucket: {} };
+    return cached;
+  }
+}
+
+function pickKnots(opts?: CalibratePayoutPercentOptions): [number, number][] {
+  const loaded = loadCalibration();
+  if (opts?.useElapsedBucket === true) {
+    const key = fractionElapsedToBucketKey(opts.fractionElapsed ?? undefined);
+    const bk = key ? loaded.byBucket[key] : undefined;
+    if (bk && bk.length > 0) return bk;
+  }
+  return loaded.defaultKnots;
+}
+
 /** Piecewise linear map of raw model percent → displayed percent (0–100). */
-export function calibratePayoutPercent(rawPercent: number | null): number | null {
+export function calibratePayoutPercent(
+  rawPercent: number | null,
+  options?: CalibratePayoutPercentOptions,
+): number | null {
   if (rawPercent == null || !Number.isFinite(rawPercent)) return null;
   const x = Math.max(0, Math.min(100, rawPercent));
-  const { knots } = loadCalibration();
+  const knots = pickKnots(options);
   return Math.round(interp(x, knots));
 }
 
 /**
  * Inverse: displayed percent → raw model percent such that calibrate(raw) ≈ target.
- * Used for payout floor (same threshold on displayed scale).
+ * Uses **default** knots only (primary payout floor / scale ticks).
  */
 export function inverseCalibratePayoutPercent(displayPercent: number): number {
   const y = Math.max(0, Math.min(100, displayPercent));
-  const { knots } = loadCalibration();
-  const inv = invertKnots(knots);
+  const { defaultKnots } = loadCalibration();
+  const inv = invertKnots(defaultKnots);
   return interp(y, inv);
 }
 
@@ -95,10 +194,6 @@ export function resetPayoutCalibrationCache(): void {
   cached = undefined;
 }
 
-function clamp01p(p: number): number {
-  return Math.max(0.001, Math.min(0.999, p));
-}
-
 /**
  * Minimum fish weight (lb) where raw normal-CDF pay probability maps (after calibration)
  * to ~`thresholdDisplayPercent` on the displayed scale.
@@ -108,10 +203,6 @@ export function weightAtCalibratedPayoutLikelihoodPercent(
   sigma: number | null,
   thresholdDisplayPercent: number,
 ): number | null {
-  if (mu == null || sigma == null || !Number.isFinite(mu) || !Number.isFinite(sigma)) return null;
-  if (sigma <= 0) return null;
   const rawPercent = inverseCalibratePayoutPercent(thresholdDisplayPercent);
-  const p = clamp01p(rawPercent / 100);
-  const w = mu + sigma * normalPpf(p);
-  return Math.max(0, w);
+  return weightAtPayoutLikelihoodPercent(mu, sigma, rawPercent);
 }

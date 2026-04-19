@@ -1,0 +1,9 @@
+{
+  "_readme": "Tournament dates for Big Bass Bash at Lake of the Ozarks by year. Used by backfill-weather.ts and backfill-water-temp.ts. Each entry is an ordered pair of [Saturday, Sunday] ISO dates. Spring 2020 was cancelled (COVID); the 2020 historical stats come from the Fall 2020 event.",
+  "2020": ["2020-10-03", "2020-10-04"],
+  "2021": ["2021-04-17", "2021-04-18"],
+  "2022": ["2022-04-23", "2022-04-24"],
+  "2023": ["2023-04-15", "2023-04-16"],
+  "2024": ["2024-04-20", "2024-04-21"],
+  "2025": ["2025-04-12", "2025-04-13"]
+}

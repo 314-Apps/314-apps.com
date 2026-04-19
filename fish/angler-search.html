@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angler search — Big Bass Bash helper</title>
+    <meta name="description" content="Search captured tournament data for an angler and see every fish they weighed in, with station, payout window, and first-seen time.">
+    <link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+    <div class="container fish-container">
+        <div class="fish-hero">
+            <h1>Angler search</h1>
+            <p class="fish-hero-tag">Search captured <code>live-training/*.jsonl</code> across all days for every fish a name has weighed in.</p>
+        </div>
+
+        <section class="fish-card fish-card-form">
+            <h2>Find an angler</h2>
+            <p class="fish-meta">Case-insensitive substring match on the scraped name. Server must be running (same origin as this page).</p>
+            <div class="fish-form-row">
+                <label class="fish-field fish-field-lg">
+                    <span class="fish-field-label">Name</span>
+                    <input type="search" id="anglerQuery" name="anglerQuery" autocomplete="off" placeholder="e.g. Curtis">
+                </label>
+            </div>
+            <p id="anglerStatus" class="fish-meta" aria-live="polite"></p>
+        </section>
+
+        <div id="anglerResults" class="fish-angler-results" aria-live="polite"></div>
+
+        <div class="cta">
+            <p><a href="index.html">← Weigh-in helper</a> · <a href="training-leaderboards.html">Training leaderboards</a> · <a href="../index.html">314 Apps home</a></p>
+        </div>
+
+        <footer>
+            <p><a href="../privacy-policy.html">Privacy Policy</a> | <a href="../terms-of-service.html">Terms of Service</a></p>
+            <p>&copy; 2026 314 Apps. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="angler-search.js?v=1" type="module"></script>
+</body>
+</html>

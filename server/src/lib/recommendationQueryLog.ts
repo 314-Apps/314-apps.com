@@ -1,13 +1,14 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { AlgorithmPrediction } from "./algorithms/types.js";
 import type { RecommendationInput, RecommendationResult } from "./recommendation.js";
 
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const QUERIES_DIR = path.resolve(__dirnamePath, "..", "..", "data", "recommendation-queries");
 
-/** v2: floor fields; v3: `payoutLikelihoodPercentRaw` alongside calibrated `payoutLikelihoodPercent`. */
-const SCHEMA_VERSION = 3 as const;
+/** v2: floor fields; v3: raw %; v4: `algorithmPredictions` + `projectedRankExpected`. */
+const SCHEMA_VERSION = 4 as const;
 
 export interface RecommendationQueryRecord {
   schemaVersion: typeof SCHEMA_VERSION;
@@ -41,6 +42,7 @@ export interface RecommendationQueryRecord {
     /** Pre-calibration model percent (0–100), for offline calibration fits. */
     payoutLikelihoodPercentRaw: number | null;
     historicalOnlyPercent: number | null;
+    projectedRankExpected: number | null;
     projectedRank: number | null;
     projectedRankLow: number | null;
     projectedRankHigh: number | null;
@@ -71,6 +73,8 @@ export interface RecommendationQueryRecord {
     projectedRank: number | null;
     projectedFinalBubbleLb: number | null;
   }[];
+  /** Shadow algorithms for offline comparison (same query, multiple models). */
+  algorithmPredictions: AlgorithmPrediction[];
 }
 
 function buildRecord(
@@ -103,6 +107,7 @@ function buildRecord(
       payoutLikelihoodPercent: result.payoutLikelihoodPercent,
       payoutLikelihoodPercentRaw: result.payoutLikelihoodPercentRaw,
       historicalOnlyPercent: result.historicalOnlyPercent,
+      projectedRankExpected: result.projectedRankExpected,
       projectedRank: result.projectedRank,
       projectedRankLow: result.projectedRankLow,
       projectedRankHigh: result.projectedRankHigh,
@@ -131,6 +136,7 @@ function buildRecord(
       projectedRank: w.projectedRank,
       projectedFinalBubbleLb: w.projectedFinalBubbleLb,
     })),
+    algorithmPredictions: result.algorithmPredictions,
   };
 }
 

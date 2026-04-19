@@ -83,16 +83,19 @@ export function normalPpf(p: number): number {
  * Fish weight w* such that the modeled P(paid at window end) ≈ thresholdPercent,
  * using the same normal approximation as `estimatePayoutLikelihood` (cutoff ~ N(mu, sigma)).
  * Heavier fish → higher pay chance; w* is the weight at the threshold (fish below → lower chance).
+ * Uses the same σ widening as pay probability (`paySigmaMult`, default from env).
  */
 export function weightAtPayoutLikelihoodPercent(
   mu: number | null,
   sigma: number | null,
   thresholdPercent: number,
+  paySigmaMult: number = payProbabilitySigmaMultFromEnv(),
 ): number | null {
   if (mu == null || sigma == null || !Number.isFinite(mu) || !Number.isFinite(sigma)) return null;
   if (sigma <= 0) return null;
+  const sigmaEff = Math.max(sigma * paySigmaMult, 0.01);
   const p = clamp(thresholdPercent / 100, 0.001, 0.999);
-  const w = mu + sigma * normalPpf(p);
+  const w = mu + sigmaEff * normalPpf(p);
   return Math.max(0, w);
 }
 
@@ -157,6 +160,46 @@ export function mergeBubbleBlend(partial?: Partial<BubbleBlendParams>): BubbleBl
 
 export interface EstimatePayoutLikelihoodOptions {
   blend?: Partial<BubbleBlendParams>;
+  /**
+   * Multiplier on σ **only** for mapping fish weight → pay probability (Φ(z)).
+   * The normal model is often too tight vs empirical pay rates; values > 1 reduce overconfidence
+   * in the tails (fewer false 0% / 100%). Defaults to `PAYOUT_LIKELIHOOD_SIGMA_MULT` or 1.28.
+   * Does not change μ or the returned `projectedFinalBubbleSigmaLb` (rank / detail text unchanged).
+   */
+  payProbabilitySigmaMult?: number;
+}
+
+const DEFAULT_PAY_PROB_SIGMA_MULT = 1.28;
+
+/** Widen σ for pay CDF vs cutoff display σ (see `EstimatePayoutLikelihoodOptions.payProbabilitySigmaMult`). */
+export function payProbabilitySigmaMultFromEnv(): number {
+  const raw = process.env.PAYOUT_LIKELIHOOD_SIGMA_MULT;
+  if (raw === undefined || raw === "") return DEFAULT_PAY_PROB_SIGMA_MULT;
+  const n = Number.parseFloat(raw);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_PAY_PROB_SIGMA_MULT;
+}
+
+function resolvePayProbabilitySigmaMult(options?: EstimatePayoutLikelihoodOptions): number {
+  const o = options?.payProbabilitySigmaMult;
+  if (o != null && Number.isFinite(o) && o > 0) return o;
+  return payProbabilitySigmaMultFromEnv();
+}
+
+/**
+ * Raw 0–100 pay probability from posterior N(mu, sigma) on the cutoff (same Φ mapping as
+ * {@link estimatePayoutLikelihood}). Use for offline eval `--recompute` from logged μ/σ.
+ */
+export function payPercentFromPosterior(
+  fishWeightLb: number,
+  mu: number,
+  sigma: number,
+  options?: EstimatePayoutLikelihoodOptions,
+): number {
+  const paySigmaMult = resolvePayProbabilitySigmaMult(options);
+  const sigmaPay = Math.max(sigma * paySigmaMult, 0.01);
+  const z = (fishWeightLb - mu) / sigmaPay;
+  const prob = normalCdf(z);
+  return Math.round(clamp(prob, 0, 1) * 100);
 }
 
 /** Rank band widens when σ is high or the board is not yet full (conservative UX). */
@@ -199,6 +242,11 @@ export interface SmartLikelihoodResult {
   projectedFinalBubbleSigmaLb: number | null;
   /** Historical-only probability (no live board, no time weighting). */
   historicalOnlyPercent: number | null;
+  /**
+   * Expected final rank before rounding (1-based), from pooled/historical blend when available.
+   * Used by shadow algorithms (e.g. live empirical pay %).
+   */
+  projectedRankExpected: number | null;
   /** Expected final rank (1-based) at window close. */
   projectedRank: number | null;
   /** ±1 SD rank range; useful for uncertainty. */
@@ -241,6 +289,7 @@ function emptyResult(overrides: Partial<SmartLikelihoodResult> = {}): SmartLikel
     projectedFinalBubbleLb: null,
     projectedFinalBubbleSigmaLb: null,
     historicalOnlyPercent: null,
+    projectedRankExpected: null,
     projectedRank: null,
     projectedRankLow: null,
     projectedRankHigh: null,
@@ -456,10 +505,9 @@ export function estimatePayoutLikelihood(
     sigma *= mult;
   }
 
-  // P(fish > finalBubble) = 1 - Φ((mu - fish) / sigma) = Φ((fish - mu) / sigma)
-  const z = (input.fishWeightLb - mu) / Math.max(sigma, 0.01);
-  const prob = normalCdf(z);
-  const percent = Math.round(clamp(prob, 0, 1) * 100);
+  // P(fish > finalBubble) = Φ((fish - mu) / σ_pay). Use widened σ for CDF only — the normal cutoff
+  // model is typically too tight vs realized pay rates (empirical calibration / ECE).
+  const percent = payPercentFromPosterior(input.fishWeightLb, mu, sigma, options);
 
   // ---- Projected rank ----------------------------------------------------
   const currentWeights = input.currentWeightsLb ?? [];
@@ -470,6 +518,7 @@ export function estimatePayoutLikelihood(
   const byYear = row?.byYear ?? [];
   const avgFinal = row?.avgFinalRowCount ?? null;
 
+  let projectedRankExpected: number | null = null;
   let projectedRank: number | null = null;
   let projectedRankLow: number | null = null;
   let projectedRankHigh: number | null = null;
@@ -493,6 +542,7 @@ export function estimatePayoutLikelihood(
     );
     const expectedAbove = wLive * liveBasedAboveExpected + (1 - wLive) * histBasedAboveExpected;
     const projected = 1 + expectedAbove;
+    projectedRankExpected = projected;
 
     // Variance: binomial on "remaining" + residual historical year-to-year variance.
     const binomVar = expectedRemaining * pAbove * (1 - pAbove);
@@ -516,6 +566,7 @@ export function estimatePayoutLikelihood(
   } else if (currentWeights.length > 0) {
     // No historical distribution: project only from the live board as a lower bound.
     projectedRank = Math.max(1, aboveNow + 1);
+    projectedRankExpected = projectedRank;
     const pad = !boardFull ? 3 : sigma > RANK_UNSTABLE_SIGMA_LB ? 2 : 0;
     projectedRankLow = Math.max(1, projectedRank - pad);
     projectedRankHigh = projectedRank + pad;
@@ -578,6 +629,7 @@ export function estimatePayoutLikelihood(
     projectedFinalBubbleLb: mu,
     projectedFinalBubbleSigmaLb: sigma,
     historicalOnlyPercent: histOnly,
+    projectedRankExpected,
     projectedRank,
     projectedRankLow,
     projectedRankHigh,

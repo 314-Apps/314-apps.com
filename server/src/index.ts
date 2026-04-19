@@ -20,6 +20,7 @@ import {
   saveRuntimeSettings,
 } from "./lib/runtimeSettings.js";
 import { maybeAppendTrainingSnapshot, trainingDataDirectory } from "./lib/trainingCapture.js";
+import { searchAnglers } from "./lib/anglerSearch.js";
 import {
   appendRecommendationQueryLog,
   recommendationQueriesDirectory,
@@ -42,6 +43,7 @@ import {
   computeWeighStationStats,
   loadWeighStationLocations,
 } from "./lib/weighStationStats.js";
+import { startWeatherCollector } from "./lib/weatherCollector.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
@@ -365,6 +367,31 @@ app.get("/api/weigh-station-stats", (req, res) => {
   });
 });
 
+/**
+ * Case-insensitive substring search for anglers across all captured training snapshots.
+ * Query: `?q=<text>&limit=<n>` (limit default 25). Returns each matching angler with every unique
+ * fish they have weighed in (earliest snapshot wins) plus the payout window label and first-seen time.
+ */
+app.get("/api/anglers/search", (req, res) => {
+  const q = String(req.query.q ?? "").trim();
+  if (q.length === 0) {
+    res.status(400).json({ error: "Query parameter q is required." });
+    return;
+  }
+  const limitRaw = req.query.limit;
+  let limit: number | undefined;
+  if (limitRaw != null && String(limitRaw).trim() !== "") {
+    const n = Number(limitRaw);
+    if (!Number.isFinite(n) || n <= 0) {
+      res.status(400).json({ error: "Optional limit must be a positive number." });
+      return;
+    }
+    limit = Math.floor(n);
+  }
+  const results = searchAnglers({ q, limit });
+  res.json({ query: q, count: results.length, results });
+});
+
 app.get("/api/payout-status", (_req, res) => {
   const now = mockMode ? getMockSimulatedDate() : new Date();
   const active = getActiveWindow(now);
@@ -585,5 +612,8 @@ app.listen(PORT, () => {
     console.log(
       `[leaderboard] auto-scrape every ${AUTO_SCRAPE_INTERVAL_MS}ms (set AUTO_SCRAPE_ENABLED=false to disable)`,
     );
+  }
+  if (!mockMode) {
+    startWeatherCollector();
   }
 });
