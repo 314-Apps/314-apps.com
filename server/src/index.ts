@@ -271,7 +271,7 @@ app.post("/api/settings", (req, res) => {
 });
 
 /**
- * Reconstructed leaderboards from `server/data/live-training/{date}.jsonl` (merged by angler when possible).
+ * Reconstructed leaderboards from `server/data/live-training/{date}.jsonl` (merged by angler + fish weight when possible).
  * Query: `?date=YYYY-MM-DD`
  */
 app.get("/api/training-leaderboards", (req, res) => {

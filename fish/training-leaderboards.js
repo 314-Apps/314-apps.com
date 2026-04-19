@@ -38,7 +38,7 @@ function periodSummaryBadge(p) {
 function renderPeriod(p, placesN) {
   const gt =
     p.groundTruth === "merged"
-      ? "Merged (all snapshots, one row per angler, latest weight)"
+      ? "Merged (all snapshots; one row per fish; same angler can have multiple; duplicate row = newest scrape)"
       : p.groundTruth === "single_snapshot"
         ? "Single snapshot (richest scrape — identity missing for merge)"
         : "No captures for this window";

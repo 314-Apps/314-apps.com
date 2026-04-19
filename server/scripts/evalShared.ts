@@ -3,10 +3,10 @@
  * Used by compare-reco-to-final.ts and evaluate-predictions.ts.
  *
  * Ground truth weights per pay period:
- * - **Merged (preferred):** union of all fish across snapshots, deduped by angler identity
- *   (`anglerKey` or normalized `name` + `weighStation`, same idea as `trainingCapture.ts`).
- *   Latest snapshot wins per angler when weights change. Produces a sorted multiset for
- *   `rankForWeight` / cutoff when every row has identity.
+ * - **Merged (preferred):** union of all fish across snapshots, deduped by **angler + fish weight**
+ *   (same idea as `fishEntryKey` in `trainingCapture.ts`: one row per distinct weighed fish).
+ *   Anglers may have **multiple** fish; only duplicate rows (same angler+weight seen again) collapse to the
+ *   newer snapshot. Produces a sorted multiset for `rankForWeight` / cutoff when every row has angler identity.
  * - **Single snapshot (fallback):** richest single scrape (≥ `places` rows), tie-break by
  *   latest `fetchedAtMs` — used when any row lacks angler identity.
  *
@@ -17,6 +17,11 @@
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  canonicalFishWeightLb,
+  normalizeFishWeightForEntryKey,
+} from "../src/lib/fishEntryKeyUtils.js";
+import { displayWeighStationFromRaw } from "../src/lib/weighStationNormalize.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const EVAL_DATA_DIR = path.join(__dirname, "..", "data");
@@ -156,9 +161,29 @@ function rowAnglerIdentity(row: TrainingRow): string | null {
   return normalizeAnglerKey(row.name, row.weighStation);
 }
 
+/** Stable key for one weighed fish: angler identity + rounded weight (matches `fishEntryKey` in `trainingCapture.ts`). */
+function fishMergeKey(row: TrainingRow): string | null {
+  const w = row.weightLb;
+  if (w == null || !Number.isFinite(w)) return null;
+  const id = rowAnglerIdentity(row);
+  if (id == null) return null;
+  return `${id}|${normalizeFishWeightForEntryKey(w)}`;
+}
+
+/** Same as `fishMergeKey`, but for single-snapshot fallback rows without identity use a per-row synthetic key so we do not drop them. */
+function fishMergeKeySingleSnapshot(row: TrainingRow, rowIndex: number): string | null {
+  const w = row.weightLb;
+  if (w == null || !Number.isFinite(w)) return null;
+  const id = rowAnglerIdentity(row);
+  const wk = normalizeFishWeightForEntryKey(w);
+  if (id != null) return `${id}|${wk}`;
+  return `__noangler__|${rowIndex}|${wk}`;
+}
+
 /**
- * Union of all fish across snapshots for this window, one weight per angler (latest snapshot wins).
- * Returns `null` if any row with a valid weight lacks angler identity, or if unique anglers < `places`.
+ * Union of all fish across snapshots for this window, one row per distinct fish (angler+weight).
+ * Multiple fish per angler are kept; when the same key appears in a later snapshot, that row wins.
+ * Returns `null` if any row with a valid weight lacks angler identity, or if unique fish entries < `places`.
  */
 export function mergedWeightsForPeriod(
   snaps: TrainingSnap[],
@@ -167,7 +192,7 @@ export function mergedWeightsForPeriod(
   places: number,
 ): { weights: number[]; rowCount: number; fetchedAtMs: number } | null {
   const ordered = [...snaps].sort((a, b) => snapFetchedMs(a) - snapFetchedMs(b));
-  const byAngler = new Map<string, { weightLb: number; fetchedAtMs: number }>();
+  const byFish = new Map<string, { weightLb: number; fetchedAtMs: number }>();
 
   for (const snap of ordered) {
     const p = periodForWindow(snap, day, windowId);
@@ -176,14 +201,14 @@ export function mergedWeightsForPeriod(
     for (const row of p.rows) {
       const w = row.weightLb;
       if (w == null || !Number.isFinite(w)) continue;
-      const id = rowAnglerIdentity(row);
-      if (id == null) return null;
-      byAngler.set(id, { weightLb: w, fetchedAtMs: ms });
+      const fk = fishMergeKey(row);
+      if (fk == null) return null;
+      byFish.set(fk, { weightLb: canonicalFishWeightLb(w), fetchedAtMs: ms });
     }
   }
 
-  if (byAngler.size < places) return null;
-  const weights = Array.from(byAngler.values())
+  if (byFish.size < places) return null;
+  const weights = Array.from(byFish.values())
     .map((x) => x.weightLb)
     .sort((a, b) => b - a);
   const fetchedAtMs = Math.max(0, ...snaps.map(snapFetchedMs));
@@ -269,7 +294,7 @@ function discoverCompletePeriodSingleSnapshot(
 }
 
 /**
- * For each pay period: **merged** ground truth (all snapshots, dedupe by angler) when possible;
+ * For each pay period: **merged** ground truth (all snapshots, dedupe by angler + fish weight) when possible;
  * else **single_snapshot** (richest scrape, same as historical behavior).
  */
 export function discoverCompletePeriods(
@@ -349,7 +374,7 @@ function finalizeDisplayEntries(
 }
 
 /**
- * Merge all snapshots by angler; fails if any weighted row lacks identity (same rules as eval merge).
+ * Merge all snapshots by angler + fish weight; fails if any weighted row lacks identity (same rules as eval merge).
  */
 function tryMergedLeaderboardEntries(
   snaps: TrainingSnap[],
@@ -357,7 +382,7 @@ function tryMergedLeaderboardEntries(
   windowId: number,
 ): { entries: LeaderboardDisplayEntry[]; failedIdentity: boolean } {
   const ordered = [...snaps].sort((a, b) => snapFetchedMs(a) - snapFetchedMs(b));
-  const byAngler = new Map<
+  const byFish = new Map<
     string,
     { weightLb: number; name: string; weighStation: string; anglerKey: string }
   >();
@@ -368,20 +393,25 @@ function tryMergedLeaderboardEntries(
     for (const row of p.rows) {
       const w = row.weightLb;
       if (w == null || !Number.isFinite(w)) continue;
-      const id = rowAnglerIdentity(row);
-      if (id == null) return { entries: [], failedIdentity: true };
+      const fk = fishMergeKey(row);
+      if (fk == null) return { entries: [], failedIdentity: true };
       const name = typeof row.name === "string" ? row.name : "";
-      const station = typeof row.weighStation === "string" ? row.weighStation : "";
+      const stationRaw = typeof row.weighStation === "string" ? row.weighStation : "";
       const ak =
         typeof row.anglerKey === "string" && row.anglerKey.trim() !== ""
           ? row.anglerKey.trim()
-          : id;
-      byAngler.set(id, { weightLb: w, name, weighStation: station, anglerKey: ak });
+          : rowAnglerIdentity(row) ?? fk;
+      byFish.set(fk, {
+        weightLb: canonicalFishWeightLb(w),
+        name,
+        weighStation: displayWeighStationFromRaw(stationRaw),
+        anglerKey: ak,
+      });
     }
   }
 
-  if (byAngler.size === 0) return { entries: [], failedIdentity: false };
-  return { entries: finalizeDisplayEntries(Array.from(byAngler.values())), failedIdentity: false };
+  if (byFish.size === 0) return { entries: [], failedIdentity: false };
+  return { entries: finalizeDisplayEntries(Array.from(byFish.values())), failedIdentity: false };
 }
 
 function singleSnapshotLeaderboardEntries(
@@ -406,25 +436,38 @@ function singleSnapshotLeaderboardEntries(
 
   if (!best) return null;
 
-  const raw: Array<{ weightLb: number; name: string; weighStation: string; anglerKey: string }> =
-    [];
+  const byFish: Map<
+    string,
+    { weightLb: number; name: string; weighStation: string; anglerKey: string }
+  > = new Map();
   best.period.rows!.forEach((row, i) => {
     const w = row.weightLb;
     if (w == null || !Number.isFinite(w)) return;
+    const fk = fishMergeKeySingleSnapshot(row, i);
+    if (fk == null) return;
+    if (byFish.has(fk)) return;
     const name = typeof row.name === "string" ? row.name : "—";
-    const station = typeof row.weighStation === "string" ? row.weighStation : "";
+    const stationRaw = typeof row.weighStation === "string" ? row.weighStation : "";
     const ak =
       typeof row.anglerKey === "string" && row.anglerKey.trim() !== ""
         ? row.anglerKey.trim()
         : rowAnglerIdentity(row) ?? `row-${i}`;
-    raw.push({ weightLb: w, name, weighStation: station, anglerKey: ak });
+    byFish.set(fk, {
+      weightLb: canonicalFishWeightLb(w),
+      name,
+      weighStation: displayWeighStationFromRaw(stationRaw),
+      anglerKey: ak,
+    });
   });
 
-  return { entries: finalizeDisplayEntries(raw), fetchedAtMs: snapFetchedMs(best.snap) };
+  return {
+    entries: finalizeDisplayEntries(Array.from(byFish.values())),
+    fetchedAtMs: snapFetchedMs(best.snap),
+  };
 }
 
 /**
- * Reconstructed leaderboard for one pay window (for UI). Prefers merged-by-angler data; else richest snapshot.
+ * Reconstructed leaderboard for one pay window (for UI). Prefers merged-by-angler+weight data; else richest snapshot.
  * Always returns a payload; empty `entries` means no training captures for that window.
  */
 export function periodLeaderboardForDisplay(

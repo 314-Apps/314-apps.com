@@ -1,7 +1,7 @@
 /**
  * Grid-search blend constants in `estimatePayoutLikelihood` against final cutoffs from
  * live-training JSONL (minimize mean squared error of μ vs true Nth-place weight).
- * True cutoffs use `discoverCompletePeriods` (merged across snapshots when angler identity exists).
+ * True cutoffs use `discoverCompletePeriods` (merged across snapshots by angler + fish weight when identity exists).
  *
  * Requires `data/live-training/{date}.jsonl` with `fetchedAtMs` on each snapshot.
  *

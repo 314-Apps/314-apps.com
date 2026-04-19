@@ -9,13 +9,26 @@
     <style>
         .fish-ws-map-wrap { height: min(70vh, 520px); width: 100%; border-radius: 10px; overflow: hidden; border: 1px solid #e6ebf1; margin-top: 10px; }
         .fish-ws-map-wrap .leaflet-container { font-family: inherit; }
+        .leaflet-tooltip.ws-map-station-label {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #0d5c2e;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #143d28;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+        }
+        .leaflet-tooltip.ws-map-station-label::before {
+            border-top-color: #0d5c2e;
+        }
     </style>
 </head>
 <body>
     <div class="container fish-container">
         <div class="fish-hero">
             <h1>Weigh stations on a map</h1>
-            <p class="fish-hero-tag">Circle size ∝ fish count (filtered). Add lat/lng in <code>server/data/weigh-station-locations.json</code> keyed by normalized station name.</p>
+            <p class="fish-hero-tag">Circle size ∝ fish count (filtered). Station names appear as labels on the map. Add lat/lng in <code>server/data/weigh-station-locations.json</code> keyed by normalized station name.</p>
         </div>
 
         <section class="fish-card fish-card-form">
@@ -71,6 +84,6 @@
         </footer>
     </div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script src="weigh-station-map.js?v=1" type="module"></script>
+    <script src="weigh-station-map.js?v=2" type="module"></script>
 </body>
 </html>

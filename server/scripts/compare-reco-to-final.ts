@@ -6,7 +6,8 @@
  *
  * Every complete period on the day is evaluated separately (e.g. Saturday W1, Saturday W2, …).
  * Ground truth for a period = **merged** across all snapshots when each row has angler identity
- * (`anglerKey` or name + weigh station): one weight per angler, latest snapshot wins. Otherwise
+ * (`anglerKey` or name + weigh station): one row per distinct fish (angler + weight); same angler can have
+ * multiple fish. If the same fish key repeats across snapshots, the newer snapshot wins. Otherwise
  * **single snapshot**: richest scrape for that period (≥ `places` fish), tie-break by latest
  * `fetchedAtMs` (same as historical behavior).
  *
@@ -113,7 +114,7 @@ function printPeriodTable(
 
   const gt =
     groundTruth === "merged"
-      ? "merged snapshots (deduped by angler)"
+      ? "merged snapshots (deduped by angler + weight)"
       : "single snapshot (richest scrape)";
   console.log(
     `=== ${key} (${wlabel}) — complete board: ${rowCount} fish (≥${places}), groundTruth=${gt}, fetchedAtMs=${fetchedAtMs} ===`,

@@ -97,7 +97,7 @@ async function loadMap() {
     hint.textContent =
       withGeo.length === 0
         ? "No stations have lat/lng yet. Edit server/data/weigh-station-locations.json using keys from the chart page (normalized station names)."
-        : "Circle radius scales with √count (min 6px). Click a circle for details.";
+        : "Circle radius scales with √count (min 6px). Station names are labeled on the map; click a circle for counts and weights.";
   }
 
   const ctx = ensureMap();
@@ -117,6 +117,16 @@ async function loadMap() {
       fillColor: "#5cb85c",
       fillOpacity: 0.55,
       weight: 2,
+    });
+    const stationTitle =
+      typeof s.locationLabel === "string" && s.locationLabel.trim() !== ""
+        ? s.locationLabel.trim()
+        : String(s.displayName ?? "");
+    m.bindTooltip(esc(stationTitle), {
+      permanent: true,
+      direction: "top",
+      offset: [0, -r - 4],
+      className: "ws-map-station-label",
     });
     m.bindPopup(
       `<strong>${esc(s.displayName)}</strong><br>${esc(String(s.count))} fish · ${esc(String(s.totalLb))} lb total<br>Max: ${esc(String(s.maxLb))} lb (${esc(s.topFishName)})`,

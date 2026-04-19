@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { LeaderboardRow, ParsedLeaderboard, PeriodSection } from "./types.js";
 import type { TournamentDayKind } from "./payoutWindows.js";
 import { computePayoutConsiderFloor, type PayoutConsiderFloorSnapshot } from "./recommendation.js";
+import { normalizeFishWeightForEntryKey } from "./fishEntryKeyUtils.js";
 
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const TRAINING_DIR = path.resolve(__dirnamePath, "..", "..", "data", "live-training");
@@ -25,7 +26,10 @@ export function anglerKey(name: string, weighStation: string): string {
 }
 
 function fishEntryKey(row: LeaderboardRow): string {
-  const w = row.weightLb != null && Number.isFinite(row.weightLb) ? String(row.weightLb) : "?";
+  const w =
+    row.weightLb != null && Number.isFinite(row.weightLb)
+      ? normalizeFishWeightForEntryKey(row.weightLb)
+      : "?";
   return `${anglerKey(row.name, row.weighStation)}|${w}`;
 }
 

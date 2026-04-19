@@ -1,12 +1,15 @@
 /**
  * Offline metrics: cutoff error vs projected μ, probability calibration buckets, stratified rank MAE.
  *
- * Ground-truth boards come from `discoverCompletePeriods` in evalShared (merged snapshots when
- * angler identity is present; else richest single snapshot). See README “Live training logs”.
+ * Ground-truth boards come from `discoverCompletePeriods` in evalShared (merged snapshots by fish =
+ * angler + weight when identity is present; else richest single snapshot). See README “Live training logs”.
  *
  * Usage:
  *   npx tsx server/scripts/evaluate-predictions.ts --date=2026-04-18
  *   npx tsx server/scripts/evaluate-predictions.ts --date=2026-04-18 --period=Saturday-W2
+ *
+ * When logs include `payoutLikelihoodPercentRaw`, a second calibration table compares outcomes to **raw**
+ * model bands (separate from displayed / post-calibration bands).
  */
 import path from "node:path";
 import {
@@ -96,6 +99,7 @@ function main(): void {
 
   const cutoffAbsErrs: number[] = [];
   const calibBuckets = new Map<string, { n: number; sumPaid: number }>();
+  const rawCalibBuckets = new Map<string, { n: number; sumPaid: number }>();
   const rankByWeight = new Map<string, { sumAbs: number; n: number }>();
   const rankByElapsed = new Map<string, { sumAbs: number; n: number }>();
 
@@ -136,13 +140,22 @@ function main(): void {
       }
 
       const payPct = q.prediction?.payoutLikelihoodPercent;
+      const paidActually = rankForWeight(finalWeights, w) <= places ? 1 : 0;
       if (payPct != null && Number.isFinite(payPct)) {
         const bucket = payPercentBucket(payPct);
-        const paidActually = rankForWeight(finalWeights, w) <= places ? 1 : 0;
         const c = calibBuckets.get(bucket) ?? { n: 0, sumPaid: 0 };
         c.n += 1;
         c.sumPaid += paidActually;
         calibBuckets.set(bucket, c);
+      }
+
+      const rawPayPct = q.prediction?.payoutLikelihoodPercentRaw;
+      if (rawPayPct != null && Number.isFinite(rawPayPct)) {
+        const rawBucket = payPercentBucket(rawPayPct);
+        const rc = rawCalibBuckets.get(rawBucket) ?? { n: 0, sumPaid: 0 };
+        rc.n += 1;
+        rc.sumPaid += paidActually;
+        rawCalibBuckets.set(rawBucket, rc);
       }
     }
   }
@@ -152,7 +165,7 @@ function main(): void {
     `  • live-training/${date}.jsonl  → final leaderboards (ground truth).`,
     `  • recommendation-queries/${date}.jsonl  → each “Get recommendation” query and what the model logged.`,
     `  • “Complete” periods only: at least ${places} fish so the true ${places}th-place cutoff is known.`,
-    "  • Ground truth per period: merged across all snapshots (one weight per angler, latest wins) when",
+    "  • Ground truth per period: merged across snapshots (one row per fish = angler + weight; anglers can have multiple fish; duplicate keys use newest scrape) when",
     "    rows have angler identity; otherwise one richest snapshot. See README for rank semantics.",
     `  • This run: ${nMerged} period(s) merged, ${nSingle} period(s) single-snapshot fallback.`,
     "  • Larger n = more query rows matched to those periods (sweeps count as many rows).",
@@ -217,6 +230,39 @@ function main(): void {
   }
 
   printSection("Pay % calibration (outcomes vs predicted band)", calibLines);
+
+  const rawCalibOrder = Array.from(rawCalibBuckets.keys()).sort((a, b) => bucketSortKey(a) - bucketSortKey(b));
+  if (rawCalibOrder.length > 0) {
+    const rawLines: string[] = [
+      "  Same as above, but buckets use **raw** model pay % (payoutLikelihoodPercentRaw) when logged.",
+      "  Use this to judge the base model; the block above reflects **display** % after calibration.",
+      "",
+      `  ${"Band".padEnd(10)} ${"n".padStart(6)}  ${"Frac paid".padStart(10)}  ${"Target ~".padStart(10)}`,
+    ];
+    for (const b of rawCalibOrder) {
+      const { n, sumPaid } = rawCalibBuckets.get(b)!;
+      const frac = n > 0 ? sumPaid / n : 0;
+      const mid = bucketMidpointFraction(b);
+      rawLines.push(
+        `  ${b.padEnd(10)} ${String(n).padStart(6)}  ${frac.toFixed(3).padStart(10)}  ${mid.toFixed(3).padStart(10)}`,
+      );
+    }
+    let rawEce = 0;
+    let rawEceN = 0;
+    for (const b of rawCalibOrder) {
+      const { n, sumPaid } = rawCalibBuckets.get(b)!;
+      if (n === 0) continue;
+      const mid = bucketMidpointFraction(b);
+      const frac = sumPaid / n;
+      rawEce += n * Math.abs(frac - mid);
+      rawEceN += n;
+    }
+    if (rawEceN > 0) {
+      rawLines.push("");
+      rawLines.push(`  Approximate ECE (raw): ${(rawEce / rawEceN).toFixed(4)}`);
+    }
+    printSection("Pay % calibration — raw model % (when logged)", rawLines);
+  }
 
   const rankWeightLines: string[] = [
     "  Compares logged projectedRank to the true rank from the final board for the same fish weight.",

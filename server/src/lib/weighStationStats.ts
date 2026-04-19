@@ -1,6 +1,6 @@
 /**
  * Aggregate fish counts and weights by weigh-in station from live-training JSONL,
- * using the same merged-by-angler leaderboard as the training UI ([`periodLeaderboardForDisplay`](../../scripts/evalShared.ts)).
+ * using the same merged-by-angler+weight leaderboard as the training UI ([`periodLeaderboardForDisplay`](../../scripts/evalShared.ts)).
  */
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
@@ -11,13 +11,17 @@ import {
   type PeriodKey,
   type TrainingSnap,
 } from "../../scripts/evalShared.js";
+import {
+  canonicalWeighStationKey,
+  formatWeighStationDisplay,
+} from "./weighStationNormalize.js";
 
 const __dirnamePath = path.dirname(fileURLToPath(import.meta.url));
 const WEIGH_STATION_LOCATIONS_FILE = path.join(__dirnamePath, "..", "..", "data", "weigh-station-locations.json");
 
+/** Alias for {@link canonicalWeighStationKey} (same bucket rules). */
 export function normalizeWeighStationKey(raw: string): string {
-  const s = raw.trim().toLowerCase().replace(/\s+/g, " ");
-  return s.length > 0 ? s : "__unknown__";
+  return canonicalWeighStationKey(raw);
 }
 
 export type WeighStationAgg = {
@@ -113,9 +117,8 @@ export function computeWeighStationStats(
       addedFromPeriod = true;
       totalFishInFilter += 1;
 
-      const stationKey = normalizeWeighStationKey(e.weighStation);
-      const displayName =
-        e.weighStation.trim().length > 0 ? e.weighStation.trim() : "Unknown station";
+      const stationKey = canonicalWeighStationKey(e.weighStation);
+      const displayName = formatWeighStationDisplay(stationKey);
 
       if (
         !overallTop ||
@@ -176,7 +179,7 @@ export function computeWeighStationStats(
 
 export type WeighStationLocation = { lat: number; lng: number; label?: string };
 
-/** Curated lat/lng keyed by `normalizeWeighStationKey` (see `server/data/weigh-station-locations.json`). */
+/** Curated lat/lng keyed by `canonicalWeighStationKey` (see `server/data/weigh-station-locations.json`). */
 export function loadWeighStationLocations(): Record<string, WeighStationLocation> {
   if (!existsSync(WEIGH_STATION_LOCATIONS_FILE)) return {};
   try {
@@ -189,11 +192,24 @@ export function loadWeighStationLocations(): Record<string, WeighStationLocation
       const lat = typeof o.lat === "number" ? o.lat : Number(o.lat);
       const lng = typeof o.lng === "number" ? o.lng : Number(o.lng);
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
-      out[k] = {
+      const canonK = canonicalWeighStationKey(k);
+      if (canonK === "__unknown__") continue;
+      out[canonK] = {
         lat,
         lng,
         label: typeof o.label === "string" ? o.label : undefined,
       };
+    }
+    const aliases = raw._aliases;
+    if (aliases && typeof aliases === "object" && !Array.isArray(aliases)) {
+      for (const [from, to] of Object.entries(aliases as Record<string, unknown>)) {
+        if (typeof to !== "string") continue;
+        const fromK = canonicalWeighStationKey(from);
+        const toK = canonicalWeighStationKey(to);
+        if (fromK === "__unknown__" || toK === "__unknown__") continue;
+        const loc = out[toK];
+        if (loc) out[fromK] = loc;
+      }
     }
     return out;
   } catch {

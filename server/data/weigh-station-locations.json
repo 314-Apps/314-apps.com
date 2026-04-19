@@ -1,3 +1,32 @@
 {
-  "_readme": "Keys must match normalized weigh-station strings (lowercase, trimmed, single spaces). Values: { \"lat\": number, \"lng\": number, \"label\": \"optional display\" }"
+  "_readme": "Keys are normalized like live data (weighStationNormalize.ts). Optional _aliases: { \"variant key\": \"target key\" } when a scrape still will not match.",
+  "_aliases": {
+    "ivy bend resort": "ivy bend resort & marina",
+    "alhonna resort": "alhonna resort & marina"
+  },
+  "ivy bend resort & marina": {
+    "lat": 38.20242,
+    "lng": -92.98428,
+    "label": "Ivy Bend Resort & Marina"
+  },
+  "point randall resort": {
+    "lat": 38.205421,
+    "lng": -92.664442,
+    "label": "Point Randall Resort"
+  },
+  "alhonna resort & marina": {
+    "lat": 38.199693,
+    "lng": -92.751841,
+    "label": "Alhonna Resort & Marina"
+  },
+  "pb#2": {
+    "lat": 38.115605,
+    "lng": -92.668627,
+    "label": "PB#2"
+  },
+  "red oak resort": {
+    "lat": 38.101891,
+    "lng": -92.791699,
+    "label": "Red Oak Resort"
+  }
 }
