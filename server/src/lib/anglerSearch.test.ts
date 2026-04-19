@@ -381,6 +381,95 @@ test("searchAnglers: limit caps the number of anglers returned", () => {
   }
 });
 
+test("searchAnglers: latestRank reflects the most recent snapshot that contained the fish", () => {
+  const t1 = ctMs("2026-04-18T07:05:00");
+  const t2 = ctMs("2026-04-18T07:30:00");
+  const t3 = ctMs("2026-04-18T08:00:00");
+  const dir = makeDir({
+    "2026-04-18.jsonl": [
+      {
+        fetchedAtMs: t1,
+        tournamentDay: "Saturday",
+        periods: [
+          {
+            day: "Saturday",
+            label: "6:30am-9am",
+            rows: [
+              { rank: "1", name: "Ian Curtis", weighStation: "Alhonna Resort", weightLb: 4.63 },
+            ],
+          },
+        ],
+      },
+      {
+        fetchedAtMs: t2,
+        tournamentDay: "Saturday",
+        periods: [
+          {
+            day: "Saturday",
+            label: "6:30am-9am",
+            rows: [
+              { rank: "1", name: "Other Person", weighStation: "Red Oak Resort", weightLb: 5.5 },
+              { rank: "2", name: "Ian Curtis", weighStation: "Alhonna Resort", weightLb: 4.63 },
+            ],
+          },
+        ],
+      },
+      {
+        fetchedAtMs: t3,
+        tournamentDay: "Saturday",
+        periods: [
+          {
+            day: "Saturday",
+            label: "6:30am-9am",
+            rows: [
+              { rank: "1", name: "Other Person", weighStation: "Red Oak Resort", weightLb: 5.5 },
+              { rank: "2", name: "Yet Another", weighStation: "Alhonna Resort", weightLb: 4.7 },
+              { rank: "3", name: "Ian Curtis", weighStation: "Alhonna Resort", weightLb: 4.63 },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+  try {
+    const hits = searchAnglers({ q: "curtis", dir });
+    assert.equal(hits.length, 1);
+    const f = hits[0]!.fish[0]!;
+    assert.equal(f.firstSeenAtMs, t1);
+    assert.equal(f.latestSeenAtMs, t3);
+    assert.equal(f.latestRank, 3);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("searchAnglers: non-numeric rank becomes null", () => {
+  const t = ctMs("2026-04-18T07:05:00");
+  const dir = makeDir({
+    "2026-04-18.jsonl": [
+      {
+        fetchedAtMs: t,
+        tournamentDay: "Saturday",
+        periods: [
+          {
+            day: "Saturday",
+            label: "6:30am-9am",
+            rows: [
+              { rank: "", name: "Ian Curtis", weighStation: "Alhonna Resort", weightLb: 4.63 },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+  try {
+    const hits = searchAnglers({ q: "curtis", dir });
+    assert.equal(hits[0]!.fish[0]!.latestRank, null);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("searchAnglers: returns Chicago-local firstSeenIso", () => {
   const t = ctMs("2026-04-18T07:05:00");
   const dir = makeDir({

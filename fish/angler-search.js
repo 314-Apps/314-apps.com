@@ -34,6 +34,9 @@ function fmtMsChicago(ms) {
 }
 
 function renderFishRow(f) {
+  const rank = typeof f.latestRank === "number" && Number.isFinite(f.latestRank)
+    ? `#${f.latestRank}`
+    : "—";
   const weight = f.weightLb != null ? `${Number(f.weightLb).toFixed(2)}` : esc(f.weightRaw || "—");
   const station = esc(f.weighStation || "—");
   const date = esc(f.tournamentDate || "—");
@@ -42,6 +45,7 @@ function renderFishRow(f) {
     ? esc(f.firstSeenIso)
     : esc(fmtMsChicago(f.firstSeenAtMs));
   return `<tr>
+    <td>${esc(rank)}</td>
     <td>${esc(weight)}</td>
     <td>${station}</td>
     <td>${date}</td>
@@ -64,6 +68,7 @@ function renderAnglerCard(a) {
       <table class="fish-table fish-angler-fish" aria-label="Fish for ${name}">
         <thead>
           <tr>
+            <th scope="col">Rank</th>
             <th scope="col">Weight (lb)</th>
             <th scope="col">Station</th>
             <th scope="col">Date</th>

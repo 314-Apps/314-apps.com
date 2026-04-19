@@ -32,6 +32,11 @@ export interface AnglerFishHit {
   periodLabel: string;
   firstSeenAtMs: number;
   firstSeenIso: string;
+  /** Rank within the payout window as of the most recent snapshot that still contained this fish. */
+  latestRank: number | null;
+  /** Timestamp of the snapshot the {@link latestRank} came from. */
+  latestSeenAtMs: number;
+  latestSeenIso: string;
 }
 
 export interface AnglerSearchHit {
@@ -66,6 +71,8 @@ interface FishAccumulator {
   periodDay: string;
   periodLabel: string;
   firstSeenAtMs: number;
+  latestSeenAtMs: number;
+  latestRank: number | null;
 }
 
 interface AnglerAccumulator {
@@ -133,6 +140,15 @@ export function searchAnglers(opts: SearchAnglersOptions): AnglerSearchHit[] {
               : weightLb != null
                 ? weightLb.toFixed(2)
                 : "";
+          const rankRaw = (row as { rank?: unknown }).rank;
+          const rankParsed =
+            typeof rankRaw === "number"
+              ? rankRaw
+              : typeof rankRaw === "string"
+                ? Number.parseInt(rankRaw, 10)
+                : NaN;
+          const rankNum =
+            Number.isFinite(rankParsed) && rankParsed > 0 ? rankParsed : null;
 
           let angler = anglers.get(anglerKey);
           if (!angler) {
@@ -146,7 +162,7 @@ export function searchAnglers(opts: SearchAnglersOptions): AnglerSearchHit[] {
           }
 
           const existing = angler.fishByEntryKey.get(fishEntryKey);
-          if (existing == null || fetchedAtMs < existing.firstSeenAtMs) {
+          if (existing == null) {
             angler.fishByEntryKey.set(fishEntryKey, {
               weightLb,
               weightRaw,
@@ -155,7 +171,22 @@ export function searchAnglers(opts: SearchAnglersOptions): AnglerSearchHit[] {
               periodDay,
               periodLabel,
               firstSeenAtMs: fetchedAtMs,
+              latestSeenAtMs: fetchedAtMs,
+              latestRank: rankNum,
             });
+          } else {
+            if (fetchedAtMs < existing.firstSeenAtMs) {
+              existing.firstSeenAtMs = fetchedAtMs;
+              existing.weighStation = stationDisplay;
+              existing.tournamentDate = date;
+              existing.periodDay = periodDay;
+              existing.periodLabel = periodLabel;
+              existing.weightRaw = weightRaw;
+            }
+            if (fetchedAtMs >= existing.latestSeenAtMs) {
+              existing.latestSeenAtMs = fetchedAtMs;
+              existing.latestRank = rankNum;
+            }
           }
         }
       }
@@ -177,6 +208,9 @@ export function searchAnglers(opts: SearchAnglersOptions): AnglerSearchHit[] {
         periodLabel: f.periodLabel,
         firstSeenAtMs: f.firstSeenAtMs,
         firstSeenIso: formatChicagoIso(f.firstSeenAtMs),
+        latestRank: f.latestRank,
+        latestSeenAtMs: f.latestSeenAtMs,
+        latestSeenIso: formatChicagoIso(f.latestSeenAtMs),
       });
     }
     fish.sort((a, b) => a.firstSeenAtMs - b.firstSeenAtMs);
