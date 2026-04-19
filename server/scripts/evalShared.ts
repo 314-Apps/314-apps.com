@@ -9,6 +9,9 @@
  *   newer snapshot. Produces a sorted multiset for `rankForWeight` / cutoff when every row has angler identity.
  * - **Single snapshot (fallback):** richest single scrape (≥ `places` rows), tie-break by
  *   latest `fetchedAtMs` — used when any row lacks angler identity.
+ * - **Tournament day filter:** rows are only read from period blocks whose scraped `day` matches the
+ *   snapshot’s real tournament day (`tournamentDay` field or `tournamentDayKind(fetchedAtMs)` in Chicago).
+ *   This avoids bogus Sunday slots when the site duplicates a late Saturday window under a “Sunday” heading.
  *
  * `rankForWeight` is 1 + count(weights strictly > w). That is the true ordinal for `w` iff
  * the weight multiset is complete for the period; tie-breaking may differ from published
@@ -22,6 +25,7 @@ import {
   normalizeFishWeightForEntryKey,
 } from "../src/lib/fishEntryKeyUtils.js";
 import { displayWeighStationFromRaw } from "../src/lib/weighStationNormalize.js";
+import { tournamentDayKind } from "../src/lib/payoutWindows.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const EVAL_DATA_DIR = path.join(__dirname, "..", "data");
@@ -49,6 +53,8 @@ export interface TrainingPeriod {
 export interface TrainingSnap {
   fetchedAtMs?: number;
   capturedAt?: string;
+  /** When set by training capture, restricts which `period.day` blocks apply (avoids bogus Sunday rows on Saturday scrapes). */
+  tournamentDay?: string | null;
   activeWindow?: { day?: string; windowId?: number } | null;
   periods?: TrainingPeriod[];
 }
@@ -126,11 +132,43 @@ export function normalizeAnglerKey(name: unknown, weighStation: unknown): string
   return `${n}|${s}`;
 }
 
+function snapFetchedMs(snap: TrainingSnap): number {
+  if (typeof snap.fetchedAtMs === "number" && Number.isFinite(snap.fetchedAtMs)) {
+    return snap.fetchedAtMs;
+  }
+  if (snap.capturedAt) {
+    const t = Date.parse(snap.capturedAt);
+    if (Number.isFinite(t)) return t;
+  }
+  return 0;
+}
+
+/**
+ * Calendar tournament day for this snapshot (Chicago). Used to ignore scraped period blocks whose
+ * `day` heading does not match (e.g. duplicate "Sunday" widgets showing Saturday late-window fish).
+ */
+export function effectiveSnapshotTournamentDay(snap: TrainingSnap): DayKind | null {
+  const raw = snap.tournamentDay;
+  if (typeof raw === "string") {
+    const u = raw.trim().toLowerCase();
+    if (u === "saturday") return "Saturday";
+    if (u === "sunday") return "Sunday";
+  }
+  const ms = snapFetchedMs(snap);
+  if (!Number.isFinite(ms) || ms <= 0) return null;
+  const k = tournamentDayKind(new Date(ms));
+  return k ?? null;
+}
+
 export function periodForWindow(
   snap: TrainingSnap,
   day: DayKind,
   windowId: number,
 ): TrainingPeriod | undefined {
+  const effective = effectiveSnapshotTournamentDay(snap);
+  if (effective != null && effective !== day) {
+    return undefined;
+  }
   const periods = snap.periods ?? [];
   return periods.find((x) => periodMatchesWindow(x, day, windowId));
 }
@@ -142,17 +180,6 @@ export function weightsForPeriod(snap: TrainingSnap, day: DayKind, windowId: num
     .map((r) => r.weightLb)
     .filter((w): w is number => w != null && Number.isFinite(w));
   return ws.sort((a, b) => b - a);
-}
-
-function snapFetchedMs(snap: TrainingSnap): number {
-  if (typeof snap.fetchedAtMs === "number" && Number.isFinite(snap.fetchedAtMs)) {
-    return snap.fetchedAtMs;
-  }
-  if (snap.capturedAt) {
-    const t = Date.parse(snap.capturedAt);
-    if (Number.isFinite(t)) return t;
-  }
-  return 0;
 }
 
 function rowAnglerIdentity(row: TrainingRow): string | null {
