@@ -84,18 +84,34 @@ export function normalPpf(p: number): number {
  * using the same normal approximation as `estimatePayoutLikelihood` (cutoff ~ N(mu, sigma)).
  * Heavier fish → higher pay chance; w* is the weight at the threshold (fish below → lower chance).
  * Uses the same σ widening as pay probability (`paySigmaMult`, default from env).
+ *
+ * When `lowerBoundLb` is supplied (e.g. the current Nth-place bubble once the board is full),
+ * the cutoff distribution is left-truncated at that value — the final cutoff can only stay
+ * the same or go up, so weights below the current bubble have 0% pay chance and w* is
+ * clamped to ≥ `lowerBoundLb`.
  */
 export function weightAtPayoutLikelihoodPercent(
   mu: number | null,
   sigma: number | null,
   thresholdPercent: number,
   paySigmaMult: number = payProbabilitySigmaMultFromEnv(),
+  lowerBoundLb?: number | null,
 ): number | null {
   if (mu == null || sigma == null || !Number.isFinite(mu) || !Number.isFinite(sigma)) return null;
   if (sigma <= 0) return null;
   const sigmaEff = Math.max(sigma * paySigmaMult, 0.01);
   const p = clamp(thresholdPercent / 100, 0.001, 0.999);
-  const w = mu + sigmaEff * normalPpf(p);
+  const hasLb = lowerBoundLb != null && Number.isFinite(lowerBoundLb);
+  let w: number;
+  if (hasLb) {
+    const a = normalCdf((lowerBoundLb! - mu) / sigmaEff);
+    // Truncated-normal inverse CDF: solve Φ((w-μ)/σ) = a + p·(1-a).
+    const target = clamp(a + p * (1 - a), 1e-9, 1 - 1e-9);
+    w = mu + sigmaEff * normalPpf(target);
+    w = Math.max(w, lowerBoundLb!);
+  } else {
+    w = mu + sigmaEff * normalPpf(p);
+  }
   return Math.max(0, w);
 }
 
@@ -127,6 +143,14 @@ export interface BubbleBlendParams {
   fullHistAgreementScale: number;
   fullHistAgreementDivSigMult: number;
   fullHistSigmaFloor: number;
+  /**
+   * Minutes-left threshold below which σ contracts toward 0 (no more fish can arrive once
+   * minutes-left is very small, so the live cutoff is essentially locked). At `minutesLeft`
+   * above this cap the tail scale is 1 (no contraction); at 0 it bottoms out at
+   * `tailSigmaScaleFloor` (kept non-zero to avoid a literal point mass).
+   */
+  tailMinutesLeftCap: number;
+  tailSigmaScaleFloor: number;
 }
 
 export const DEFAULT_BUBBLE_BLEND: BubbleBlendParams = {
@@ -152,6 +176,8 @@ export const DEFAULT_BUBBLE_BLEND: BubbleBlendParams = {
   fullHistAgreementScale: 0.5,
   fullHistAgreementDivSigMult: 2,
   fullHistSigmaFloor: 0.08,
+  tailMinutesLeftCap: 15,
+  tailSigmaScaleFloor: 0.15,
 };
 
 export function mergeBubbleBlend(partial?: Partial<BubbleBlendParams>): BubbleBlendParams {
@@ -167,6 +193,13 @@ export interface EstimatePayoutLikelihoodOptions {
    * Does not change μ or the returned `projectedFinalBubbleSigmaLb` (rank / detail text unchanged).
    */
   payProbabilitySigmaMult?: number;
+  /**
+   * Lower bound on the final cutoff (left-truncation point). When supplied, the pay-probability
+   * CDF is conditioned on `finalBubble ≥ lowerBoundLb`, so fish below this weight map to 0%.
+   * Passed through from `estimatePayoutLikelihood` when the board is already full at `cb`;
+   * callers using logged μ/σ can pass it explicitly.
+   */
+  lowerBoundLb?: number | null;
 }
 
 const DEFAULT_PAY_PROB_SIGMA_MULT = 1.28;
@@ -197,8 +230,18 @@ export function payPercentFromPosterior(
 ): number {
   const paySigmaMult = resolvePayProbabilitySigmaMult(options);
   const sigmaPay = Math.max(sigma * paySigmaMult, 0.01);
+  const lb = options?.lowerBoundLb;
+  const hasLb = lb != null && Number.isFinite(lb);
+  if (hasLb && fishWeightLb < (lb as number)) {
+    return 0;
+  }
   const z = (fishWeightLb - mu) / sigmaPay;
-  const prob = normalCdf(z);
+  let prob = normalCdf(z);
+  if (hasLb) {
+    const a = normalCdf(((lb as number) - mu) / sigmaPay);
+    const denom = 1 - a;
+    prob = denom > 1e-9 ? (prob - a) / denom : 1;
+  }
   return Math.round(clamp(prob, 0, 1) * 100);
 }
 
@@ -240,6 +283,13 @@ export interface SmartLikelihoodResult {
   projectedFinalBubbleLb: number | null;
   /** Posterior stddev around the projected final cutoff. */
   projectedFinalBubbleSigmaLb: number | null;
+  /**
+   * Lower bound on the final cutoff (set to `currentBubbleLb` once the board is full; `null`
+   * while the board is still filling). Downstream consumers that compute "weight at N% pay
+   * chance" should forward this so the truncated distribution is respected (fish below this
+   * weight can never be paid because the cutoff only goes up).
+   */
+  projectedFinalBubbleLowerBoundLb: number | null;
   /** Historical-only probability (no live board, no time weighting). */
   historicalOnlyPercent: number | null;
   /**
@@ -288,6 +338,7 @@ function emptyResult(overrides: Partial<SmartLikelihoodResult> = {}): SmartLikel
     percent: null,
     projectedFinalBubbleLb: null,
     projectedFinalBubbleSigmaLb: null,
+    projectedFinalBubbleLowerBoundLb: null,
     historicalOnlyPercent: null,
     projectedRankExpected: null,
     projectedRank: null,
@@ -496,7 +547,16 @@ export function estimatePayoutLikelihood(
       sigH *
       Math.sqrt(clamp(1 - b.fullHistSigmaElapsedCoeff * f, b.fullHistSigmaSqrtFloor, 1)) *
       agreementShrink;
-    sigma = Math.max(sigma, b.fullHistSigmaFloor);
+
+    // Near window close the cutoff is effectively locked — scale σ (and its floor) down with
+    // the remaining minutes so the upper ticks collapse toward cb instead of staying inflated
+    // by the static 0.08 floor.
+    const minutesLeft = Math.max(0, totalMin - elapsed);
+    const cap = Math.max(1, b.tailMinutesLeftCap);
+    const floorFrac = clamp(b.tailSigmaScaleFloor, 0, 1);
+    const tailScale = Math.sqrt(clamp(minutesLeft / cap, floorFrac, 1));
+    sigma *= tailScale;
+    sigma = Math.max(sigma, b.fullHistSigmaFloor * tailScale);
   }
 
   if (input.snapshotStale) {
@@ -505,9 +565,17 @@ export function estimatePayoutLikelihood(
     sigma *= mult;
   }
 
+  // Once the board is full, the final cutoff can only stay the same or go up — fish already
+  // on the board don't disappear. Pass the current bubble as a left-truncation point so fish
+  // below it never read > 0% and "weight at N% pay chance" inversions clamp to ≥ cb.
+  const lowerBoundLb = boardFull && cb != null ? cb : null;
+
   // P(fish > finalBubble) = Φ((fish - mu) / σ_pay). Use widened σ for CDF only — the normal cutoff
   // model is typically too tight vs realized pay rates (empirical calibration / ECE).
-  const percent = payPercentFromPosterior(input.fishWeightLb, mu, sigma, options);
+  const percent = payPercentFromPosterior(input.fishWeightLb, mu, sigma, {
+    ...options,
+    lowerBoundLb,
+  });
 
   // ---- Projected rank ----------------------------------------------------
   const currentWeights = input.currentWeightsLb ?? [];
@@ -628,6 +696,7 @@ export function estimatePayoutLikelihood(
     percent,
     projectedFinalBubbleLb: mu,
     projectedFinalBubbleSigmaLb: sigma,
+    projectedFinalBubbleLowerBoundLb: lowerBoundLb,
     historicalOnlyPercent: histOnly,
     projectedRankExpected,
     projectedRank,

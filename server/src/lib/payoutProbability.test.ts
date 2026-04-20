@@ -7,6 +7,8 @@ import {
   estimatePayoutLikelihood,
   mergeBubbleBlend,
   DEFAULT_BUBBLE_BLEND,
+  payPercentFromPosterior,
+  weightAtPayoutLikelihoodPercent,
 } from "./payoutProbability.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -53,6 +55,72 @@ test("payProbabilitySigmaMult pulls pay % toward 50% (less tail overconfidence)"
   assert.ok(
     Math.abs(wide.percent! - 50) <= Math.abs(tight.percent! - 50),
     `wider σ_pay should move rounded % toward 50; got ${tight.percent} vs ${wide.percent}`,
+  );
+});
+
+test("weightAtPayoutLikelihoodPercent with lowerBoundLb never returns below the bound", () => {
+  const mu = 3.5;
+  const sigma = 0.15;
+  const lb = 3.5;
+  for (const pct of [10, 25, 50, 75, 99]) {
+    const w = weightAtPayoutLikelihoodPercent(mu, sigma, pct, 1, lb);
+    assert.ok(w != null && w >= lb - 1e-9, `pct=${pct} got ${w}, expected ≥ ${lb}`);
+  }
+});
+
+test("weightAtPayoutLikelihoodPercent without lowerBoundLb can dip below μ (untruncated)", () => {
+  const w = weightAtPayoutLikelihoodPercent(3.5, 0.15, 10, 1);
+  assert.ok(w != null && w < 3.5, `untruncated 10% weight should sit below μ; got ${w}`);
+});
+
+test("payPercentFromPosterior with lowerBoundLb: fish below bound → 0", () => {
+  const pct = payPercentFromPosterior(3.32, 3.5, 0.15, { lowerBoundLb: 3.5 });
+  assert.equal(pct, 0);
+});
+
+test("payPercentFromPosterior: fish ≫ bound ≈ untruncated value (no-op)", () => {
+  const untruncated = payPercentFromPosterior(4.5, 3.5, 0.15);
+  const truncated = payPercentFromPosterior(4.5, 3.5, 0.15, { lowerBoundLb: 2.5 });
+  assert.ok(
+    Math.abs(untruncated - truncated) <= 1,
+    `expected near-equal pct when lb is far below μ; got ${untruncated} vs ${truncated}`,
+  );
+});
+
+test("estimatePayoutLikelihood: end of window with bubble 3.50 → sub-bubble fish reads 0% and lowerBound=cb", () => {
+  const input = {
+    fishWeightLb: 3.32,
+    day: "Sunday" as const,
+    windowId: 4,
+    currentBubbleLb: 3.5,
+    rowCount: 60,
+    currentWeightsLb: [] as number[],
+    minutesElapsedInWindow: 116,
+    windowTotalMinutes: 119,
+    placesPaidOverride: 46,
+  };
+  const r = estimatePayoutLikelihood(input);
+  assert.equal(r.projectedFinalBubbleLowerBoundLb, 3.5);
+  assert.equal(r.percent, 0, `3.32 lb fish below 3.50 bubble should be 0%, got ${r.percent}`);
+});
+
+test("estimatePayoutLikelihood: tail σ contracts as minutes-left approaches 0", () => {
+  const base = {
+    fishWeightLb: 3.6,
+    day: "Sunday" as const,
+    windowId: 4,
+    currentBubbleLb: 3.5,
+    rowCount: 60,
+    currentWeightsLb: [] as number[],
+    windowTotalMinutes: 119,
+    placesPaidOverride: 46,
+  };
+  const early = estimatePayoutLikelihood({ ...base, minutesElapsedInWindow: 99 }); // ~20 min left
+  const late = estimatePayoutLikelihood({ ...base, minutesElapsedInWindow: 117 }); // ~2 min left
+  assert.ok(early.projectedFinalBubbleSigmaLb != null && late.projectedFinalBubbleSigmaLb != null);
+  assert.ok(
+    late.projectedFinalBubbleSigmaLb! < early.projectedFinalBubbleSigmaLb!,
+    `σ should shrink near close; early=${early.projectedFinalBubbleSigmaLb}, late=${late.projectedFinalBubbleSigmaLb}`,
   );
 });
 

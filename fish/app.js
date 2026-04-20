@@ -61,6 +61,11 @@ const LEADERBOARD_POLL_MS_MOCK = 2000;
 /** Live mode: align with server cache TTL so we poll about when a new scrape may run. */
 const LEADERBOARD_POLL_MS_LIVE = 300000;
 
+/** Weather is hourly on the server — 10 min client poll is plenty and the response is file-backed. */
+const WEATHER_POLL_MS = 10 * 60 * 1000;
+/** @type {ReturnType<typeof setInterval> | null} */
+let weatherPollTimer = null;
+
 function formatAutoRefreshLabel(ms) {
   const sec = ms / 1000;
   if (sec >= 60 && sec % 60 === 0) return `${sec / 60} min`;
@@ -673,6 +678,149 @@ async function refreshLeaderboard() {
   }
 }
 
+const COMPASS_POINTS = [
+  "N", "NNE", "NE", "ENE",
+  "E", "ESE", "SE", "SSE",
+  "S", "SSW", "SW", "WSW",
+  "W", "WNW", "NW", "NNW",
+];
+
+function compassFromDeg(deg) {
+  if (deg == null || !Number.isFinite(deg)) return null;
+  const idx = Math.round(((deg % 360) + 360) % 360 / 22.5) % 16;
+  return COMPASS_POINTS[idx];
+}
+
+function fmtWithUnit(value, unit, digits = 0) {
+  if (value == null || !Number.isFinite(value)) return "—";
+  return `${Number(value).toFixed(digits)}${unit}`;
+}
+
+function formatAsOfTime(asOfMs) {
+  if (!Number.isFinite(asOfMs) || asOfMs <= 0) return "";
+  try {
+    return new Date(asOfMs).toLocaleTimeString("en-US", {
+      timeZone: "America/Chicago",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return new Date(asOfMs).toISOString();
+  }
+}
+
+function pressureTrendHtml(trend) {
+  if (!trend || trend.direction == null || trend.deltaHpa3h == null) {
+    return `<span class="fish-pressure-trend fish-pressure-trend-unknown">— / 3h</span>`;
+  }
+  const dir = trend.direction;
+  const symbol = dir === "rising" ? "▲" : dir === "falling" ? "▼" : "▬";
+  const sign = trend.deltaHpa3h > 0 ? "+" : "";
+  return `<span class="fish-pressure-trend fish-pressure-trend-${dir}" aria-label="${dir} ${sign}${trend.deltaHpa3h.toFixed(1)} hPa over 3 hours">${symbol} ${sign}${trend.deltaHpa3h.toFixed(1)} hPa / 3h</span>`;
+}
+
+function renderWeatherGrid(snap) {
+  const grid = safeEl("weatherGrid");
+  if (!grid) return;
+  const tiles = [];
+  tiles.push(`
+    <div class="fish-weather-tile">
+      <div class="fish-weather-label">Temp</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.tempF, "°F", 0)}</div>
+    </div>`);
+
+  const windDir = compassFromDeg(snap.windDeg);
+  const windSub =
+    snap.gustMph != null && Number.isFinite(snap.gustMph)
+      ? `gust ${snap.gustMph.toFixed(0)} mph`
+      : "";
+  tiles.push(`
+    <div class="fish-weather-tile">
+      <div class="fish-weather-label">Wind</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.windMph, " mph", 0)}${windDir ? ` ${windDir}` : ""}</div>
+      ${windSub ? `<div class="fish-weather-sub">${windSub}</div>` : ""}
+    </div>`);
+
+  tiles.push(`
+    <div class="fish-weather-tile fish-weather-tile-pressure">
+      <div class="fish-weather-label">Pressure</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.pressureHpa, " hPa", 1)}</div>
+      <div class="fish-weather-sub">${pressureTrendHtml(snap.pressureTrend)}</div>
+    </div>`);
+
+  tiles.push(`
+    <div class="fish-weather-tile">
+      <div class="fish-weather-label">Humidity</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.humidityPct, "%", 0)}</div>
+    </div>`);
+
+  tiles.push(`
+    <div class="fish-weather-tile">
+      <div class="fish-weather-label">Cloud</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.cloudCoverPct, "%", 0)}</div>
+    </div>`);
+
+  tiles.push(`
+    <div class="fish-weather-tile">
+      <div class="fish-weather-label">Precip</div>
+      <div class="fish-weather-value">${fmtWithUnit(snap.precipMm, " mm", 2)}</div>
+    </div>`);
+
+  grid.innerHTML = tiles.join("");
+  grid.hidden = false;
+}
+
+function renderPressureTips(direction) {
+  const list = safeEl("weatherPressureTips");
+  if (!list) return;
+  list.hidden = false;
+  const items = list.querySelectorAll("li[data-direction]");
+  items.forEach((li) => {
+    const d = li.getAttribute("data-direction");
+    if (direction && d === direction) {
+      li.classList.add("is-active");
+    } else {
+      li.classList.remove("is-active");
+    }
+  });
+}
+
+async function loadWeather() {
+  const meta = safeEl("weatherMeta");
+  const grid = safeEl("weatherGrid");
+  const tips = safeEl("weatherPressureTips");
+  try {
+    const snap = await fetchJson("/api/weather/current");
+    renderWeatherGrid(snap);
+    renderPressureTips(snap?.pressureTrend?.direction ?? null);
+    if (meta) {
+      const when = formatAsOfTime(snap.asOfMs);
+      const n = Number.isFinite(snap.stationsUsed) ? snap.stationsUsed : 0;
+      const stationsBit = n > 0 ? ` · averaged across ${n} station${n === 1 ? "" : "s"}` : "";
+      meta.textContent = when ? `As of ${when} CT${stationsBit}` : `Updated${stationsBit}`;
+    }
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (meta) meta.textContent = `Weather unavailable: ${msg}`;
+    if (grid) grid.hidden = true;
+    if (tips) tips.hidden = true;
+  }
+}
+
+function startWeatherPoll() {
+  stopWeatherPoll();
+  weatherPollTimer = setInterval(() => {
+    void loadWeather();
+  }, WEATHER_POLL_MS);
+}
+
+function stopWeatherPoll() {
+  if (weatherPollTimer != null) {
+    clearInterval(weatherPollTimer);
+    weatherPollTimer = null;
+  }
+}
+
 const SHIRT_STORAGE_KEY = "fishShirtPurchased";
 
 async function loadSettingsFromServer() {
@@ -1064,6 +1212,8 @@ async function boot() {
   await loadPayoutStatus();
   await loadLeaderboard({ silent: false });
   startLeaderboardPoll();
+  void loadWeather();
+  startWeatherPoll();
 }
 
 function init() {
@@ -1105,11 +1255,14 @@ function init() {
           /* ignore */
         }
         stopLeaderboardPoll();
+        stopWeatherPoll();
         await loadHealthBanner();
         await loadSettingsFromServer();
         await loadPayoutStatus();
         await loadLeaderboard({ silent: false });
         startLeaderboardPoll();
+        void loadWeather();
+        startWeatherPoll();
       });
     }
 
@@ -1156,14 +1309,24 @@ function init() {
     el("recoForm").addEventListener("submit", submitReco);
     el("refreshLb").addEventListener("click", refreshLeaderboard);
 
+    const refreshWeatherBtn = safeEl("refreshWeather");
+    if (refreshWeatherBtn) {
+      refreshWeatherBtn.addEventListener("click", () => {
+        void loadWeather();
+      });
+    }
+
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         stopLeaderboardPoll();
+        stopWeatherPoll();
       } else {
         startLeaderboardPoll();
         loadLeaderboard({ silent: true });
         loadPayoutStatus();
         loadSettingsFromServer();
+        void loadWeather();
+        startWeatherPoll();
       }
     });
 

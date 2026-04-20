@@ -846,6 +846,83 @@ footer {
   letter-spacing: 0.02em;
 }
 
+/* Lake conditions (weather) card */
+.fish-weather-card .fish-meta { margin: 4px 0 10px; }
+.fish-weather-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin: 4px 0 10px;
+}
+.fish-weather-tile {
+    border: 1px solid #e6ebf1;
+    border-radius: 8px;
+    padding: 10px 12px;
+    background: #fbfcfe;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.fish-weather-tile-pressure {
+    background: #f5f9ff;
+    border-color: #d7e5f6;
+}
+.fish-weather-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6c757d;
+}
+.fish-weather-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1a1a2e;
+    font-variant-numeric: tabular-nums;
+}
+.fish-weather-sub {
+    font-size: 0.82rem;
+    color: #495057;
+}
+.fish-pressure-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+.fish-pressure-trend-rising { color: #1a5f2a; }
+.fish-pressure-trend-falling { color: #b02a37; }
+.fish-pressure-trend-steady { color: #495057; }
+.fish-pressure-trend-unknown { color: #6c757d; font-weight: 500; }
+
+.fish-pressure-tips {
+    list-style: none;
+    padding: 0;
+    margin: 6px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.fish-pressure-tips li {
+    border: 1px solid #e6ebf1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    background: #fff;
+    font-size: 0.88rem;
+    color: #495057;
+    line-height: 1.4;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.fish-pressure-tips li strong { color: #1a1a2e; }
+.fish-pressure-tips li.is-active {
+    background: #eaf5ec;
+    border-color: #b7dcc0;
+    color: #163a1f;
+}
+.fish-pressure-tips li.is-active strong { color: #0b3315; }
+
 .fish-settings {
     grid-column: 1 / -1;
     display: flex;

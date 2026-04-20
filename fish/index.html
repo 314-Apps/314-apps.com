@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Big Bass Bash weigh-in helper — 314 Apps</title>
-    <meta name="description" content="Unofficial helper for Big Bass Bash payout windows and weigh-in timing, with cross-window forecasts.">
+    <title>BigBassIQ — 314 Apps</title>
+    <meta name="description" content="BigBassIQ: unofficial helper for Big Bass Bash payout windows and weigh-in timing, with cross-window forecasts.">
     <!-- Bump FISH_ASSET_VERSION when deploying fish CSS/JS changes (cache bust for Cloudflare/browsers). -->
     <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
     <div class="container fish-container">
         <div class="fish-hero">
-            <h1>Big Bass Bash weigh-in helper</h1>
+            <h1>BigBassIQ</h1>
             <p class="fish-hero-tag">Lake of the Ozarks · unofficial timing &amp; payout forecast</p>
         </div>
 
@@ -163,6 +163,25 @@
             <div class="fish-forecast-list" id="forecastList"></div>
         </section>
 
+        <section class="fish-card fish-weather-card" id="weatherBox">
+            <div class="fish-card-header">
+                <h2>Lake conditions</h2>
+                <button type="button" class="fish-btn fish-btn-secondary" id="refreshWeather">Refresh</button>
+            </div>
+            <p class="fish-meta" id="weatherMeta">Loading weather…</p>
+            <div class="fish-weather-grid" id="weatherGrid" hidden></div>
+            <ul class="fish-pressure-tips" id="weatherPressureTips" hidden>
+                <li data-direction="falling">
+                    <strong>Falling pressure (front moving in):</strong>
+                    fish feed aggressively in the 12–24 h before a front. Target shallow cover, active presentations.
+                </li>
+                <li data-direction="rising">
+                    <strong>Rising / high steady pressure (bluebird post-front):</strong>
+                    fish get lethargic, hold tight to cover, often move deeper. Slow down, downsize baits, fish structure.
+                </li>
+            </ul>
+        </section>
+
         <section class="fish-card fish-leaderboard-card">
             <div class="fish-card-header">
                 <h2>Live leaderboard</h2>
@@ -217,6 +236,6 @@
   window.__fishInlineClockInterval = setInterval(tick, 1000);
 })();
     </script>
-    <script src="app.js?v=2" type="module"></script>
+    <script src="app.js?v=3" type="module"></script>
 </body>
 </html>

@@ -202,7 +202,14 @@ export function weightAtCalibratedPayoutLikelihoodPercent(
   mu: number | null,
   sigma: number | null,
   thresholdDisplayPercent: number,
+  lowerBoundLb?: number | null,
 ): number | null {
   const rawPercent = inverseCalibratePayoutPercent(thresholdDisplayPercent);
-  return weightAtPayoutLikelihoodPercent(mu, sigma, rawPercent);
+  return weightAtPayoutLikelihoodPercent(
+    mu,
+    sigma,
+    rawPercent,
+    undefined,
+    lowerBoundLb,
+  );
 }

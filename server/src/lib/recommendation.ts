@@ -376,6 +376,7 @@ export function recommendWeighIn(
     likelihood.projectedFinalBubbleLb,
     likelihood.projectedFinalBubbleSigmaLb,
     floorTh,
+    likelihood.projectedFinalBubbleLowerBoundLb,
   );
 
   const currentKey = `${active.day}-W${active.window.id}`;
@@ -484,6 +485,7 @@ function buildPayChanceScaleTicks(
   mu: number | null,
   sigma: number | null,
   floorThresholdPercent: number,
+  lowerBoundLb?: number | null,
 ): PayChanceScaleTick[] {
   const candidates = [99, 75, 50, 25, Math.round(floorThresholdPercent), 10, 1];
   const seen = new Set<number>();
@@ -497,7 +499,12 @@ function buildPayChanceScaleTicks(
   percents.sort((a, b) => b - a);
   return percents.map((displayPercent) => ({
     displayPercent,
-    weightLb: weightAtCalibratedPayoutLikelihoodPercent(mu, sigma, displayPercent),
+    weightLb: weightAtCalibratedPayoutLikelihoodPercent(
+      mu,
+      sigma,
+      displayPercent,
+      lowerBoundLb,
+    ),
   }));
 }
 
@@ -568,12 +575,14 @@ export function computePayoutConsiderFloor(
     likelihood.projectedFinalBubbleLb,
     likelihood.projectedFinalBubbleSigmaLb,
     floorTh,
+    likelihood.projectedFinalBubbleLowerBoundLb,
   );
 
   const payChanceScaleTicks = buildPayChanceScaleTicks(
     likelihood.projectedFinalBubbleLb,
     likelihood.projectedFinalBubbleSigmaLb,
     floorTh,
+    likelihood.projectedFinalBubbleLowerBoundLb,
   );
 
   return {

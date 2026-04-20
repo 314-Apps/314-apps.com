@@ -20,7 +20,7 @@
     "extract:arrivals": "tsx server/scripts/extract-fish-arrivals.ts",
     "backfill:weather": "tsx server/scripts/backfill-weather.ts",
     "backfill:water-temp": "tsx server/scripts/backfill-water-temp.ts",
-    "test": "node --import tsx --test server/src/lib/payoutProbability.test.ts server/src/lib/payoutCalibration.test.ts server/src/lib/payoutCalibrationFit.test.ts server/src/lib/fishEntryKeyUtils.test.ts server/src/lib/weighStationNormalize.test.ts server/src/lib/fishArrivals.test.ts server/src/lib/weatherOpenMeteo.test.ts server/src/lib/weatherStations.test.ts server/src/lib/waterTempAmeren.test.ts server/src/lib/anglerSearch.test.ts"
+    "test": "node --import tsx --test server/src/lib/payoutProbability.test.ts server/src/lib/payoutCalibration.test.ts server/src/lib/payoutCalibrationFit.test.ts server/src/lib/fishEntryKeyUtils.test.ts server/src/lib/weighStationNormalize.test.ts server/src/lib/fishArrivals.test.ts server/src/lib/weatherOpenMeteo.test.ts server/src/lib/weatherStations.test.ts server/src/lib/weatherSnapshot.test.ts server/src/lib/waterTempAmeren.test.ts server/src/lib/anglerSearch.test.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.758.0",

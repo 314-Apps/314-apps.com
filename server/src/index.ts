@@ -44,6 +44,7 @@ import {
   loadWeighStationLocations,
 } from "./lib/weighStationStats.js";
 import { startWeatherCollector } from "./lib/weatherCollector.js";
+import { buildWeatherSnapshot } from "./lib/weatherSnapshot.js";
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const CACHE_TTL_SECONDS = Number.parseInt(process.env.CACHE_TTL_SECONDS || "300", 10);
@@ -390,6 +391,21 @@ app.get("/api/anglers/search", (req, res) => {
   }
   const results = searchAnglers({ q, limit });
   res.json({ query: q, count: results.length, results });
+});
+
+app.get("/api/weather/current", (_req, res) => {
+  try {
+    const snap = buildWeatherSnapshot();
+    res.setHeader("Cache-Control", "no-store");
+    if (!snap) {
+      res.status(503).json({ reason: "no-data" });
+      return;
+    }
+    res.json(snap);
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    res.status(500).json({ error: msg });
+  }
 });
 
 app.get("/api/payout-status", (_req, res) => {
