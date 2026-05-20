@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "profit-calculator",
+    "title": "Profit Calculator",
+    "description": "True margin after platform fees, shipping, and cost of goods."
+  },
+  {
+    "slug": "sell-through-calculator",
+    "title": "Sell-Through Calculator",
+    "description": "Inventory velocity and days-on-hand for your closet or booth."
+  },
+  {
+    "slug": "break-even-calculator",
+    "title": "Break-Even Calculator",
+    "description": "How many sales you need to cover rent, fees, and fixed costs."
+  },
+  {
+    "slug": "pnl-template",
+    "title": "P&L Template",
+    "description": "Monthly profit-and-loss worksheet for resellers."
+  },
+  {
+    "slug": "spreadsheet-template",
+    "title": "Inventory Spreadsheet Template",
+    "description": "Starter columns for SKU, cost, price, and channel."
+  },
+  {
+    "slug": "photo-checklist",
+    "title": "Photo Checklist",
+    "description": "Every shot to capture before you list an item."
+  },
+  {
+    "slug": "tax-checklist",
+    "title": "Tax Checklist",
+    "description": "Schedule C prep checklist for resale businesses."
+  },
+  {
+    "slug": "sourcing-guide",
+    "title": "Sourcing Guide",
+    "description": "Field checklist for thrift runs and estate sales."
+  },
+  {
+    "slug": "migration-guide",
+    "title": "Migration Guide",
+    "description": "Steps to move off spreadsheets into Inventr."
+  },
+  {
+    "slug": "booth-scorecard",
+    "title": "Booth Scorecard",
+    "description": "Score display, pricing, and traffic for your booth."
+  }
+]

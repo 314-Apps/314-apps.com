@@ -1,0 +1,52 @@
+{
+  "name": "314-apps-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch server/src/index.ts",
+    "start": "node --import tsx server/src/index.ts",
+    "ddb:create-table": "tsx server/scripts/create-table.ts",
+    "fish:dev": "bash scripts/fish-dev-up.sh",
+    "start:mock": "env USE_MOCK_LEADERBOARD=1 PAYOUT_PLACES_HEURISTIC=45 node --import tsx server/src/index.ts",
+    "dev:mock": "env USE_MOCK_LEADERBOARD=1 PAYOUT_PLACES_HEURISTIC=45 tsx watch server/src/index.ts",
+    "fish:mock": "bash scripts/fish-mock-dev.sh",
+    "train:historical": "tsx server/scripts/train-historical.ts",
+    "compare:reco-to-final": "tsx server/scripts/compare-reco-to-final.ts",
+    "eval:window-recommendation": "tsx server/scripts/eval-window-recommendation.ts",
+    "backtest:historical": "tsx server/scripts/backtest-historical.ts",
+    "analyze:backtest-loo": "tsx server/scripts/analyze-backtest-loo.ts",
+    "evaluate:predictions": "tsx server/scripts/evaluate-predictions.ts",
+    "fit:payout-calibration": "tsx server/scripts/fit-payout-calibration.ts",
+    "fit:payout-calibration:weekend": "tsx server/scripts/fit-payout-calibration.ts --pool-weekend",
+    "fit:cutoff-constants": "tsx server/scripts/fit-cutoff-constants.ts",
+    "sweep:predictions": "tsx server/scripts/prediction-weight-sweep.ts",
+    "extract:arrivals": "tsx server/scripts/extract-fish-arrivals.ts",
+    "backfill:weather": "tsx server/scripts/backfill-weather.ts",
+    "backfill:water-temp": "tsx server/scripts/backfill-water-temp.ts",
+    "blog:stubs": "node scripts/blog/generate-stubs.mjs",
+    "blog:catalog": "node scripts/blog/generate-catalog.mjs",
+    "blog:build": "node scripts/blog/build-blog.mjs",
+    "blog:site": "node scripts/blog/build-site.mjs",
+    "blog:preview": "npm run blog:site && npx --yes serve _site -p 8765",
+    "blog:tools": "python3 scripts/blog/_gen_tools.py",
+    "test": "node --import tsx --test server/src/lib/payoutProbability.test.ts server/src/lib/payoutCalibration.test.ts server/src/lib/payoutCalibrationFit.test.ts server/src/lib/fishEntryKeyUtils.test.ts server/src/lib/weighStationNormalize.test.ts server/src/lib/fishArrivals.test.ts server/src/lib/weatherOpenMeteo.test.ts server/src/lib/weatherStations.test.ts server/src/lib/weatherSnapshot.test.ts server/src/lib/waterTempAmeren.test.ts server/src/lib/anglerSearch.test.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/lib-dynamodb": "^3.758.0",
+    "cheerio": "^1.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "luxon": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/luxon": "^3.7.1",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

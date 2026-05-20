@@ -3,37 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>P&amp;L Template — Inventr</title>
-  <meta name="description" content="Monthly profit and loss template for booth sellers and consignment shops.">
+  <title>P&L Template — Inventr</title>
+  <meta name="description" content="Monthly profit-and-loss worksheet for resellers.">
+  <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/pnl-template/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tools.css">
 </head>
-<body>
+<body data-tool="pnl-template">
   <header class="site-header">
     <div class="container">
       <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=pnl_template" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=pnl-template" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     </div>
   </header>
   <section class="hero hero--small">
     <div class="container">
-      <h1>P&amp;L template</h1>
-      <p>Monthly profit-and-loss structure for booth and consignment operations.</p>
+      <h1>P&L Template</h1>
+      <p>Monthly profit-and-loss worksheet for resellers.</p>
     </div>
   </section>
   <main>
     <div class="container">
-      <p class="placeholder-note">Downloadable template coming soon. Inventr exports sales and fee data for your books.</p>
-      <p style="text-align:center;margin-top:1.5rem;">
-        <a class="btn btn--primary btn--lg" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=pnl_cta">Try Inventr Free</a>
-        <a class="btn btn--outline btn--lg" href="/funnel-tools/" style="margin-left:0.5rem;">All tools</a>
+      <div class="tool-panel tool-panel--wide">
+        <p>Monthly P&amp;L worksheet. Download CSV or copy the table.</p>
+        <table class="pnl-table" id="pnl-table">
+          <thead><tr><th>Category</th><th>Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Gross sales</td><td></td></tr>
+            <tr><td>Cost of goods sold</td><td></td></tr>
+            <tr><td>Platform fees</td><td></td></tr>
+            <tr><td>Shipping paid</td><td></td></tr>
+            <tr><td>Supplies &amp; packaging</td><td></td></tr>
+            <tr><td>Booth rent</td><td></td></tr>
+            <tr><td>Mileage (deductible)</td><td></td></tr>
+            <tr><td>Other expenses</td><td></td></tr>
+            <tr><td><strong>Net profit</strong></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="tool-actions">
+          <button type="button" class="btn btn--primary" id="pnl-download">Download CSV</button>
+          <button type="button" class="btn btn--outline" id="pnl-copy">Copy table</button>
+        </div>
+      </div>
+      <p style="text-align:center;margin-top:1rem;">
+        <a class="btn btn--outline" href="/funnel-tools/">← All free tools</a>
       </p>
     </div>
   </main>
   <footer class="site-footer"><div class="container"><p>&copy; 2026 Inventr</p></div></footer>
+  <script src="../js/tools.js"></script>
 </body>
 </html>

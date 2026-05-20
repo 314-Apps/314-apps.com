@@ -135,10 +135,21 @@ function buildIndex(catalog, published) {
 `;
 }
 
+function funnelToolUrls() {
+  const manifestPath = path.join(ROOT, 'funnel-tools/manifest.json');
+  if (!fs.existsSync(manifestPath)) return [];
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  return manifest.map(
+    (t) =>
+      `<url><loc>${SITE_BASE}/funnel-tools/${t.slug}/</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>`
+  );
+}
+
 function buildSitemap(published) {
   const urls = [
     `<url><loc>${SITE_BASE}/blog/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
-    `<url><loc>${SITE_BASE}/funnel-tools/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`,
+    `<url><loc>${SITE_BASE}/funnel-tools/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+    ...funnelToolUrls(),
     ...[...published].sort().map(
       (p) => `<url><loc>${SITE_BASE}/blog/${p}</loc><changefreq>monthly</changefreq></url>`
     ),

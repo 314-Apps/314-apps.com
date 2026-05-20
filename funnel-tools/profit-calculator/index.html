@@ -4,36 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Profit Calculator — Inventr</title>
-  <meta name="description" content="Calculate true reselling profit after platform fees, shipping, and cost of goods.">
+  <meta name="description" content="True margin after platform fees, shipping, and cost of goods.">
+  <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/profit-calculator/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tools.css">
 </head>
-<body>
+<body data-tool="profit-calculator">
   <header class="site-header">
     <div class="container">
       <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=profit_calculator" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=profit-calculator" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     </div>
   </header>
   <section class="hero hero--small">
     <div class="container">
-      <h1>Profit calculator</h1>
-      <p>Stack fees, shipping, and COGS to see true margin per sale.</p>
+      <h1>Profit Calculator</h1>
+      <p>True margin after platform fees, shipping, and cost of goods.</p>
     </div>
   </section>
   <main>
     <div class="container">
-      <p class="placeholder-note">Interactive calculator coming soon. Inventr tracks profit automatically on every sale.</p>
-      <p style="text-align:center;margin-top:1.5rem;">
-        <a class="btn btn--primary btn--lg" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=profit_calculator_cta">Try Inventr Free</a>
-        <a class="btn btn--outline btn--lg" href="/funnel-tools/" style="margin-left:0.5rem;">All tools</a>
+      <div class="tool-panel">
+        <div class="tool-grid-2">
+          <div class="tool-field"><label for="sale">Sale price ($)</label><input type="number" id="sale" min="0" step="0.01" value="45"></div>
+          <div class="tool-field"><label for="cogs">Cost of goods ($)</label><input type="number" id="cogs" min="0" step="0.01" value="12"></div>
+          <div class="tool-field"><label for="feePct">Platform + payment fees (%)</label><input type="number" id="feePct" min="0" step="0.1" value="13"></div>
+          <div class="tool-field"><label for="shipOut">Shipping you pay ($)</label><input type="number" id="shipOut" min="0" step="0.01" value="5.50"></div>
+          <div class="tool-field"><label for="shipIn">Shipping charged to buyer ($)</label><input type="number" id="shipIn" min="0" step="0.01" value="0"></div>
+        </div>
+        <div class="tool-results"><h3>Results</h3><dl>
+            <dt>Platform fees</dt><dd id="fees">$0.00</dd>
+            <dt>Net profit</dt><dd id="netProfit">$0.00</dd>
+            <dt>Profit margin</dt><dd id="margin">0%</dd>
+        </dl></div>
+      </div>
+      <p style="text-align:center;margin-top:1rem;">
+        <a class="btn btn--outline" href="/funnel-tools/">← All free tools</a>
       </p>
     </div>
   </main>
   <footer class="site-footer"><div class="container"><p>&copy; 2026 Inventr</p></div></footer>
+  <script src="../js/tools.js"></script>
 </body>
 </html>

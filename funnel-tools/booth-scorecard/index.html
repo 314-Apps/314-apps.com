@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booth Scorecard — Inventr</title>
+  <meta name="description" content="Score display, pricing, and traffic for your booth.">
+  <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/booth-scorecard/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body data-tool="booth-scorecard">
+  <header class="site-header">
+    <div class="container">
+      <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
+      <nav class="nav-links">
+        <a href="/blog/">All Posts</a>
+        <a href="/funnel-tools/">Free Tools</a>
+        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=booth-scorecard" target="_blank" rel="noopener">Try Inventr Free</a>
+      </nav>
+    </div>
+  </header>
+  <section class="hero hero--small">
+    <div class="container">
+      <h1>Booth Scorecard</h1>
+      <p>Score display, pricing, and traffic for your booth.</p>
+    </div>
+  </section>
+  <main>
+    <div class="container">
+      <div class="tool-panel">
+        <p>Rate each area 1 (weak) to 5 (excellent).</p>
+        <div class="score-row"><label>Display & lighting</label><select data-cat="0"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="score-row"><label>Signage & booth identity</label><select data-cat="1"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="score-row"><label>Pricing clarity</label><select data-cat="2"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="score-row"><label>Traffic / location</label><select data-cat="3"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="score-row"><label>Checkout speed</label><select data-cat="4"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="score-row"><label>Inventory freshness</label><select data-cat="5"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="tool-results"><h3>Score</h3><dl>
+            <dt>Average</dt><dd id="boothScore">—</dd>
+            <dt>Summary</dt><dd id="boothLabel" style="color:var(--color-text)">—</dd>
+        </dl></div>
+      </div>
+      <p style="text-align:center;margin-top:1rem;">
+        <a class="btn btn--outline" href="/funnel-tools/">← All free tools</a>
+      </p>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container"><p>&copy; 2026 Inventr</p></div></footer>
+  <script src="../js/tools.js"></script>
+</body>
+</html>
