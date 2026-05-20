@@ -26,6 +26,7 @@
     "backfill:water-temp": "tsx server/scripts/backfill-water-temp.ts",
     "blog:stubs": "node scripts/blog/generate-stubs.mjs",
     "blog:catalog": "node scripts/blog/generate-catalog.mjs",
+    "blog:links-check": "node scripts/blog/validate-published-links.mjs",
     "blog:build": "node scripts/blog/build-blog.mjs",
     "blog:site": "node scripts/blog/build-site.mjs",
     "blog:preview": "npm run blog:site && npx --yes serve _site -p 8765",

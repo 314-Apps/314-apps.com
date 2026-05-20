@@ -85,6 +85,16 @@ export function walkHtmlFiles(dir, base = dir) {
   return results;
 }
 
+export function extractBlogLinks(html) {
+  const re = /href="\/blog\/([^"#?]+)"/g;
+  const paths = new Set();
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    if (m[1] && !m[1].endsWith('/')) paths.add(m[1]);
+  }
+  return [...paths].sort();
+}
+
 export function parseArticleMeta(html, relPath) {
   const cluster = relPath.includes('/') ? relPath.split('/')[0] : 'uncategorized';
   const titleMatch = html.match(/<title>([^<]+)<\/title>/i);
@@ -107,6 +117,7 @@ export function parseArticleMeta(html, relPath) {
     description,
     status,
     wordCount,
+    linksTo: extractBlogLinks(html),
   };
 }
 

@@ -29,9 +29,9 @@
       <div class="row">
         <div>
           <label for="github-token">GitHub personal access token</label>
-          <input type="password" id="github-token" autocomplete="off" placeholder="Fine-grained: Contents read & write">
-        </motion>
-      </motion>
+          <input type="password" id="github-token" autocomplete="off" placeholder="Fine-grained: Contents read &amp; write">
+        </div>
+      </div>
       <button type="button" id="btn-login">Sign in</button>
       <p class="help">
         Create a <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">fine-grained token</a>
@@ -48,16 +48,16 @@
           <button type="button" class="secondary" id="btn-publish-ready">Publish all ready (unpublished)</button>
           <button type="button" class="danger secondary" id="btn-unpublish-all">Unpublish all</button>
           <button type="button" class="secondary" id="btn-logout">Sign out</button>
-        </motion>
+        </div>
         <div class="row">
           <div>
             <label for="filter-search">Search</label>
             <input type="search" id="filter-search" placeholder="Title or path…">
-          </motion>
+          </div>
           <div>
             <label for="filter-cluster">Cluster</label>
             <select id="filter-cluster"><option value="">All clusters</option></select>
-          </motion>
+          </div>
           <div>
             <label for="filter-status">Content</label>
             <select id="filter-status">
@@ -65,7 +65,7 @@
               <option value="ready">Ready only</option>
               <option value="stub">Stubs only</option>
             </select>
-          </motion>
+          </div>
           <div>
             <label for="filter-live">Published</label>
             <select id="filter-live">
@@ -73,9 +73,17 @@
               <option value="yes">Live</option>
               <option value="no">Not live</option>
             </select>
-          </motion>
-        </motion>
-      </motion>
+          </div>
+          <div>
+            <label for="filter-links">Links</label>
+            <select id="filter-links">
+              <option value="">All</option>
+              <option value="broken">Broken (live with missing deps)</option>
+              <option value="needs">Needs deps published</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
       <div class="panel" style="padding:0; overflow:auto;">
         <table>
@@ -87,13 +95,26 @@
               <th>Title</th>
               <th>Cluster</th>
               <th>Words</th>
+              <th>Links</th>
             </tr>
           </thead>
           <tbody id="article-rows"></tbody>
         </table>
-      </motion>
+      </div>
     </section>
-  </motion>
+  </div>
+
+  <div id="dep-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h2 id="dep-modal-title">Publishing requires more articles</h2>
+      <p id="dep-modal-intro" class="help"></p>
+      <div id="dep-modal-list" class="dep-list"></div>
+      <div class="actions-bar" style="justify-content: flex-end;">
+        <button type="button" class="secondary" id="dep-modal-cancel">Cancel</button>
+        <button type="button" id="dep-modal-confirm">Publish all listed</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="admin.js"></script>
 </body>
