@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { BLOG_SOURCE, BLOG_DATA, escapeHtml } from './lib.mjs';
+import { APP_STORE_URL } from './app-links.mjs';
 
 const PLAN_PATH = path.join(BLOG_DATA, 'CONTENT-PLAN.md');
 const plan = fs.readFileSync(PLAN_PATH, 'utf8');
@@ -39,7 +40,7 @@ function stubHtml(title, clusterName) {
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="${APP_STORE_URL}" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     </div>
   </header>

@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 manifest = json.loads((ROOT / "funnel-tools/manifest.json").read_text())
 O, C = "@@O@@", "@@C@@"
+APP_STORE_URL = "https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683"
 
 
 def shell(title, desc, slug, body, wide=False):
@@ -28,7 +29,7 @@ def shell(title, desc, slug, body, wide=False):
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium={slug}" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="{APP_STORE_URL}?utm_source=funnel_tools&amp;utm_medium={slug}" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     {C}
   </header>
@@ -197,7 +198,7 @@ index_html = f"""<!DOCTYPE html>
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="{APP_STORE_URL}?utm_source=funnel_tools&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     {C}
   </header>
@@ -216,6 +217,6 @@ index_html = f"""<!DOCTYPE html>
   </main>
   <footer class="site-footer">{O} class="container"><p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a></p>{C}</footer>
 </body>
-</html>""".replace(O, "<motion").replace(C, "</div>")
-(ROOT / "funnel-tools/index.html").write_text(index_html.replace("motion", "motion").replace("<motion", "<div").replace("</motion>", "</div>"))
+</html>""".replace(O, "<div").replace(C, "</div>")
+(ROOT / "funnel-tools/index.html").write_text(index_html)
 print("done", len(manifest))

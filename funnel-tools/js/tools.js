@@ -94,29 +94,52 @@
 
   /* ——— Break-even ——— */
   function initBreakEvenCalculator() {
+    const note = $('#beNote');
     bindInputs(['fixed', 'profitPerSale', 'avgSale'], () => {
       const fixed = parseMoney($('#fixed').value);
       const profit = parseMoney($('#profitPerSale').value);
       const avgSale = parseMoney($('#avgSale').value);
-      const units = profit > 0 ? Math.ceil(fixed / profit) : 0;
-      $('#unitsNeeded').textContent = units > 0 ? String(units) : '—';
-      $('#revenueNeeded').textContent = units > 0 ? money(units * avgSale) : '—';
+      if (profit <= 0) {
+        $('#unitsNeeded').textContent = '—';
+        $('#revenueNeeded').textContent = '—';
+        if (note) {
+          note.textContent =
+            fixed > 0
+              ? 'Net profit per sale must be greater than $0 to reach break-even.'
+              : 'Enter fixed costs and a positive net profit per sale.';
+          note.hidden = false;
+        }
+        return;
+      }
+      const units = fixed > 0 ? Math.ceil(fixed / profit) : 0;
+      $('#unitsNeeded').textContent = fixed > 0 ? String(units) : '0';
+      $('#revenueNeeded').textContent = fixed > 0 ? money(units * avgSale) : money(0);
+      if (note) note.hidden = true;
     });
   }
 
   /* ——— Sell-through ——— */
   function initSellThroughCalculator() {
+    const note = $('#stNote');
     bindInputs(['startUnits', 'soldUnits', 'days'], () => {
       const start = parseMoney($('#startUnits').value);
       const sold = parseMoney($('#soldUnits').value);
-      const days = parseMoney($('#days').value) || 1;
-      const rate = start > 0 ? (sold / start) * 100 : 0;
+      const days = Math.max(1, parseMoney($('#days').value) || 1);
+      const rate = start > 0 ? Math.min(100, (sold / start) * 100) : 0;
       const annualized = rate * (365 / days);
       const daysPerSale = sold > 0 ? days / sold : 0;
       $('#stRate').textContent = pct(rate);
-      $('#annualized').textContent = pct(annualized);
+      $('#annualized').textContent = start > 0 ? pct(annualized) : '—';
       $('#remaining').textContent = String(Math.max(0, start - sold));
       $('#daysPerSale').textContent = sold > 0 ? daysPerSale.toFixed(1) : '—';
+      if (note) {
+        if (sold > start && start > 0) {
+          note.textContent = 'Units sold exceeds starting listings — rate is capped at 100% for this period.';
+          note.hidden = false;
+        } else {
+          note.hidden = true;
+        }
+      }
     });
   }
 
@@ -153,29 +176,41 @@
       recalc();
     });
 
+    function pnlSnapshot() {
+      const gross = parseMoney($('[data-pnl="gross-sales"]', root)?.value);
+      const cogs = parseMoney($('[data-pnl="cogs"]', root)?.value);
+      const expenses = ['platform-fees', 'shipping', 'supplies', 'booth-rent', 'mileage', 'other'].reduce(
+        (sum, key) => sum + parseMoney($(`[data-pnl="${key}"]`, root)?.value),
+        0
+      );
+      const grossProfit = gross - cogs;
+      const net = grossProfit - expenses;
+      return { gross, cogs, expenses, grossProfit, net };
+    }
+
     $('#pnl-download')?.addEventListener('click', () => {
       const period = $('#pnl-period')?.value || 'Period';
+      const snap = pnlSnapshot();
       const lines = [`Inventr P&L — ${period}`, 'Category,Amount'];
-      $$('#pnl-table tbody tr[data-pnl]', root).forEach((tr) => {
-        const label = tr.querySelector('td')?.textContent?.trim();
-        const val = parseMoney(tr.querySelector('.money-in')?.value);
-        lines.push(`"${label}",${val.toFixed(2)}`);
+      $$('.money-in[data-pnl]', root).forEach((input) => {
+        const label = input.closest('tr')?.querySelector('td')?.textContent?.trim() || input.dataset.pnl;
+        lines.push(`"${label}",${parseMoney(input.value).toFixed(2)}`);
       });
-      lines.push(`"Gross profit",${(parseMoney($('[data-pnl=gross-sales]')?.value) - parseMoney($('[data-pnl=cogs]')?.value)).toFixed(2)}`);
-      lines.push(`"Net profit",${$('#pnl-net-profit')?.textContent?.replace(/[$,]/g, '') || 0}`);
+      lines.push(`"Gross profit",${snap.grossProfit.toFixed(2)}`);
+      lines.push(`"Total operating expenses",${snap.expenses.toFixed(2)}`);
+      lines.push(`"Net profit",${snap.net.toFixed(2)}`);
       downloadText('inventr-pnl.csv', lines.join('\n'));
     });
 
     $('#pnl-copy')?.addEventListener('click', async () => {
       const rows = [];
       $$('#pnl-table tbody tr', root).forEach((tr) => {
+        if (tr.classList.contains('section')) return;
         const cells = [...tr.querySelectorAll('td')];
         if (!cells.length) return;
         const label = cells[0].textContent.trim();
-        const amt =
-          tr.querySelector('.money-in')?.value ||
-          cells[1]?.textContent?.trim() ||
-          '';
+        const input = tr.querySelector('.money-in');
+        const amt = input ? input.value : cells[1]?.textContent?.trim() || '';
         rows.push(`${label}\t${amt}`);
       });
       await navigator.clipboard.writeText(rows.join('\n'));
@@ -193,11 +228,10 @@
     function rowProfit(tr) {
       const cost = parseMoney($('.in-cost', tr)?.value);
       const sold = parseMoney($('.in-sold', tr)?.value);
-      const list = parseMoney($('.in-list', tr)?.value);
       const fees = parseMoney($('.in-fees', tr)?.value);
       const ship = parseMoney($('.in-ship', tr)?.value);
-      const revenue = sold > 0 ? sold : 0;
-      return revenue - cost - fees - ship;
+      if (sold <= 0) return null;
+      return sold - cost - fees - ship;
     }
 
     function recalc() {
@@ -213,13 +247,18 @@
         const list = parseMoney($('.in-list', tr)?.value);
         const cell = $('.in-profit', tr);
         if (cell) {
-          cell.textContent = sold > 0 || cost > 0 || list > 0 ? money(profit) : '—';
-          cell.classList.toggle('negative', profit < 0);
+          if (profit == null) {
+            cell.textContent = sold > 0 ? money(0) : '—';
+            cell.classList.remove('negative');
+          } else {
+            cell.textContent = money(profit);
+            cell.classList.toggle('negative', profit < 0);
+          }
         }
         if (cost || sold || list) active += 1;
         totalCost += cost;
         totalRevenue += sold;
-        totalProfit += sold > 0 ? profit : 0;
+        if (profit != null) totalProfit += profit;
       });
 
       $('#sheet-total-cost').textContent = money(totalCost);
@@ -382,10 +421,13 @@
       });
       const avg = count ? total / count : 0;
       $('#boothScore').textContent = count ? avg.toFixed(1) : '—';
-      let label = 'Needs work';
-      if (avg >= 4) label = 'Strong booth';
-      else if (avg >= 3) label = 'Solid';
-      else if (avg >= 2) label = 'Room to improve';
+      let label = '—';
+      if (count) {
+        if (avg >= 4) label = 'Strong booth';
+        else if (avg >= 3) label = 'Solid';
+        else if (avg >= 2) label = 'Room to improve';
+        else label = 'Needs work';
+      }
       $('#boothLabel').textContent = label;
     };
     rows.forEach((sel) => sel.addEventListener('change', update));

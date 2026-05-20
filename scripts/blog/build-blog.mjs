@@ -11,6 +11,7 @@ import {
   readPublished,
   escapeHtml,
 } from './lib.mjs';
+import { APP_STORE_URL } from './app-links.mjs';
 
 function loadCatalog() {
   if (!fs.existsSync(CATALOG_PATH)) {
@@ -101,7 +102,7 @@ function buildIndex(catalog, published) {
       <nav class="nav-links">
         <a href="/blog/">All Posts</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=blog&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="${APP_STORE_URL}?utm_source=blog&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     </div>
   </header>
@@ -109,26 +110,26 @@ function buildIndex(catalog, published) {
     <div class="container">
       <h1>Reseller &amp; booth guides that show the math</h1>
       <p>Long-form playbooks for online platforms, local flips, and consignment operations.</p>
-    </div>
+    </motion>
   </section>
   <main>
     <div class="container">
       ${navChips ? `<nav class="category-nav" aria-label="Topics">${navChips}</nav>` : ''}
       ${emptyMsg}
       ${sectionsHtml}
-    </div>
+    </motion>
   </main>
   <section class="cta-banner">
     <div class="container">
       <h2>Track inventory and real profit in one app</h2>
       <p>Inventr is built for booth sellers and multi-channel resellers.</p>
-      <a class="btn btn--white btn--lg" href="https://inventrapp.com?utm_source=blog&amp;utm_medium=cta" target="_blank" rel="noopener">Try Inventr Free</a>
-    </div>
+      <a class="btn btn--white btn--lg" href="${APP_STORE_URL}?utm_source=blog&amp;utm_medium=cta" target="_blank" rel="noopener">Try Inventr Free</a>
+    </motion>
   </section>
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a></p>
-    </div>
+    </motion>
   </footer>
 </body>
 </html>

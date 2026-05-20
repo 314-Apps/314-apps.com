@@ -23,7 +23,7 @@ The remedy is a rigid taxonomy plus an editorial discipline: each post owns a un
 - ~2,000 words (200–280 lines of HTML), structured as: hero, intro narrative, 3–5 H2 sections, ≥1 unique table or list, ≥1 `.tip` or `.warning` callout, closing CTA banner.
 - A unique opening narrative — name a hypothetical reseller, show specific dollars/hours/inventory, do not start with "In the world of reselling..." or similar bland intros.
 - ≥2 internal links to existing posts (1 same-cluster pillar + 1 cross-cluster supporting post).
-- A cluster-appropriate CTA banner with the matching `cta-banner` styling and the relevant funnel-tool URL or `https://inventrapp.com`.
+- A cluster-appropriate CTA banner with the matching `cta-banner` styling and the relevant funnel-tool URL or `https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683`.
 - Listed in [blog/index.html](blog/index.html) under the correct cluster section, with the cluster also added to the `category-nav` chips.
 
 ### 1.3 Publishing cadence
@@ -54,10 +54,10 @@ Each cluster has a primary CTA target. Posts may swap to a secondary CTA when th
 | `sourcing-guide/` | `/funnel-tools/sourcing-guide/` |
 | `migration-guide/` | `/funnel-tools/migration-guide/` |
 | `booth-scorecard/` | `/funnel-tools/booth-scorecard/` |
-| `inventr-app/` | `https://inventrapp.com` |
-| **Online platforms** (`ebay/`, `etsy/`, etc.) | `https://inventrapp.com` (cross-channel inventory pain naturally surfaces app value) |
-| **Niches** (`niches-*/`) | `https://inventrapp.com` |
-| **Ops/business** (`consignment-shop-ops/`, etc.) | `https://inventrapp.com` |
+| `inventr-app/` | `https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683` |
+| **Online platforms** (`ebay/`, `etsy/`, etc.) | `https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683` (cross-channel inventory pain naturally surfaces app value) |
+| **Niches** (`niches-*/`) | `https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683` |
+| **Ops/business** (`consignment-shop-ops/`, etc.) | `https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683` |
 
 ### 1.5 Internal linking strategy
 

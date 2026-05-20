@@ -30,6 +30,7 @@
     "blog:site": "node scripts/blog/build-site.mjs",
     "blog:preview": "npm run blog:site && npx --yes serve _site -p 8765",
     "blog:tools": "python3 scripts/blog/_gen_tools.py",
+    "blog:audit-tools": "node scripts/blog/audit-tools.test.mjs && node scripts/blog/audit-tools-dom.mjs",
     "test": "node --import tsx --test server/src/lib/payoutProbability.test.ts server/src/lib/payoutCalibration.test.ts server/src/lib/payoutCalibrationFit.test.ts server/src/lib/fishEntryKeyUtils.test.ts server/src/lib/weighStationNormalize.test.ts server/src/lib/fishArrivals.test.ts server/src/lib/weatherOpenMeteo.test.ts server/src/lib/weatherStations.test.ts server/src/lib/weatherSnapshot.test.ts server/src/lib/waterTempAmeren.test.ts server/src/lib/anglerSearch.test.ts"
   },
   "dependencies": {
