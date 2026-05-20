@@ -1,16 +1,29 @@
 {
   "paths": [
+    "break-even-calculator/how-store-commission-affects-bottom-line.html",
     "consignment-shop-ops/setting-consignor-splits-fairly.html",
     "ebay/ebay-store-vs-no-store-roi.html",
     "etsy/etsy-vintage-20-year-rule-explained.html",
     "facebook-marketplace/fb-marketplace-furniture-flip-margins.html",
+    "inventr-app/inventr-vs-spreadsheets-why-switching.html",
     "mercari/mercari-vs-poshmark-where-to-list-first.html",
     "niches-books/book-scanning-apps-which-actually-pay.html",
     "niches-toys-collectibles/funko-pop-flipping-still-worth-it.html",
     "niches-vintage-clothing/identifying-valuable-vintage-band-tees.html",
+    "photo-checklist/photographing-clothing-online-resale.html",
+    "pnl-template/operating-expenses-booth-sellers.html",
     "poshmark/poshmark-sharing-strategy-hours-vs-sales.html",
+    "profit-calculator/how-to-calculate-true-reselling-profit.html",
+    "profit-calculator/platform-fee-comparison-ebay-poshmark-mercari.html",
+    "profit-calculator/why-revenue-isnt-profit.html",
+    "sell-through-calculator/how-to-improve-sell-through-rate.html",
+    "sell-through-calculator/inventory-aging-silent-profit-killer.html",
+    "sell-through-calculator/what-is-sell-through-rate.html",
+    "sourcing-guide/garage-sale-sourcing-tips.html",
+    "sourcing-guide/how-to-spot-valuable-vintage-clothing.html",
+    "sourcing-guide/research-item-value-60-seconds.html",
     "whatnot/whatnot-live-selling-real-economics.html"
   ],
-  "updatedAt": "2026-05-20T00:52:08.472Z",
+  "updatedAt": "2026-05-20T01:30:07.150Z",
   "updatedBy": "mjcdk9"
 }
