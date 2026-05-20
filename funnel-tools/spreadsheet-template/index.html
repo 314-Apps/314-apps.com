@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventory Spreadsheet Template — Inventr</title>
-  <meta name="description" content="Starter columns for SKU, cost, price, and channel.">
+  <title>Inventory Spreadsheet — Inventr</title>
+  <meta name="description" content="Interactive inventory tracker with per-item profit.">
   <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/spreadsheet-template/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
@@ -23,20 +23,45 @@
   </header>
   <section class="hero hero--small">
     <div class="container">
-      <h1>Inventory Spreadsheet Template</h1>
-      <p>Starter columns for SKU, cost, price, and channel.</p>
+      <h1>Inventory Spreadsheet</h1>
+      <p>Track items and see profit per row. Add rows as you go — nothing leaves your browser.</p>
     </div>
   </section>
   <main>
     <div class="container">
       <div class="tool-panel tool-panel--wide">
-        <p>Starter inventory columns for Sheets or Excel.</p>
-        <table class="sheet-table">
-          <thead><tr><th>SKU</th><th>Title</th><th>Cost</th><th>List Price</th><th>Channel</th><th>Status</th></tr></thead>
-          <tbody><tr><td></td><td></td><td></td><td></td><td></td><td>Available</td></tr></tbody>
-        </table>
+        <p class="tool-hint">Enter <strong>Sale price</strong> when an item sells to calculate profit. List price is optional for unsold inventory.</p>
+        <div class="sheet-scroll">
+          <table class="interactive-table sheet-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Title</th>
+                <th class="num">Cost</th>
+                <th class="num">List</th>
+                <th class="num">Sold</th>
+                <th class="num">Fees</th>
+                <th class="num">Ship</th>
+                <th class="num">Profit</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="sheet-body"></tbody>
+          </table>
+        </div>
+        <div class="tool-results">
+          <h3>Totals</h3>
+          <dl>
+            <dt>Active rows</dt><dd id="sheet-active">0</dd>
+            <dt>Total cost (all rows)</dt><dd id="sheet-total-cost">$0.00</dd>
+            <dt>Total sold revenue</dt><dd id="sheet-total-revenue">$0.00</dd>
+            <dt>Profit on sold items</dt><dd id="sheet-total-profit">$0.00</dd>
+          </dl>
+        </div>
         <div class="tool-actions">
-          <button type="button" class="btn btn--primary" id="sheet-download">Download CSV template</button>
+          <button type="button" class="btn btn--primary" id="sheet-add-row">+ Add row</button>
+          <button type="button" class="btn btn--outline" id="sheet-download">Download CSV</button>
+          <button type="button" class="btn secondary" id="sheet-clear">Reset</button>
         </div>
       </div>
       <p style="text-align:center;margin-top:1rem;">

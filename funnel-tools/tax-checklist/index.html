@@ -30,17 +30,51 @@
   <main>
     <div class="container">
       <div class="tool-panel">
+        <p class="tool-hint">Check tasks off and optionally enter dollar amounts — totals update live. Nothing is saved online.</p>
         <ul class="checklist" id="tax-checklist">
-          <li><input type="checkbox" data-id="tax-checklist-0" id="tax-checklist-0"><label for="tax-checklist-0">Export all platform sales reports</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-1" id="tax-checklist-1"><label for="tax-checklist-1">Separate personal vs business purchases</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-2" id="tax-checklist-2"><label for="tax-checklist-2">Mileage log for sourcing trips</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-3" id="tax-checklist-3"><label for="tax-checklist-3">Home office deduction worksheet</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-4" id="tax-checklist-4"><label for="tax-checklist-4">Inventory snapshot (year-end)</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-5" id="tax-checklist-5"><label for="tax-checklist-5">1099-K / 1099-NEC forms received</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-6" id="tax-checklist-6"><label for="tax-checklist-6">Schedule C expense categories mapped</label></li>
-          <li><input type="checkbox" data-id="tax-checklist-7" id="tax-checklist-7"><label for="tax-checklist-7">Quarterly estimated payments reviewed</label></li>
+          <li>
+            <input type="checkbox" data-id="tax-0" id="tax-0">
+            <label for="tax-0">Export all platform sales reports</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Export all platform sales reports">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-1" id="tax-1">
+            <label for="tax-1">Separate personal vs business purchases</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Separate personal vs business purchases">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-2" id="tax-2">
+            <label for="tax-2">Mileage log for sourcing trips</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Mileage log for sourcing trips">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-3" id="tax-3">
+            <label for="tax-3">Home office deduction worksheet</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Home office deduction worksheet">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-4" id="tax-4">
+            <label for="tax-4">Inventory snapshot (year-end)</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Inventory snapshot (year-end)">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-5" id="tax-5">
+            <label for="tax-5">1099-K / 1099-NEC forms received</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for 1099-K / 1099-NEC forms received">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-6" id="tax-6">
+            <label for="tax-6">Schedule C expense categories mapped</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Schedule C expense categories mapped">
+          </li>
+          <li>
+            <input type="checkbox" data-id="tax-7" id="tax-7">
+            <label for="tax-7">Quarterly estimated payments reviewed</label>
+            <input type="text" class="money-in" inputmode="decimal" placeholder="$" aria-label="Amount for Quarterly estimated payments reviewed">
+          </li>
         </ul>
-        <div class="tool-actions"><button type="button" class="btn secondary" id="checklist-reset">Reset checklist</button></div>
+        <div class="tool-results"><h3>Expense total (entered amounts)</h3><dl><dt>Sum</dt><dd id="checklist-total">$0.00</dd></dl></div>
+        <div class="tool-actions"><button type="button" class="btn secondary" id="checklist-reset">Reset</button></div>
       </div>
       <p style="text-align:center;margin-top:1rem;">
         <a class="btn btn--outline" href="/funnel-tools/">← All free tools</a>

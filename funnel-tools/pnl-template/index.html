@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>P&L Template — Inventr</title>
-  <meta name="description" content="Monthly profit-and-loss worksheet for resellers.">
+  <meta name="description" content="Interactive monthly profit-and-loss worksheet for resellers.">
   <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/pnl-template/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
@@ -24,30 +24,82 @@
   <section class="hero hero--small">
     <div class="container">
       <h1>P&L Template</h1>
-      <p>Monthly profit-and-loss worksheet for resellers.</p>
+      <p>Enter your numbers — gross profit and net profit calculate automatically.</p>
     </div>
   </section>
   <main>
     <div class="container">
-      <div class="tool-panel tool-panel--wide">
-        <p>Monthly P&amp;L worksheet. Download CSV or copy the table.</p>
-        <table class="pnl-table" id="pnl-table">
-          <thead><tr><th>Category</th><th>Amount</th></tr></thead>
+      <div class="tool-panel tool-panel--wide" id="pnl-root">
+        <p class="tool-hint">Nothing is saved to our servers. Use this for a single month, then download or copy when done.</p>
+        <div class="tool-field" style="max-width:280px;">
+          <label for="pnl-period">Month / period</label>
+          <input type="text" id="pnl-period" placeholder="e.g. May 2026">
+        </div>
+        <table class="interactive-table" id="pnl-table">
+          <thead>
+            <tr><th>Line item</th><th class="num">Amount</th></tr>
+          </thead>
           <tbody>
-            <tr><td>Gross sales</td><td></td></tr>
-            <tr><td>Cost of goods sold</td><td></td></tr>
-            <tr><td>Platform fees</td><td></td></tr>
-            <tr><td>Shipping paid</td><td></td></tr>
-            <tr><td>Supplies &amp; packaging</td><td></td></tr>
-            <tr><td>Booth rent</td><td></td></tr>
-            <tr><td>Mileage (deductible)</td><td></td></tr>
-            <tr><td>Other expenses</td><td></td></tr>
-            <tr><td><strong>Net profit</strong></td><td></td></tr>
+            <tr class="section"><td colspan="2">Revenue</td></tr>
+            <tr>
+              <td>Gross sales</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="gross-sales" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr class="section"><td colspan="2">Cost of goods sold</td></tr>
+            <tr>
+              <td>Inventory / COGS</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="cogs" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr class="subtotal">
+              <td>Gross profit</td>
+              <td class="num calc-cell" id="pnl-gross-profit">$0.00</td>
+            </tr>
+            <tr class="section"><td colspan="2">Operating expenses</td></tr>
+            <tr>
+              <td>Platform &amp; payment fees</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="platform-fees" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr>
+              <td>Shipping (outbound)</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="shipping" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr>
+              <td>Supplies &amp; packaging</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="supplies" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr>
+              <td>Booth rent</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="booth-rent" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr>
+              <td>Mileage (deductible)</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="mileage" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr>
+              <td>Other expenses</td>
+              <td class="num"><input type="text" class="money-in" data-pnl="other" inputmode="decimal" placeholder="0"></td>
+            </tr>
+            <tr class="subtotal">
+              <td>Total operating expenses</td>
+              <td class="num calc-cell" id="pnl-total-expenses">$0.00</td>
+            </tr>
+            <tr class="total">
+              <td><strong>Net profit</strong></td>
+              <td class="num calc-cell" id="pnl-net-profit">$0.00</td>
+            </tr>
           </tbody>
         </table>
+        <div class="tool-results">
+          <h3>Summary</h3>
+          <dl>
+            <dt>Net margin (on gross sales)</dt>
+            <dd id="pnl-margin">—</dd>
+          </dl>
+        </div>
         <div class="tool-actions">
           <button type="button" class="btn btn--primary" id="pnl-download">Download CSV</button>
           <button type="button" class="btn btn--outline" id="pnl-copy">Copy table</button>
+          <button type="button" class="btn secondary" id="pnl-clear">Clear all</button>
         </div>
       </div>
       <p style="text-align:center;margin-top:1rem;">

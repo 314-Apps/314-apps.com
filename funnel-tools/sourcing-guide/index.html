@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sourcing Guide — Inventr</title>
-  <meta name="description" content="Field checklist for thrift runs and estate sales.">
+  <meta name="description" content="Quick flip calculator plus field checklist for sourcing trips.">
   <link rel="canonical" href="https://consignment.314-apps.com/funnel-tools/sourcing-guide/">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
@@ -24,20 +24,36 @@
   <section class="hero hero--small">
     <div class="container">
       <h1>Sourcing Guide</h1>
-      <p>Field checklist for thrift runs and estate sales.</p>
+      <p>Run the numbers before you buy, then use the field checklist on your trip.</p>
     </div>
   </section>
   <main>
     <div class="container">
       <div class="tool-panel">
+        <div class="flip-calc">
+          <h3>Quick flip calculator</h3>
+          <div class="tool-grid-2">
+            <div class="tool-field"><label for="src-buy">Buy price ($)</label><input type="number" id="src-buy" min="0" step="0.01" value="8"></div>
+            <div class="tool-field"><label for="src-sell">Expected sell ($)</label><input type="number" id="src-sell" min="0" step="0.01" value="35"></div>
+            <div class="tool-field"><label for="src-fees">Fees (%)</label><input type="number" id="src-fees" min="0" step="0.1" value="13"></div>
+            <div class="tool-field"><label for="src-ship">Shipping ($)</label><input type="number" id="src-ship" min="0" step="0.01" value="5"></div>
+            <div class="tool-field"><label for="src-hours">Your time (hours)</label><input type="number" id="src-hours" min="0" step="0.1" value="0.5"></div>
+          </div>
+          <div class="tool-results"><h3>At this price</h3><dl>
+            <dt>Net profit</dt><dd id="src-net">$0.00</dd>
+            <dt>Margin</dt><dd id="src-margin">—</dd>
+            <dt>Profit per hour</dt><dd id="src-hourly">—</dd>
+          </dl></div>
+        </div>
+        <h3 style="margin:1.5rem 0 0.75rem;font-size:1rem;">Field checklist</h3>
         <ul class="checklist" id="sourcing-checklist">
-          <li><input type="checkbox" data-id="sourcing-checklist-0" id="sourcing-checklist-0"><label for="sourcing-checklist-0">Research comps before leaving home</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-1" id="sourcing-checklist-1"><label for="sourcing-checklist-1">Bring measuring tape & flashlight</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-2" id="sourcing-checklist-2"><label for="sourcing-checklist-2">Set max spend per category</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-3" id="sourcing-checklist-3"><label for="sourcing-checklist-3">Check sold comps on one item per rack</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-4" id="sourcing-checklist-4"><label for="sourcing-checklist-4">Skip categories below target $/hour</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-5" id="sourcing-checklist-5"><label for="sourcing-checklist-5">Photograph tags on high-value finds</label></li>
-          <li><input type="checkbox" data-id="sourcing-checklist-6" id="sourcing-checklist-6"><label for="sourcing-checklist-6">Track mileage from first stop</label></li>
+          <li><input type="checkbox" data-id="s0" id="s0"><label for="s0">Research comps before leaving home</label></li>
+          <li><input type="checkbox" data-id="s1" id="s1"><label for="s1">Bring measuring tape &amp; flashlight</label></li>
+          <li><input type="checkbox" data-id="s2" id="s2"><label for="s2">Set max spend per category</label></li>
+          <li><input type="checkbox" data-id="s3" id="s3"><label for="s3">Check sold comps on one item per rack</label></li>
+          <li><input type="checkbox" data-id="s4" id="s4"><label for="s4">Skip categories below target $/hour</label></li>
+          <li><input type="checkbox" data-id="s5" id="s5"><label for="s5">Photograph tags on high-value finds</label></li>
+          <li><input type="checkbox" data-id="s6" id="s6"><label for="s6">Track mileage from first stop</label></li>
         </ul>
         <div class="tool-actions"><button type="button" class="btn secondary" id="checklist-reset">Reset checklist</button></div>
       </div>

@@ -17,12 +17,12 @@
   {
     "slug": "pnl-template",
     "title": "P&L Template",
-    "description": "Monthly profit-and-loss worksheet for resellers."
+    "description": "Interactive monthly P&L — enter amounts and see net profit instantly."
   },
   {
     "slug": "spreadsheet-template",
-    "title": "Inventory Spreadsheet Template",
-    "description": "Starter columns for SKU, cost, price, and channel."
+    "title": "Inventory Spreadsheet",
+    "description": "Interactive inventory rows with per-item profit and CSV export."
   },
   {
     "slug": "photo-checklist",

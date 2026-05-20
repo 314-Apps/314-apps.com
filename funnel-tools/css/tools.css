@@ -8,7 +8,13 @@
 }
 
 .tool-panel--wide {
-  max-width: 900px;
+  max-width: 960px;
+}
+
+.tool-hint {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--color-muted);
 }
 
 .tool-field {
@@ -24,7 +30,8 @@
 }
 
 .tool-field input,
-.tool-field select {
+.tool-field select,
+.tool-field textarea {
   width: 100%;
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
@@ -95,9 +102,10 @@
 }
 
 .checklist li {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   gap: 0.65rem;
+  align-items: start;
   padding: 0.65rem 0;
   border-bottom: 1px solid var(--color-border);
 }
@@ -107,14 +115,13 @@
 }
 
 .checklist input[type="checkbox"] {
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
   width: 1.1rem;
   height: 1.1rem;
   accent-color: var(--color-primary);
 }
 
 .checklist label {
-  flex: 1;
   cursor: pointer;
   color: var(--color-text);
 }
@@ -124,6 +131,18 @@
   text-decoration: line-through;
 }
 
+.checklist .money-in {
+  width: 6.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
 .tool-actions {
   display: flex;
   flex-wrap: wrap;
@@ -131,28 +150,128 @@
   margin-top: 1rem;
 }
 
-.pnl-table,
-.sheet-table {
+.interactive-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   margin: 1rem 0;
 }
 
-.pnl-table th,
-.pnl-table td,
-.sheet-table th,
-.sheet-table td {
+.interactive-table th,
+.interactive-table td {
   border: 1px solid var(--color-border);
-  padding: 0.45rem 0.5rem;
+  padding: 0.5rem 0.6rem;
   text-align: left;
+  vertical-align: middle;
 }
 
-.pnl-table th,
-.sheet-table th {
+.interactive-table th {
   background: var(--color-bg);
   color: var(--color-muted);
   font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.interactive-table td.num,
+.interactive-table th.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.interactive-table tr.section td {
+  background: rgba(102, 126, 234, 0.12);
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.interactive-table tr.subtotal td {
+  background: rgba(26, 26, 34, 0.8);
+  font-weight: 600;
+}
+
+.interactive-table tr.total td {
+  background: rgba(52, 211, 153, 0.1);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.interactive-table tr.total.negative td {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.interactive-table .money-in {
+  width: 100%;
+  min-width: 5.5rem;
+  max-width: 8rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  text-align: right;
+}
+
+.interactive-table .money-in:focus {
+  outline: 2px solid var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.interactive-table .text-in {
+  width: 100%;
+  min-width: 4rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.85rem;
+}
+
+.interactive-table .calc-cell {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.interactive-table .calc-cell.negative {
+  color: var(--color-warning-border);
+}
+
+.sheet-scroll {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.sheet-table .btn-row-remove {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-muted);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sheet-table .btn-row-remove:hover {
+  border-color: var(--color-warning-border);
+  color: var(--color-warning-border);
+}
+
+.flip-calc {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.flip-calc h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
 }
 
 .score-row {
@@ -173,5 +292,27 @@
   border-radius: 6px;
   border: 1px solid var(--color-border);
   background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.preset-row button {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.preset-row button:hover {
+  border-color: var(--color-primary);
   color: var(--color-text);
 }
