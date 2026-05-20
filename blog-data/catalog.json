@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-20T01:26:24.700Z",
-  "count": 513,
+  "generatedAt": "2026-05-20T04:03:19.127Z",
+  "count": 523,
   "articles": [
     {
       "path": "amazon-resellers/amazon-account-health-metrics.html",
@@ -393,6 +393,19 @@
       "linksTo": []
     },
     {
+      "path": "break-even-calculator/how-to-calculate-booth-break-even.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "How to Calculate Booth Break-Even (Real Formula)",
+      "description": "The right formula for booth break-even with commission, fees, and COGS baked in—plus a worked example, the line items most sellers forget, and the monthly target every booth needs.",
+      "status": "ready",
+      "wordCount": 1163,
+      "linksTo": [
+        "break-even-calculator/how-store-commission-affects-bottom-line.html",
+        "pnl-template/operating-expenses-booth-sellers.html"
+      ]
+    },
+    {
       "path": "break-even-calculator/mid-year-booth-audits-break-even-drift.html",
       "cluster": "break-even-calculator",
       "clusterLabel": "Break-even calculator",
@@ -401,6 +414,19 @@
       "status": "stub",
       "wordCount": 36,
       "linksTo": []
+    },
+    {
+      "path": "break-even-calculator/true-cost-running-consignment-booth.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "The True Cost of Running a Consignment Booth",
+      "description": "A full accounting of what it actually costs to run a consignment or antique-mall booth: rent, commission, supplies, mileage, time, opportunity cost—plus the categories most sellers ignore until they hurt.",
+      "status": "ready",
+      "wordCount": 1222,
+      "linksTo": [
+        "break-even-calculator/how-to-calculate-booth-break-even.html",
+        "pnl-template/operating-expenses-booth-sellers.html"
+      ]
     },
     {
       "path": "break-even-calculator/two-booths-one-owner-crossover.html",
@@ -1643,6 +1669,18 @@
       "status": "stub",
       "wordCount": 33,
       "linksTo": []
+    },
+    {
+      "path": "inventr-app/getting-started-inventr-walkthrough.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Getting Started with Inventr: A First-Week Walkthrough",
+      "description": "A practical first-week walkthrough of the Inventr app for resellers: setup, item entry, sales tracking, and the small habits that turn the app from a download into a real inventory system.",
+      "status": "ready",
+      "wordCount": 1369,
+      "linksTo": [
+        "inventr-app/inventr-vs-spreadsheets-why-switching.html"
+      ]
     },
     {
       "path": "inventr-app/importing-ebay-sales-history-inventr.html",
@@ -3827,6 +3865,19 @@
       "linksTo": []
     },
     {
+      "path": "photo-checklist/how-to-photograph-resale-items.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "How to Photograph Resale Items Like a Pro",
+      "description": "Lighting, framing, backgrounds, and the small habits that turn phone photos into listing photos that convert. A practical setup guide for resellers under $100 in gear.",
+      "status": "ready",
+      "wordCount": 1189,
+      "linksTo": [
+        "photo-checklist/photographing-clothing-online-resale.html",
+        "photo-checklist/photos-every-listing-needs.html"
+      ]
+    },
+    {
       "path": "photo-checklist/mannequin-vs-flat-lay-vs-model.html",
       "cluster": "photo-checklist",
       "clusterLabel": "Photo checklist",
@@ -3887,6 +3938,18 @@
       "linksTo": []
     },
     {
+      "path": "photo-checklist/photos-every-listing-needs.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "The Photos Every Listing Needs",
+      "description": "The minimum photo set every resale listing should have across clothing, hardgoods, electronics, and collectibles—plus the order to shoot them in so you inspect the item while you photograph it.",
+      "status": "ready",
+      "wordCount": 1017,
+      "linksTo": [
+        "photo-checklist/photographing-clothing-online-resale.html"
+      ]
+    },
+    {
       "path": "photo-checklist/stop-motion-and-360-listings.html",
       "cluster": "photo-checklist",
       "clusterLabel": "Photo checklist",
@@ -3925,6 +3988,20 @@
       "status": "stub",
       "wordCount": 35,
       "linksTo": []
+    },
+    {
+      "path": "pnl-template/how-to-read-pnl-better-decisions.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "How to Read Your P&L for Better Decisions",
+      "description": "Reading a reseller P&L beyond the bottom line: the ratios that matter, the trends to watch month-over-month, and the specific signals that should change your sourcing, pricing, or channel mix.",
+      "status": "ready",
+      "wordCount": 1266,
+      "linksTo": [
+        "pnl-template/what-is-pnl-statement-resellers.html",
+        "profit-calculator/how-to-calculate-true-reselling-profit.html",
+        "profit-calculator/platform-fee-comparison-ebay-poshmark-mercari.html"
+      ]
     },
     {
       "path": "pnl-template/operating-expenses-booth-sellers.html",
@@ -4017,6 +4094,21 @@
       "status": "stub",
       "wordCount": 37,
       "linksTo": []
+    },
+    {
+      "path": "pnl-template/what-is-pnl-statement-resellers.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "What Is a P&L Statement (And Why Resellers Need One)",
+      "description": "P&L statements explained in plain English for resellers: what each section means, how COGS and gross profit work, why a real P&L beats a sales report, and how to set up your first one this week.",
+      "status": "ready",
+      "wordCount": 1182,
+      "linksTo": [
+        "pnl-template/how-to-read-pnl-better-decisions.html",
+        "pnl-template/operating-expenses-booth-sellers.html",
+        "profit-calculator/why-revenue-isnt-profit.html",
+        "tax-checklist/what-is-schedule-c-resellers.html"
+      ]
     },
     {
       "path": "poshmark/poshmark-authentication-required.html",
@@ -4717,6 +4809,20 @@
       "linksTo": []
     },
     {
+      "path": "sourcing-guide/best-things-flip-thrift-stores.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "The Best Things to Flip from Thrift Stores",
+      "description": "A working list of the categories that actually pay at thrift stores in 2026: vintage clothing, hand tools, glassware, books, electronics, and the bands experienced flippers use to grade buy-pass decisions.",
+      "status": "ready",
+      "wordCount": 1292,
+      "linksTo": [
+        "niches-books/book-scanning-apps-which-actually-pay.html",
+        "sourcing-guide/how-to-spot-valuable-vintage-clothing.html",
+        "sourcing-guide/research-item-value-60-seconds.html"
+      ]
+    },
+    {
       "path": "sourcing-guide/building-a-pickers-network.html",
       "cluster": "sourcing-guide",
       "clusterLabel": "Sourcing guide",
@@ -5001,6 +5107,19 @@
       "linksTo": []
     },
     {
+      "path": "tax-checklist/reseller-tax-basics.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Reseller Tax Basics: What You Actually Owe",
+      "description": "A plain-English tax primer for resellers: when reselling becomes a business, which expenses are deductible, when 1099-K thresholds apply, and the year-round records that prevent April panic.",
+      "status": "ready",
+      "wordCount": 1337,
+      "linksTo": [
+        "pnl-template/operating-expenses-booth-sellers.html",
+        "tax-checklist/what-is-schedule-c-resellers.html"
+      ]
+    },
+    {
       "path": "tax-checklist/sole-prop-vs-llc-vs-scorp-resellers.html",
       "cluster": "tax-checklist",
       "clusterLabel": "Tax checklist",
@@ -5029,6 +5148,19 @@
       "status": "stub",
       "wordCount": 37,
       "linksTo": []
+    },
+    {
+      "path": "tax-checklist/what-is-schedule-c-resellers.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "What Is Schedule C and Why Resellers File One",
+      "description": "A practical walkthrough of Schedule C for resellers: what each section means, how COGS is calculated, the line items most resellers miss, and how to think about the form before tax software asks you about it.",
+      "status": "ready",
+      "wordCount": 1245,
+      "linksTo": [
+        "pnl-template/operating-expenses-booth-sellers.html",
+        "tax-checklist/reseller-tax-basics.html"
+      ]
     },
     {
       "path": "whatnot/whatnot-50-shows-lessons.html",
