@@ -56,7 +56,7 @@
   function showToast(msg) {
     let t = $('.tool-toast');
     if (!t) {
-      t = document.createElement('motion');
+      t = document.createElement('div');
       t.className = 'tool-toast';
       t.style.cssText =
         'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1a1a22;border:1px solid #667eea;padding:0.75rem 1.25rem;border-radius:8px;z-index:999;color:#fff;font-size:0.9rem;';
