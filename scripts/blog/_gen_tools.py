@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 manifest = json.loads((ROOT / "funnel-tools/manifest.json").read_text())
 O, C = "@@O@@", "@@C@@"
 APP_STORE_URL = "https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683"
+SITE_HOME = "/"
 
 
 def shell(title, desc, slug, body, wide=False):
@@ -25,9 +26,9 @@ def shell(title, desc, slug, body, wide=False):
 <body data-tool="{slug}">
   <header class="site-header">
     {O} class="container">
-      <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
+      <a href="{SITE_HOME}" class="logo">Inventr</a>
       <nav class="nav-links">
-        <a href="/blog/">All Posts</a>
+        <a href="{SITE_HOME}">Guides</a>
         <a href="/funnel-tools/">Free Tools</a>
         <a class="btn btn--primary btn--sm" href="{APP_STORE_URL}?utm_source=funnel_tools&amp;utm_medium={slug}" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
@@ -194,9 +195,9 @@ index_html = f"""<!DOCTYPE html>
 <body>
   <header class="site-header">
     {O} class="container">
-      <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
+      <a href="{SITE_HOME}" class="logo">Inventr</a>
       <nav class="nav-links">
-        <a href="/blog/">All Posts</a>
+        <a href="{SITE_HOME}">Guides</a>
         <a href="/funnel-tools/">Free Tools</a>
         <a class="btn btn--primary btn--sm" href="{APP_STORE_URL}?utm_source=funnel_tools&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>

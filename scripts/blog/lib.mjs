@@ -9,6 +9,9 @@ export const BLOG_OUT = path.join(ROOT, 'blog');
 export const PUBLISHED_PATH = path.join(BLOG_DATA, 'published.json');
 export const CATALOG_PATH = path.join(BLOG_DATA, 'catalog.json');
 export const SITE_BASE = 'https://consignment.314-apps.com';
+/** Site root on consignment.314-apps.com (guides home). Articles stay under /blog/. */
+export const SITE_HOME = '/';
+export const SITE_STYLES = '/funnel-tools/css/styles.css';
 
 export const CLUSTER_LABELS = {
   'profit-calculator': 'Profit calculator',

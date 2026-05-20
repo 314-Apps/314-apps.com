@@ -7,6 +7,8 @@ import {
   BLOG_OUT,
   CATALOG_PATH,
   SITE_BASE,
+  SITE_HOME,
+  SITE_STYLES,
   CLUSTER_SECTIONS,
   readPublished,
   escapeHtml,
@@ -89,18 +91,18 @@ function buildIndex(catalog, published) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventr Blog — Guides for Resellers, Booth Sellers &amp; Consignment Shops</title>
-  <meta name="description" content="Practical reselling guides for resellers and consignment sellers.">
-  <link rel="canonical" href="${SITE_BASE}/blog/">
+  <title>Inventr — Reseller guides &amp; free tools</title>
+  <meta name="description" content="Practical reselling guides, calculators, and checklists for booth sellers and consignment shops.">
+  <link rel="canonical" href="${SITE_BASE}${SITE_HOME}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../funnel-tools/css/styles.css">
+  <link rel="stylesheet" href="${SITE_STYLES}">
 </head>
 <body>
   <header class="site-header">
     <div class="container">
-      <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
+      <a href="${SITE_HOME}" class="logo">Inventr</a>
       <nav class="nav-links">
-        <a href="/blog/">All Posts</a>
+        <a href="${SITE_HOME}">Guides</a>
         <a href="/funnel-tools/">Free Tools</a>
         <a class="btn btn--primary btn--sm" href="${APP_STORE_URL}?utm_source=blog&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
@@ -109,27 +111,31 @@ function buildIndex(catalog, published) {
   <section class="hero">
     <div class="container">
       <h1>Reseller &amp; booth guides that show the math</h1>
-      <p>Long-form playbooks for online platforms, local flips, and consignment operations.</p>
-    </motion>
+      <p>Long-form playbooks for online platforms, local flips, and consignment operations — plus free calculators and checklists.</p>
+      <p style="margin-top:1.25rem;display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;">
+        <a class="btn btn--white btn--lg" href="/funnel-tools/">Browse free tools</a>
+        <a class="btn btn--outline btn--lg" href="#guides" style="border-color:rgba(255,255,255,0.5);color:#fff;">Jump to guides</a>
+      </p>
+    </div>
   </section>
-  <main>
+  <main id="guides">
     <div class="container">
       ${navChips ? `<nav class="category-nav" aria-label="Topics">${navChips}</nav>` : ''}
       ${emptyMsg}
       ${sectionsHtml}
-    </motion>
+    </div>
   </main>
   <section class="cta-banner">
     <div class="container">
       <h2>Track inventory and real profit in one app</h2>
       <p>Inventr is built for booth sellers and multi-channel resellers.</p>
       <a class="btn btn--white btn--lg" href="${APP_STORE_URL}?utm_source=blog&amp;utm_medium=cta" target="_blank" rel="noopener">Try Inventr Free</a>
-    </motion>
+    </div>
   </section>
   <footer class="site-footer">
     <div class="container">
       <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a></p>
-    </motion>
+    </div>
   </footer>
 </body>
 </html>
@@ -148,7 +154,7 @@ function funnelToolUrls() {
 
 function buildSitemap(published) {
   const urls = [
-    `<url><loc>${SITE_BASE}/blog/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>`,
+    `<url><loc>${SITE_BASE}${SITE_HOME}</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
     `<url><loc>${SITE_BASE}/funnel-tools/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
     ...funnelToolUrls(),
     ...[...published].sort().map(

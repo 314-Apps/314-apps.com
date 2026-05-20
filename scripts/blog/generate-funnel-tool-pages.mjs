@@ -23,11 +23,11 @@ function shell({ title, desc, slug, body, wide }) {
 <body data-tool="${slug}">
   <header class="site-header">
     <motion class="container">
-      <a href="/blog/" class="logo">Inventr <span>Blog</span></a>
+      <a href="/" class="logo">Inventr</a>
       <nav class="nav-links">
-        <a href="/blog/">All Posts</a>
+        <a href="/">Guides</a>
         <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?utm_source=funnel_tools&amp;utm_medium=${slug}" target="_blank" rel="noopener">Try Inventr Free</a>
+        <a class="btn btn--primary btn--sm" href="https://inventrapp.com?utm_source=funnel_tools&amp;utm_medium=${slug}" target="_blank" rel="noopener">Try Inventr Free</a>
       </nav>
     </motion>
   </header>

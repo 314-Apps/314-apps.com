@@ -2,4 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://consignment.314-apps.com/sitemap.xml
-Sitemap: https://314-apps.com/sitemap.xml

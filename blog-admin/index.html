@@ -12,7 +12,7 @@
   <div class="wrap">
     <header class="bar">
       <h1>Inventr Blog Admin</h1>
-      <a href="/blog/" class="btn secondary">View blog</a>
+      <a href="/" class="btn secondary">View site</a>
     </header>
 
     <div id="msg" class="msg hidden" role="status"></div>
@@ -30,8 +30,8 @@
         <div>
           <label for="github-token">GitHub personal access token</label>
           <input type="password" id="github-token" autocomplete="off" placeholder="Fine-grained: Contents read & write">
-        </div>
-      </div>
+        </motion>
+      </motion>
       <button type="button" id="btn-login">Sign in</button>
       <p class="help">
         Create a <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">fine-grained token</a>
@@ -48,16 +48,16 @@
           <button type="button" class="secondary" id="btn-publish-ready">Publish all ready (unpublished)</button>
           <button type="button" class="danger secondary" id="btn-unpublish-all">Unpublish all</button>
           <button type="button" class="secondary" id="btn-logout">Sign out</button>
-        </div>
+        </motion>
         <div class="row">
           <div>
             <label for="filter-search">Search</label>
             <input type="search" id="filter-search" placeholder="Title or path…">
-          </div>
+          </motion>
           <div>
             <label for="filter-cluster">Cluster</label>
             <select id="filter-cluster"><option value="">All clusters</option></select>
-          </div>
+          </motion>
           <div>
             <label for="filter-status">Content</label>
             <select id="filter-status">
@@ -65,7 +65,7 @@
               <option value="ready">Ready only</option>
               <option value="stub">Stubs only</option>
             </select>
-          </div>
+          </motion>
           <div>
             <label for="filter-live">Published</label>
             <select id="filter-live">
@@ -73,9 +73,9 @@
               <option value="yes">Live</option>
               <option value="no">Not live</option>
             </select>
-          </div>
-        </div>
-      </div>
+          </motion>
+        </motion>
+      </motion>
 
       <div class="panel" style="padding:0; overflow:auto;">
         <table>
@@ -91,9 +91,9 @@
           </thead>
           <tbody id="article-rows"></tbody>
         </table>
-      </div>
+      </motion>
     </section>
-  </div>
+  </motion>
 
   <script type="module" src="admin.js"></script>
 </body>

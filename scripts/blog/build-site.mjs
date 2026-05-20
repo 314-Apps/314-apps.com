@@ -1,19 +1,31 @@
 #!/usr/bin/env node
 /**
- * Assembles _site/ for GitHub Pages: main site + published blog only.
+ * Assembles _site/ for consignment.314-apps.com (Inventr guides + tools only).
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT } from './lib.mjs';
 import { execSync } from 'node:child_process';
+import { ROOT, SITE_BASE, SITE_HOME } from './lib.mjs';
 
 const OUT = path.join(ROOT, '_site');
 
-const COPY_DIRS = ['fish', 'funnel-tools', 'blog-admin'];
-const COPY_FILES = [
-  'index.html', 'style.css', 'contact.html', 'privacy-policy.html',
-  'terms-of-service.html', 'CNAME', '.nojekyll', 'robots.txt',
-];
+const COPY_DIRS = ['funnel-tools', 'blog-admin'];
+const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
+
+const BLOG_REDIRECT_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=/">
+  <link rel="canonical" href="${SITE_BASE}${SITE_HOME}">
+  <title>Redirecting…</title>
+  <script>location.replace('/');</script>
+</head>
+<body>
+  <p><a href="/">Inventr guides home</a></p>
+</body>
+</html>
+`;
 
 function rmOut() {
   if (fs.existsSync(OUT)) fs.rmSync(OUT, { recursive: true, force: true });
@@ -43,18 +55,26 @@ for (const f of COPY_FILES) copyFile(f);
 for (const d of COPY_DIRS) copyDir(d);
 copyDir('blog');
 
-fs.mkdirSync(path.join(OUT, 'blog-data'), { recursive: true });
-// PIN is in blog-admin/config.json only (not copied to _site)
+// Guides home at site root (consignment.314-apps.com/)
+const blogIndex = path.join(OUT, 'blog/index.html');
+if (fs.existsSync(blogIndex)) {
+  fs.copyFileSync(blogIndex, path.join(OUT, 'index.html'));
+  fs.writeFileSync(blogIndex, BLOG_REDIRECT_HTML);
+}
 
-// Merge sitemaps
-const mainUrls = `<url><loc>https://314-apps.com/</loc><priority>1.0</priority></url>`;
+fs.mkdirSync(path.join(OUT, 'blog-data'), { recursive: true });
+
 const blogSitemap = fs.existsSync(path.join(ROOT, 'sitemap-blog.xml'))
   ? fs.readFileSync(path.join(ROOT, 'sitemap-blog.xml'), 'utf8')
   : '';
-const blogUrls = blogSitemap.replace(/<\?xml[\s\S]*?<urlset[^>]*>/, '').replace(/<\/urlset>\s*$/, '').trim();
+const blogUrls = blogSitemap
+  .replace(/<\?xml[\s\S]*?<urlset[^>]*>/, '')
+  .replace(/<\/urlset>\s*$/, '')
+  .trim()
+  .replaceAll(`${SITE_BASE}/blog/`, `${SITE_BASE}/blog/`);
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${mainUrls}
 ${blogUrls}
 </urlset>
 `;
