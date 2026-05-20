@@ -1,0 +1,3 @@
+{
+  "note": "Admin UI reads blog-admin/config.json. Change sitePin there before deploying."
+}

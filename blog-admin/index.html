@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Inventr Blog Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="bar">
+      <h1>Inventr Blog Admin</h1>
+      <a href="/blog/" class="btn secondary">View blog</a>
+    </header>
+
+    <div id="msg" class="msg hidden" role="status"></div>
+
+    <section id="login-panel" class="panel login-grid">
+      <h2>Sign in</h2>
+      <p class="help">Uses your GitHub account to update <code>blog-data/published.json</code>. You need write access to <strong>314-Apps/314-apps.com</strong>.</p>
+      <div class="row">
+        <div>
+          <label for="site-pin">Site PIN</label>
+          <input type="password" id="site-pin" autocomplete="current-password" placeholder="Site PIN">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="github-token">GitHub personal access token</label>
+          <input type="password" id="github-token" autocomplete="off" placeholder="Fine-grained: Contents read & write">
+        </div>
+      </div>
+      <button type="button" id="btn-login">Sign in</button>
+      <p class="help">
+        Create a <a href="https://github.com/settings/tokens?type=beta" target="_blank" rel="noopener">fine-grained token</a>
+        for this repo (Contents: Read and write). Token stays in this browser session only.
+      </p>
+    </section>
+
+    <section id="app-panel" class="hidden">
+      <div class="panel">
+        <div class="stats" id="stats"></div>
+        <div class="actions-bar">
+          <button type="button" id="btn-save" disabled>Save &amp; deploy</button>
+          <button type="button" class="secondary" id="btn-reload">Reload</button>
+          <button type="button" class="secondary" id="btn-publish-ready">Publish all ready (unpublished)</button>
+          <button type="button" class="danger secondary" id="btn-unpublish-all">Unpublish all</button>
+          <button type="button" class="secondary" id="btn-logout">Sign out</button>
+        </div>
+        <div class="row">
+          <div>
+            <label for="filter-search">Search</label>
+            <input type="search" id="filter-search" placeholder="Title or path…">
+          </div>
+          <div>
+            <label for="filter-cluster">Cluster</label>
+            <select id="filter-cluster"><option value="">All clusters</option></select>
+          </div>
+          <div>
+            <label for="filter-status">Content</label>
+            <select id="filter-status">
+              <option value="">All</option>
+              <option value="ready">Ready only</option>
+              <option value="stub">Stubs only</option>
+            </select>
+          </div>
+          <div>
+            <label for="filter-live">Published</label>
+            <select id="filter-live">
+              <option value="">All</option>
+              <option value="yes">Live</option>
+              <option value="no">Not live</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="padding:0; overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="check-all" title="Select visible"></th>
+              <th>Live</th>
+              <th>Content</th>
+              <th>Title</th>
+              <th>Cluster</th>
+              <th>Words</th>
+            </tr>
+          </thead>
+          <tbody id="article-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

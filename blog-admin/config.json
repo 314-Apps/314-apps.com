@@ -1,0 +1,8 @@
+{
+  "repo": "314-Apps/314-apps.com",
+  "branch": "main",
+  "publishedPath": "blog-data/published.json",
+  "catalogPath": "blog-data/catalog.json",
+  "sitePin": "inventr-admin-2026",
+  "requiredGithubLogin": null
+}

@@ -1,0 +1,4506 @@
+{
+  "generatedAt": "2026-05-19T23:54:11.687Z",
+  "count": 500,
+  "articles": [
+    {
+      "path": "amazon-resellers/amazon-account-health-metrics.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Reseller Account Health Metrics",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-antique-vintage-resellers.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon for Antique and Vintage Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-bookselling-walkthrough.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Bookselling Sub-Niche Walkthrough",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "amazon-resellers/amazon-brand-restrictions-2026.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Brand Restrictions for Resellers in 2026",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "amazon-resellers/amazon-buy-box-used-items.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Buy Box for Used Items: Is It Even Possible?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 45
+    },
+    {
+      "path": "amazon-resellers/amazon-customer-service-when-to-reply.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Customer Service: When to Reply, When to Escalate",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "amazon-resellers/amazon-fba-vs-fbm-resellers.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon FBA vs FBM for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-ipi-score-tactical-levers.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Reseller IPI Score: Tactical Levers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-liquidation-sourcing.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Liquidation: A Sourcing Channel",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-listing-suppressions.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Listing Suppressions: Diagnosis and Fixes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-multichannel-fulfillment.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Multichannel Fulfillment for Cross-Listers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-replenishment-routines.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Replenishment Routines for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-repricing-tools-roundup.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Repricing Tools: A Compared Roundup",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-reseller-tax-marketplace-rules.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Reseller Tax and Sales Tax Marketplace Rules",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "amazon-resellers/amazon-reserves-cash-flow.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Reserves: Cash Flow Implications",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-returns-reseller-risk.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Returns: The Reseller's Risk",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "amazon-resellers/amazon-seller-central-daily-routines.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Seller Central: Daily Routines for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "amazon-resellers/amazon-storage-fees-when-to-pull.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Storage Fees: When to Pull Inventory",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "amazon-resellers/amazon-used-like-new-standards.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Used-Like-New Standards: A Practical Guide",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "amazon-resellers/amazon-variation-listings-used.html",
+      "cluster": "amazon-resellers",
+      "clusterLabel": "Amazon resellers",
+      "title": "Amazon Variation Listings for Used Items",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "booth-scorecard/booth-hot-zone-where-eyes-go.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "The &quot;Hot Zone&quot; of a Booth: Where Eyes Go First",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 45
+    },
+    {
+      "path": "booth-scorecard/booth-mix-mid-low-high-end.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Mid-Range vs Low-End vs High-End Booth Mix",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "booth-scorecard/booth-photography-cross-promotion.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Booth Photography for Listing Cross-Promotion",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "booth-scorecard/booth-sound-smell-sight.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Booth Sound, Smell, and Sight: Sensory Sales Levers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "booth-scorecard/booth-theme-rotations-6-week.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Booth Theme Rotations on a 6-Week Cadence",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "booth-scorecard/co-booth-strategies-shared-space.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Co-Booth Strategies: Sharing Space, Splitting Costs",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "booth-scorecard/holiday-booth-setups-that-convert.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Holiday Booth Setups That Actually Convert",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "booth-scorecard/lighting-your-booth-cheap-wins.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Lighting Your Booth: Cheap Wins That Lift Sales",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "booth-scorecard/tagging-booth-items-online-sync.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "Tagging Booth Items for Online Sync",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "booth-scorecard/the-80-20-booth-audit.html",
+      "cluster": "booth-scorecard",
+      "clusterLabel": "Booth scorecard",
+      "title": "The 80/20 Booth Audit",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "break-even-calculator/booth-doesnt-break-even-decision-tree.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "When Your Booth Doesn't Break Even: A Decision Tree",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "break-even-calculator/booth-sub-leasing.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Booth Sub-Leasing: A Break-Even Lever",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "break-even-calculator/break-even-calendar.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "The Break-Even Calendar: Knowing the Day You Pay Rent",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "break-even-calculator/break-even-multi-booth.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Break-Even for Multi-Booth Operators",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "break-even-calculator/break-even-off-season-survival.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Break-Even and the Off-Season Survival Plan",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "break-even-calculator/break-even-on-booth-move.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Break-Even on a Booth Move (Worth It or Not?)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "break-even-calculator/break-even-with-variable-commissions.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Break-Even with Variable Booth Commissions",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "break-even-calculator/hidden-break-even-of-online-time.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "The Hidden Break-Even of Online Selling: Time",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "break-even-calculator/mid-year-booth-audits-break-even-drift.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Mid-Year Booth Audits: Catching Break-Even Drift",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "break-even-calculator/two-booths-one-owner-crossover.html",
+      "cluster": "break-even-calculator",
+      "clusterLabel": "Break-even calculator",
+      "title": "Two Booths One Owner: Crossover Break-Even",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/banning-pausing-consignor.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Banning or Pausing a Consignor",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/consignment-aging-policies.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Inventory Aging Policies",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "consignment-shop-ops/consignment-booth-hybrid.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Shop and Booth Hybrid Models",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/consignment-pos-systems.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment POS Systems for Owners",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/consignment-sales-tax-1099.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Sales Tax and 1099 Rules",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/consignment-shop-insurance.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Shop Insurance Essentials",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "consignment-shop-ops/consignment-shop-layout-conversion.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Shop Layout for Conversion",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/consignment-shrinkage-theft-controls.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Shop Shrinkage and Theft Controls",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/consignment-year-end-closing.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignment Shop Year-End Closing Checklist",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/consignor-app-access-when.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignor App Access: When to Give It",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "consignment-shop-ops/consignor-payment-cycles.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignor Payment Cycles: Weekly, Monthly, On-Sale",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/consignor-reports-statements.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Consignor Reports and Statements",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "consignment-shop-ops/high-volume-consignor-tiers.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Inviting High-Volume Consignors: Tier Structures",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/marketing-consignment-shop-locally.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Marketing Your Consignment Shop Locally",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/onboarding-consignors-contracts.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Onboarding Consignors: Contracts and Communication",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "consignment-shop-ops/pricing-consigned-items-authority.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Pricing Consigned Items: Owner vs Consignor Authority",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "consignment-shop-ops/returns-damage-policies-consignors.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Returns and Damage Policies for Consignors",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "consignment-shop-ops/selling-online-for-consignors.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Selling Online for Consignors: Yes or No?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "consignment-shop-ops/setting-consignor-splits-fairly.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Setting Consignor Splits Fairly: A Shop Owner's Guide",
+      "description": "How consignment shops should think about 50/50, 60/40, and 70/30 splits—tiering by category, volume, and the owner's true operating costs—with sample P&amp;L math at $50K GMV.",
+      "status": "ready",
+      "wordCount": 944
+    },
+    {
+      "path": "consignment-shop-ops/tagging-labeling-consigned-items.html",
+      "cluster": "consignment-shop-ops",
+      "clusterLabel": "Consignment shop ops",
+      "title": "Tagging and Labeling Consigned Items",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "depop/depop-bundles-discounting.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Bundles: Are They Worth Discounting?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "depop/depop-cleanouts-and-migrations.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Closet Cleanouts and Migrations",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "depop/depop-pricing-too-high.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Pricing: How High Is Too High?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "depop/depop-refresh-bumping-old-listings.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Refresh: Bumping Old Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "depop/depop-reseller-branding.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Reseller Branding: Why It Matters More",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "depop/depop-reseller-sales-tax.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Reseller and Sales Tax",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "depop/depop-seo-tags-titles-photos.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop SEO: Tags, Titles, and Photos for the Gen Z Algo",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 46
+    },
+    {
+      "path": "depop/depop-shipping-workflow.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Shipping Workflow for the Casual Reseller",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "depop/depop-streams-live-selling.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop Streams Live Selling Notes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "depop/depop-vs-poshmark-y2k-streetwear.html",
+      "cluster": "depop",
+      "clusterLabel": "Depop",
+      "title": "Depop vs Poshmark for Y2K and Streetwear",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-auction-vs-fixed-price.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Auction vs Fixed Price for Used Goods",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-authentication-sneakers-watches.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Authentication for Sneakers and Watches",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-authenticity-vintage-toys.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Authenticity for Vintage Toys",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-below-cost-liquidation.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Below-Cost Liquidation Tactics (When You Should)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-best-offer-counter-templates.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Best Offer Strategy: Counter-Offer Templates",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-bulk-listing-workflows.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Bulk Listing Workflows",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "ebay/ebay-buyer-block-lists.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Buyer Block Lists: When to Use Them",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-buyer-disputes-vs-returns.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Buyer Disputes vs Returns: Know the Difference",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-calculated-vs-free-shipping.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Calculated vs Free Shipping: ROI Comparison",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-collectibles-authenticity-programs.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "Selling Collectibles on eBay: Authenticity Programs",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-combining-shipping-repeat-buyers.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Combining Shipping: How to Earn Repeat Buyers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-coupons-and-sales-events.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Coupons and Sales Events: Worth Running?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-cross-border-sales-tax-customs.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Cross-Border Sales: Tax and Customs Notes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-cross-promotion-strategy.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Cross-Promotion Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 30
+    },
+    {
+      "path": "ebay/ebay-defect-rate-explained.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay's Defect Rate Explained (and How to Stay Safe)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "ebay/ebay-description-templates-that-convert.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Description Templates That Convert",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-first-30-days-roadmap.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Reseller's First-30-Days Roadmap",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "ebay/ebay-first-class-vs-ground-advantage.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay First-Class vs Ground Advantage in 2026",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-gtc-vs-30-day.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay GTC vs 30-Day: Which Listing Format Sells Faster?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "ebay/ebay-international-gsp-vs-native.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay International Shipping: GSP vs Native, Compared",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-inventory-hygiene-dead-stock.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Inventory Hygiene: Dead-Stock Sweep Routine",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-item-reserves.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Item Reserves: Use Them or Skip?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-item-specifics-2026-rules.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Item Specifics: The 2026 Rules",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-listing-drafts-power-user.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Listing Drafts: A Power-User Workflow",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-listing-insurance.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Listing Insurance: When It Actually Pays",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-listing-postmortems.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Listings That Failed (and Why): A Postmortem Series",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "ebay/ebay-listing-schedule-best-times.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Listing Schedule: Best Days/Times to Go Live",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-listing-title-optimization.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Listing Title Optimization for Search",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-markdown-manager-strategy.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Markdown Manager: Strategy Guide",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-multi-buy-discounts.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Multi-Buy Discounts: Smart or Margin Killer?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-negative-feedback-recovery.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Negative Feedback: Recovery Playbook",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-off-site-ads-returns.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Off-Site Ads: Real Returns Analysis",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-photo-standards-ai-filters.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Photo Standards (And the New AI Filters)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-promoted-listings-profitability.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Promoted Listings: A Profitability Threshold",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-promoted-listings-standard-vs-advanced.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay's Promoted Listings Standard vs Advanced",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-returns-cost-mitigation.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Returns: Cost Mitigation Strategies",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-sell-through-research-tools.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Sell-Through Rate Research Tools",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "ebay/ebay-seller-hub-weekly-reports.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Seller Hub Reports You Should Run Weekly",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-store-vs-no-store-roi.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Store vs No Store: When the Subscription Actually Pays",
+      "description": "A reseller's spreadsheet-grade breakdown of when an eBay Store subscription pays for itself, with month-by-month math across Starter, Basic, and Premium tiers.",
+      "status": "ready",
+      "wordCount": 1553
+    },
+    {
+      "path": "ebay/ebay-top-rated-plus-worth-it.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Top Rated Plus: Worth Chasing?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-top-sellers-niche-snapshot-2026.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Top Sellers Across Niches: 2026 Snapshot",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "ebay/ebay-vacation-mode-the-right-way.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay Vacation Mode the Right Way",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "ebay/ebay-vintage-clothing-2026-best-practices.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "Selling Vintage Clothing on eBay: 2026 Best Practices",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "ebay/ebay-vs-local-furniture-flippers.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "eBay vs Local Selling for Furniture: A Reseller's Choice",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "ebay/sourcing-for-ebay-vs-booth.html",
+      "cluster": "ebay",
+      "clusterLabel": "eBay",
+      "title": "Sourcing for eBay vs Sourcing for Booth: Different Calculus",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "etsy/etsy-ads-roi.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Ads ROI: When to Run Them, When to Pause",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "etsy/etsy-bad-review-recovery.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Reviews: Recovery from a Bad One",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-bulk-editor-vintage-resellers.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Bulk Editor for Vintage Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-categories-resellers-avoid.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Categories Resellers Should Avoid",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "etsy/etsy-coupons-without-eroding-margin.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Coupons That Don't Erode Margin",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-gift-mode-resellers.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Gift Mode: How Resellers Can Use It",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "etsy/etsy-international-shipping.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy International Shipping for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "etsy/etsy-listing-photos-style-trends.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Listing Photos: Style Trends That Sell",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-listings-that-sit.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Listings That Sit (And How to Refresh)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "etsy/etsy-marketplace-facilitator-rules.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy and the Sales Tax Marketplace Facilitator Rules",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "etsy/etsy-newsletter-marketing.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Newsletter and Marketing Tools",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "etsy/etsy-pattern-sites.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Pattern Sites: Worth It for Resellers?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-price-anchoring-vintage.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Price Anchoring for Vintage Goods",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-rebrand-when-and-how.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Rebrand: When and How to Do It",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "etsy/etsy-renewals-auto-vs-manual.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Renewals: Auto-Renew vs Manual Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-repeat-buyers.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Repeat Buyers: How to Build Them",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-reseller-eligibility-vintage-craft.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Reseller Eligibility: Vintage and Craft Supplies",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-returns-and-cases.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Returns and Cases: A Reseller's Guide",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-sales-events-resellers.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Sales Events: Should You Run Them?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-sections-featured-items.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Sections and Featured Items Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-seller-mistakes-tank-rank.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Seller Mistakes That Tank Your Rank",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-seo-title-tag-playbook-2026.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy SEO 2026: Title and Tag Playbook",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "etsy/etsy-star-seller-real-cost.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Star Seller: The Real Cost of Chasing It",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "etsy/etsy-stats-page-what-to-watch.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Stats Page: What to Watch and What to Ignore",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "etsy/etsy-storefront-branding.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Reseller Storefront Branding 101",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "etsy/etsy-tax-documents-1099k.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Tax Documents and 1099-K",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "etsy/etsy-variations-personalization-vintage.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Variations and Personalization for Vintage",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-vintage-20-year-rule-explained.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy's 20-Year Vintage Rule: What You Can (and Can't) List",
+      "description": "Etsy requires vintage items to be at least 20 years old. Here's how the rule actually gets enforced, what trips resellers up, and a practical dating playbook for booth and online sellers.",
+      "status": "ready",
+      "wordCount": 1625
+    },
+    {
+      "path": "etsy/etsy-vintage-authenticity-trust.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy Vintage Authenticity: Building Buyer Trust",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "etsy/etsy-vs-ebay-for-vintage.html",
+      "cluster": "etsy",
+      "clusterLabel": "Etsy",
+      "title": "Etsy vs eBay for Vintage: A Side-by-Side",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-account-hygiene.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Reseller Account Hygiene",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-boosted-posts.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Boosted Posts: ROI Worth It?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-cross-posting.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Cross-Posting: Safe vs Risky",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-estate-sale-operators.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace for Estate Sale Operators",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-furniture-flip-margins.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "Facebook Marketplace Furniture Flips: The Margin Reality",
+      "description": "Twelve real furniture flips through Facebook Marketplace—purchase, refinishing, sale price, hours, and hourly profit—plus which styles pencil out and which waste gas.",
+      "status": "ready",
+      "wordCount": 783
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-group-strategy.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Group Strategy: Local Reseller Networks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-insights-stats.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Insights: What the Stats Mean",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-listing-optimization.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Listing Optimization for the Algorithm",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-listing-refresh.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Dance: Listing Refresh Strategies",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-local-pickup-safety.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace and Local Pickup: Safety Playbook",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-returns-refunds.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Returns and Refunds (Yes, They Happen)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-shipping-when-it-works.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace Shipping: When It Works, When It Doesn't",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-tax-1099k.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace and Tax: 1099-K and Beyond",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-vintage-pros-cons.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace for Vintage Goods: Pros and Cons",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "facebook-marketplace/fb-marketplace-vs-other-local-apps.html",
+      "cluster": "facebook-marketplace",
+      "clusterLabel": "Facebook Marketplace",
+      "title": "FB Marketplace and Other Local Apps Compared",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "inventr-app/2-minute-listing-routine-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Building a 2-Minute Listing Routine in Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "inventr-app/bulk-editing-inventory-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Bulk Editing Inventory in Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/importing-ebay-sales-history-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Importing eBay Sales History into Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/importing-mercari-orders-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Importing Mercari Orders into Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-backup-and-restore.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Backup and Restore",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-custom-fields-when-needed.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Custom Fields: When You Need Them",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "inventr-app/inventr-data-exports-csv-excel-pdf.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Data Exports: CSV, Excel, PDF",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-end-of-day-booth-reconciliation.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr's End-of-Day Booth Reconciliation",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-for-antique-mall-booth-owners.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr for Antique Mall Booth Owners",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-for-estate-sale-operators.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr for Estate Sale Operators",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-for-hybrid-sellers.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr for Hybrid Sellers (Booth + Online)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "inventr-app/inventr-for-online-only-resellers.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr for Online-Only Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-for-whatnot-live-sellers.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr for Whatnot Live Sellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-holiday-mode-surge-tracking.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Holiday Mode: Surge Inventory Tracking",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-inventory-aging-report.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Inventory Aging Report",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-listing-workflow.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "The Inventr Listing Workflow Explained",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-markdown-workflow.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Markdown Workflow",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "inventr-app/inventr-mileage-tracker-schedule-c.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Mileage Tracker for Schedule C",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-mobile-vs-desktop.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Mobile vs Desktop: Which When",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-photos-reusing-listings.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Photos: Reusing Across Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-profit-auto-calculation.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr's Profit Auto-Calculation: How It Works",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "inventr-app/inventr-reports-tax-season.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Reports for Tax Season",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-roadmap-power-user-tips.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Roadmap and Power-User Tips",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "inventr-app/inventr-sell-through-reports-walkthrough.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Sell-Through Reports Walkthrough",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-sourcing-budget-tracker.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Sourcing Budget Tracker",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-tags-power-user.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Tags: Power-User Strategies",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/inventr-year-end-closing-checklist.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Inventr Year-End Closing Checklist",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "inventr-app/setting-up-multiple-locations-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "How to Set Up Multiple Locations in Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "inventr-app/sharing-inventr-access-va-spouse.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Sharing Inventr Access with a VA or Spouse",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "inventr-app/tracking-booth-sales-60-seconds-inventr.html",
+      "cluster": "inventr-app",
+      "clusterLabel": "Inventr app",
+      "title": "Tracking Booth Sales in Inventr in 60 Seconds",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "mercari/mercari-bundle-discounts.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Bundle Discounts: Setup and Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-categories-where-found.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Categories: Where Items Actually Get Found",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "mercari/mercari-crosslisting-tools-2026.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Crosslisting Tools: A 2026 Overview",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-electronics-reseller.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari for Electronics: A Reseller's Take",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-listing-photos-first-picture.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Listing Photos: First-Picture Hacks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "mercari/mercari-listing-title-templates.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Listing Title Templates",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "mercari/mercari-local-pickup-vs-ship.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Local Pickup vs Ship: The New Math",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "mercari/mercari-local-shipping-labels.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Local Shipping Labels: Pro Tips",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-migration-when-to-move.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Migration: When to Move Inventory Off",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "mercari/mercari-promote-feature.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Promote Feature: When It Pays",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-reseller-hours-time-audit.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Reseller Hours: A Time-Audit Study",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-returns-disputes.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Returns and Disputes: A Survival Guide",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "mercari/mercari-sale-events.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Sale Events: Worth Joining?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "mercari/mercari-selling-velocity-benchmarks.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Selling Velocity: Benchmarks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "mercari/mercari-smart-offers.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Smart Offers: Decline or Accept?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-smart-pricing.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Smart Pricing: Should You Trust It?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "mercari/mercari-tax-1099-notes.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari Reseller Tax and 1099 Notes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "mercari/mercari-toys-collectibles.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari for Toys and Collectibles",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "mercari/mercari-vintage-worth-listing.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari for Vintage: Is It Worth Listing There?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "mercari/mercari-vs-poshmark-where-to-list-first.html",
+      "cluster": "mercari",
+      "clusterLabel": "Mercari",
+      "title": "Mercari vs Poshmark: Where Should You List First?",
+      "description": "A side-by-side look at Mercari and Poshmark for clothing and accessories—fees, buyer behavior, velocity, time cost, and a practical matrix for which platform to list first.",
+      "status": "ready",
+      "wordCount": 1000
+    },
+    {
+      "path": "migration-guide/24-hour-migration-sprint-plan.html",
+      "cluster": "migration-guide",
+      "clusterLabel": "Migration guide",
+      "title": "The 24-Hour Migration Sprint Plan",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "migration-guide/cleaning-sku-conflicts-during-migration.html",
+      "cluster": "migration-guide",
+      "clusterLabel": "Migration guide",
+      "title": "Cleaning SKU Conflicts During Migration",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "migration-guide/mapping-custom-columns-to-app-fields.html",
+      "cluster": "migration-guide",
+      "clusterLabel": "Migration guide",
+      "title": "Mapping Custom Spreadsheet Columns to App Fields",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "migration-guide/migrating-mid-year.html",
+      "cluster": "migration-guide",
+      "clusterLabel": "Migration guide",
+      "title": "Migrating Mid-Year: Picking the Right Moment",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "migration-guide/migrating-two-spreadsheets-into-one.html",
+      "cluster": "migration-guide",
+      "clusterLabel": "Migration guide",
+      "title": "Migrating Two Spreadsheets into One System",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "mindset-burnout/annual-reseller-reset.html",
+      "cluster": "mindset-burnout",
+      "clusterLabel": "Mindset & burnout",
+      "title": "The Annual Reseller Reset",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "mindset-burnout/avoiding-sourcing-compulsion.html",
+      "cluster": "mindset-burnout",
+      "clusterLabel": "Mindset & burnout",
+      "title": "Avoiding Sourcing Compulsion",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "mindset-burnout/realistic-reseller-income-goals.html",
+      "cluster": "mindset-burnout",
+      "clusterLabel": "Mindset & burnout",
+      "title": "Setting Realistic Reseller Income Goals",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "mindset-burnout/reseller-burnout-diagnosing-signs.html",
+      "cluster": "mindset-burnout",
+      "clusterLabel": "Mindset & burnout",
+      "title": "Reseller Burnout: Diagnosing the Signs",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "mindset-burnout/sustainable-reseller-workweek.html",
+      "cluster": "mindset-burnout",
+      "clusterLabel": "Mindset & burnout",
+      "title": "Designing a Sustainable Reseller Workweek",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/book-scanning-apps-which-actually-pay.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Scanning Books for Resale: Which Apps Actually Pay Off?",
+      "description": "ScoutIQ vs Bookscouter vs Pronto Plus vs camera-only scanning—cost, signals, offline mode, and the monthly scan volume where subscriptions break even.",
+      "status": "ready",
+      "wordCount": 1029
+    },
+    {
+      "path": "niches-books/bookbinding-conditions-lingo.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Bookbinding Conditions: Learn the Lingo",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/bookplate-inscription-provenance.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Bookplate, Inscription, and Provenance Value",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/bookselling-ebay-vs-amazon-vs-etsy.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Bookselling on eBay vs Amazon vs Etsy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-books/bookselling-sales-tax-1099k.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Bookselling Sales Tax and 1099-K",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/bookselling-workflow-with-inventr.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Bookselling Workflow with Inventr",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-books/comic-book-reselling-101.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Comic Book Reselling 101 for Beginners",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-books/cookbook-resale-sleeper-niche.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Cookbook Resale: A Sleeper Niche",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/first-editions-id-pricing.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "First Editions: Identifying and Pricing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/library-sale-sourcing-tactics.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Library Sale Sourcing Tactics",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-books/pulp-magazines-vintage-periodicals.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Pulp Magazines and Vintage Periodicals",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/religious-self-help-books-margin.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Religious and Self-Help Books: Margin Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-books/signed-copies-authentication.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Signed Copies: Authentication and Pricing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/textbook-reselling-cycles.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Textbook Reselling Cycles: Timing Buys",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-books/vintage-childrens-books-what-sells.html",
+      "cluster": "niches-books",
+      "clusterLabel": "Books",
+      "title": "Vintage Children's Books: What Sells",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-electronics/cables-adapters-spares-niche.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Cables, Adapters, and Spares: A Steady Niche",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-electronics/calculator-niche-office-equipment.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Calculator and Niche Office Equipment Reselling",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-electronics/cameras-film-and-digital.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Reseller's Guide to Cameras (Film and Digital)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-electronics/diagnosing-disclosing-defects.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Diagnosing and Disclosing Defects",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-electronics/electronics-photography-listings.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Electronics Photography for Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-electronics/electronics-returns-reduction.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Electronics Returns Reduction Tactics",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-electronics/electronics-shipping-insurance-packaging.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Electronics Shipping Insurance and Packaging",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-electronics/electronics-sourcing-routes.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Electronics Sourcing Routes (Estate, Auction, Online)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-electronics/gaming-consoles-by-era.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Gaming Consoles by Era: Resale Hot List",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-electronics/reselling-used-phones-risk-reward.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Reselling Used Phones: Risk and Reward",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-electronics/synthesizers-music-gear-niche.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Synthesizers and Music Gear: A Niche Within a Niche",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "niches-electronics/used-laptop-reselling-pricing-tiers.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Used Laptop Reselling: Pricing Tiers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-electronics/vintage-audio-receivers-speakers-turntables.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Vintage Audio: Receivers, Speakers, Turntables",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-electronics/vintage-electronics-pre-2000-sleepers.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Vintage Electronics: Pre-2000 Sleepers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-electronics/working-vs-untested-vs-parts.html",
+      "cluster": "niches-electronics",
+      "clusterLabel": "Electronics",
+      "title": "Working vs Untested vs Parts Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-furniture/furniture-booth-sections.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Booth Sections That Convert",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/furniture-insurance-liability.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Reselling Insurance and Liability",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/furniture-photography-online.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Photography for Online Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/furniture-pricing-by-style-era.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Pricing by Style Era",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/furniture-refinishing-roi.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Refinishing: ROI Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-furniture/furniture-restoration-diy-vs-outsource.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Restoration: When to DIY vs Outsource",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-furniture/furniture-returns-special-case.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Returns: A Special Case",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/furniture-shipping-logistics.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Furniture Shipping Logistics for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/local-only-furniture-workflow.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Local-Only Furniture Reselling Workflow",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-furniture/mid-century-modern-identification.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Mid-Century Modern: Identification and Pricing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/outdoor-patio-furniture.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Outdoor and Patio Furniture Reselling",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/sourcing-furniture-estate-sales.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Sourcing Furniture from Estate Sales",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/vintage-furniture-brands-hold-value.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Vintage Furniture Brands That Hold Value",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-furniture/vintage-lighting-lamps-fixtures.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Vintage Lighting: Lamps and Fixtures",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-furniture/vintage-office-furniture.html",
+      "cluster": "niches-furniture",
+      "clusterLabel": "Furniture",
+      "title": "Vintage Office Furniture",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "niches-glassware-pottery/glass-reseller-packaging-shipping.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Glass Reseller Packaging and Shipping",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-glassware-pottery/glassware-pricing-local-vs-online.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Glassware Pricing in Local vs Online Markets",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-glassware-pottery/mccoy-hull-american-pottery.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "McCoy, Hull, and American Pottery Brands",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-glassware-pottery/pottery-marks-identification.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Identifying Pottery Marks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "niches-glassware-pottery/pottery-reseller-booth-display.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Pottery Reseller's Booth Display",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-glassware-pottery/vintage-cookie-jars.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Vintage Cookie Jars",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "niches-glassware-pottery/vintage-crocks-stoneware.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Reselling Vintage Crocks and Stoneware",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-glassware-pottery/vintage-glassware-depression-elegant-carnival.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Vintage Glassware: Depression vs Elegant vs Carnival",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-glassware-pottery/vintage-pyrex-patterns-sourcing.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Vintage Pyrex Patterns Worth Sourcing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-glassware-pottery/vintage-pyrex-pricing-decoder.html",
+      "cluster": "niches-glassware-pottery",
+      "clusterLabel": "Glassware & pottery",
+      "title": "Vintage Pyrex: A Pricing Decoder",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-handbags/authenticating-designer-handbags.html",
+      "cluster": "niches-handbags",
+      "clusterLabel": "Handbags",
+      "title": "Authenticating Designer Handbags",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "niches-handbags/authenticating-vintage-designer-denim.html",
+      "cluster": "niches-handbags",
+      "clusterLabel": "Handbags",
+      "title": "Authenticating Vintage Levi's and Designer Denim",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-handbags/designer-resale-authentication-services.html",
+      "cluster": "niches-handbags",
+      "clusterLabel": "Handbags",
+      "title": "Designer Resale and Authentication Services",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-handbags/reseller-vintage-coach.html",
+      "cluster": "niches-handbags",
+      "clusterLabel": "Handbags",
+      "title": "The Reseller's Guide to Vintage Coach",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-handbags/reselling-designer-shoes.html",
+      "cluster": "niches-handbags",
+      "clusterLabel": "Handbags",
+      "title": "Reselling Designer Shoes: Risk and Margin",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-sports-memorabilia/autograph-authentication-services.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Autograph Authentication Services",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "niches-sports-memorabilia/boxed-sealed-sports-memorabilia.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Boxed and Sealed Sports Memorabilia",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-sports-memorabilia/pricing-vintage-sports-equipment.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Pricing Vintage Sports Equipment",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-sports-memorabilia/reselling-sports-cards-2026.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Reselling Sports Cards in 2026",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-sports-memorabilia/reselling-tickets-stubs.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Reselling Tickets and Stubs (Legality + Margin)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-sports-memorabilia/sourcing-card-shows-conventions.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Sourcing at Card Shows and Conventions",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-sports-memorabilia/sports-memorabilia-booth-strategy.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Sports Memorabilia Booth Section Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-sports-memorabilia/sports-memorabilia-coa-reality.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Sports Memorabilia Authentication: COA Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-sports-memorabilia/vintage-bobbleheads-figurines.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Reselling Vintage Bobbleheads and Figurines",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-sports-memorabilia/vintage-game-worn-vs-replica.html",
+      "cluster": "niches-sports-memorabilia",
+      "clusterLabel": "Sports memorabilia",
+      "title": "Vintage Game-Worn vs Replica Identification",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-tools/power-tool-reselling-diagnosing.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Power Tool Reselling: Diagnosing Function",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-tools/reselling-construction-tools.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Reselling Construction Tools and Equipment",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-tools/snapon-mac-matco-pro-brands.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Snap-On, Mac, Matco: Pro Brands and Resale",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-tools/tool-reseller-booth-section.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Tool Reseller Booth Section",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-tools/tool-reseller-pricing-margin.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Tool Reseller Pricing and Margin",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-tools/tool-reselling-fb-offerup.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Tool Reselling on FB Marketplace and OfferUp",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-tools/tools-at-estate-sales.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Tools at Estate Sales: A Sourcing Route",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-tools/vintage-hand-tools-brands-that-hold-value.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Vintage Hand Tools: Brands That Hold Value",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-tools/vintage-wood-planes-hand-saws.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Vintage Wood Planes and Hand Saws",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-tools/vintage-wrenches-sockets.html",
+      "cluster": "niches-tools",
+      "clusterLabel": "Tools",
+      "title": "Vintage Wrenches and Sockets",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-toys-collectibles/authentication-tools-subscriptions.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Authentication Tools and Subscriptions",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-toys-collectibles/building-toys-collectibles-booth.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Building a Toys &amp; Collectibles Booth Section",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-toys-collectibles/comic-era-memorabilia.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Comic-Era Memorabilia",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 30
+    },
+    {
+      "path": "niches-toys-collectibles/funko-pop-flipping-still-worth-it.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Funko Pop Flipping: Is It Still Worth It in 2026?",
+      "description": "A 2026 reality check on Funko flipping—average resale collapse vs pockets that still move, with tier-by-tier verdicts and aging discipline for slow sellers.",
+      "status": "ready",
+      "wordCount": 1031
+    },
+    {
+      "path": "niches-toys-collectibles/lego-reselling-sets-minifigs-bulk.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "LEGO Reselling: Sets, Minifigs, and Bulk",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/mcdonalds-toys-fast-food.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "McDonald's Toys and Fast Food Premiums",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/online-toy-forums-discord-sourcing.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Online Toy Forums and Discord Communities for Sourcing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "niches-toys-collectibles/plush-and-beanie-babies.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Plush and Beanie Babies: Still a Thing?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-toys-collectibles/pokemon-cards-sourcing-authentication.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Pokémon Cards: Sourcing and Authentication",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-toys-collectibles/pricing-sealed-vs-loose-vintage-toys.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Pricing Sealed vs Loose Vintage Toys",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/reselling-at-toy-shows-card-shows.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Reselling at Toy Shows and Card Shows",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-toys-collectibles/sports-cards-2026-margin-reality.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Sports Cards in 2026: A Margin Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-toys-collectibles/star-wars-collectibles-eras-lines.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Star Wars Collectibles: Eras and Lines",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/tcg-resale-mtg-yugioh.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Trading Card Game Resale: MTG, Yu-Gi-Oh!",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/toy-reseller-tax-1099.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Toy Reseller Sales Tax and 1099 Considerations",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-toys-collectibles/toys-collectibles-photography-standards.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Toys &amp; Collectibles Photography Standards",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-toys-collectibles/vintage-action-figures.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Vintage Action Figures: Brands That Move",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/vintage-barbie-and-dolls.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Vintage Barbie and Dolls",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-toys-collectibles/vintage-board-games.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Vintage Board Games: Sourcing and Pricing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-toys-collectibles/vintage-hot-wheels-matchbox.html",
+      "cluster": "niches-toys-collectibles",
+      "clusterLabel": "Toys & collectibles",
+      "title": "Vintage Hot Wheels and Matchbox",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/building-a-vintage-clothing-booth.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Building a Vintage Clothing Booth Section",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-vintage-clothing/identifying-valuable-vintage-band-tees.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "How to Identify a Valuable Vintage Band Tee in 30 Seconds",
+      "description": "A fast triage guide for vintage band T-shirts—tag era cues, screen ink tells, blank identification, and a tiered resale map with bootleg warnings.",
+      "status": "ready",
+      "wordCount": 1060
+    },
+    {
+      "path": "niches-vintage-clothing/pop-culture-tee-pricing.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Pop Culture Tee Pricing: Bands, Movies, Sports",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-vintage-clothing/single-stitch-tees-pricing.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Single-Stitch Tees: Why They're Pricey",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/tagging-eras-of-vintage-clothing.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Tagging Eras of Vintage Clothing for Listings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-accessories-belts-hats-scarves.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Accessories: Belts, Hats, Scarves",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-athleisure-80s-90s.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Athleisure: 80s-90s Sportswear Trends",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-brands-that-hold-value.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Brands That Hold Their Value",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-clothing-photography-tips.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Clothing Photography Tips",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-clothing-pricing-by-decade.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Clothing Pricing by Decade",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-clothing-returns-reduction.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Clothing Returns: How to Reduce Them",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-denim-wash-hem-selvedge.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Denim: Wash, Hem, Selvedge",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-dresses-pre-1980-id.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Dresses: Pre-1980 Identification",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-leather-jackets-bombers.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Leather Jackets and Bombers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-levis-tag-decoder.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Levi's Tag Decoder",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-patagonia-outdoor-brands.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Patagonia and Outdoor Brands",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-sizing-across-eras.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Sizing Across Eras",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-wool-coats-sweaters.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Wool: Coats and Sweaters Worth Sourcing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-vintage-clothing/vintage-workwear-carhartt-dickies-filson.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Vintage Workwear: Carhartt, Dickies, Filson",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "niches-vintage-clothing/y2k-clothing-trends-2026.html",
+      "cluster": "niches-vintage-clothing",
+      "clusterLabel": "Vintage clothing",
+      "title": "Y2K Clothing Trends Worth Buying in 2026",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "niches-vinyl/building-a-record-booth-section.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Building a Record Booth Section",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-vinyl/identifying-first-pressings.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Identifying First Pressings",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "niches-vinyl/sourcing-vinyl-thrift-estate.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Sourcing Vinyl at Thrift and Estate Sales",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-vinyl/vinyl-cleaning-resellers.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Cleaning for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-vinyl/vinyl-discogs-vs-ebay-vs-local.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Selling Vinyl on Discogs vs eBay vs Local",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "niches-vinyl/vinyl-grading-101-letter-codes.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Grading 101: Letter Codes Explained",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "niches-vinyl/vinyl-pricing-tools-discogs-popsike.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Pricing Tools (Discogs, Popsike)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "niches-vinyl/vinyl-resale-genres-eras-that-sell.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Resale: Genres and Eras That Sell",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "niches-vinyl/vinyl-reseller-pricing-mistakes.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Reseller Pricing Mistakes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "niches-vinyl/vinyl-shipping-mailers-packaging.html",
+      "cluster": "niches-vinyl",
+      "clusterLabel": "Vinyl",
+      "title": "Vinyl Shipping: Mailers and Packaging",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/craigslist-free-section-sourcing.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "Craigslist Free Section: Sourcing Gold",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/craigslist-furniture-templates.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "Craigslist Furniture Listings: Templates That Convert",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "offerup-craigslist/craigslist-meet-up-safety.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "Craigslist Safety: Meet-Up Best Practices",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/local-cross-list-workflow.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "Combining OfferUp + FB Marketplace + CL: Cross-List Workflow",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "offerup-craigslist/local-drop-off-pickup-logistics.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp/CL Drop-Off and Pickup Logistics",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-account-hygiene.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Reseller Account Hygiene",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "offerup-craigslist/offerup-boosts-worth-spend.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Boosts: Worth the Spend?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-electronics-risks-rewards.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp for Electronics: Risks and Rewards",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "offerup-craigslist/offerup-listing-photos-clicks.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Listing Photos That Actually Get Clicks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "offerup-craigslist/offerup-migration-to-inventr.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Migration to Inventr-Tracked Inventory",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-negotiation-scripts.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Negotiation Scripts",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "offerup-craigslist/offerup-shipping-vs-local-pickup.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Shipping vs Local Pickup",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-title-description-templates.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp Title and Description Templates",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-tools-equipment.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp for Tools and Equipment",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "offerup-craigslist/offerup-vs-craigslist-furniture-flippers.html",
+      "cluster": "offerup-craigslist",
+      "clusterLabel": "OfferUp & Craigslist",
+      "title": "OfferUp vs Craigslist for Furniture Flippers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "operations-fulfillment/cold-storage-inventory-strategy.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Cold-Storage Inventory Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 31
+    },
+    {
+      "path": "operations-fulfillment/daily-reseller-shipping-routine.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Daily Reseller Shipping Routine",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "operations-fulfillment/hiring-a-packing-helper.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Hiring a Packing Helper: Worth It?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "operations-fulfillment/holiday-fulfillment-surge-plan.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Reseller's Holiday Fulfillment Surge Plan",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "operations-fulfillment/insured-shipping-high-value.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Insured Shipping for High-Value Items",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "operations-fulfillment/packaging-materials-cost-per-order.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Packaging Materials: Cost-Per-Order Targets",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "operations-fulfillment/reseller-fulfillment-pick-pack-ship.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Reseller Fulfillment Workflow: Pick, Pack, Ship",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "operations-fulfillment/reseller-office-setup.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Reseller Office Setup: Space, Tools, Tape",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "operations-fulfillment/returns-operations-sops.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Returns Operations: SOPs for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "operations-fulfillment/shipping-software-compared.html",
+      "cluster": "operations-fulfillment",
+      "clusterLabel": "Operations & fulfillment",
+      "title": "Shipping Software Compared for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "photo-checklist/ai-photo-tools-for-resellers.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "AI Photo Tools for Resellers: What Actually Helps",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "photo-checklist/building-a-light-tent-under-20.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Building a Light Tent for Under $20",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "photo-checklist/color-accurate-listing-photos.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Color-Accurate Listing Photos: A White Balance Primer",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "photo-checklist/mannequin-vs-flat-lay-vs-model.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Mannequin vs Flat-Lay vs Model: Clothing Photo Showdown",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "photo-checklist/phone-camera-settings-for-listings.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Phone Camera Settings That Make Listings Pop",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "photo-checklist/photographing-books-postcards-paper.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Photographing Books, Postcards, and Paper Goods",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "photo-checklist/photographing-damage-honestly-templates.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Photographing Damage Honestly (Sample Templates)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "photo-checklist/photographing-glassware-without-reflections.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Photographing Glassware Without Reflections",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 33
+    },
+    {
+      "path": "photo-checklist/stop-motion-and-360-listings.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "Stop-Motion and 360-Degree Listings: Worth It?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "photo-checklist/the-hero-shot-formula.html",
+      "cluster": "photo-checklist",
+      "clusterLabel": "Photo checklist",
+      "title": "The &quot;Hero Shot&quot; Formula That Lifts Click-Throughs",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "pnl-template/12-month-rolling-pnl.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "Building a 12-Month Rolling P&amp;L",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "pnl-template/categorizing-expenses-reseller-pnl.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "Categorizing Expenses for a Reseller P&amp;L",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "pnl-template/pnl-for-booth-and-online-hybrid.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "P&amp;L for a Booth + Online Hybrid Business",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "pnl-template/pnl-forecasting-holiday-quarter.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "P&amp;L Forecasting for the Holiday Quarter",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "pnl-template/pnl-reseller-partnership.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "P&amp;L for a Multi-Owner Reseller Partnership",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "pnl-template/pnl-to-balance-sheet-next-step.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "From P&amp;L to Balance Sheet: The Next Step",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "pnl-template/pnl-variance-analysis.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "P&amp;L Variance Analysis: Why You Beat (or Missed) Plan",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "pnl-template/quarterly-pnl-review-routine.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "The Quarterly P&amp;L Review Routine",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "pnl-template/reading-pnl-like-a-lender.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "Reading a P&amp;L Like a Lender Would",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "pnl-template/separating-personal-business-pnl.html",
+      "cluster": "pnl-template",
+      "clusterLabel": "P&L template",
+      "title": "Separating Personal and Business in Your P&amp;L",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "poshmark/poshmark-authentication-required.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Authentication: What's Required",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-bundles-math.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Bundles: The Math Behind the Discount",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "poshmark/poshmark-cleanout-campaigns.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Closet Cleanout Campaigns",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-closet-audit-dead-items.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Closet Audit: Cleaning the Dead Items",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "poshmark/poshmark-closet-move-out-migrating.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Closet Move-Out: Migrating to eBay/Mercari",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-closet-seo-title-description-photo.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Closet SEO: Title, Description, Photo",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-closet-themes-that-sell.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Closet Themes That Sell",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "poshmark/poshmark-cross-listing-tools.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Cross-Listing Tools Compared",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-drops-re-engaging-followers.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Drops: Re-Engaging Followers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-first-week-plan.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Reseller's First-Week Plan",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-holiday-strategy.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Holiday Strategy: Black Friday to NYE",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "poshmark/poshmark-kids-sub-closet.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Kids: A Sub-Closet Strategy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "poshmark/poshmark-mens-underserved-niche.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Men's: Underserved Niche Wins",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "poshmark/poshmark-offer-to-likers.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Offer to Likers: Conversion Rates Studied",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "poshmark/poshmark-parties-still-worth-it.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Parties: Are They Still Worth Showing Up For?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "poshmark/poshmark-posh-show-live-selling.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Posh Show / Live Selling: Beginner Playbook",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "poshmark/poshmark-posh-stories-worth-it.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Posh Stories: Worth the Time?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-promoted-closet-roi.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Promoted Closet: ROI Test",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 34
+    },
+    {
+      "path": "poshmark/poshmark-reseller-earnings-tracking.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Reseller Earnings Tracking",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "poshmark/poshmark-returns-caps-cases.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Returns: Caps, Cases, and Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-sales-tax-primer.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark and Sales Tax: A Quick Primer",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "poshmark/poshmark-sharing-strategy-hours-vs-sales.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Sharing: How Many Hours Actually Move the Needle?",
+      "description": "A six-week closet experiment on Poshmark sharing cadence—hours per week vs sales lift, sell-through, and where extra sharing stops paying for itself.",
+      "status": "ready",
+      "wordCount": 1246
+    },
+    {
+      "path": "poshmark/poshmark-tags-seo-inside-app.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Tags: SEO Inside the App",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-vintage-rules.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark Reseller and Vintage: The Rules",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "poshmark/poshmark-vs-mercari-clothes.html",
+      "cluster": "poshmark",
+      "clusterLabel": "Poshmark",
+      "title": "Poshmark vs Mercari: Which to List First (For Clothes)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "profit-calculator/best-sellers-not-most-profitable.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Why Your Best-Sellers Aren't Always Most Profitable",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "profit-calculator/compounding-reseller-profits.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Compounding Reseller Profits: How to Reinvest Wisely",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "profit-calculator/from-1k-to-10k-profit-roadmap.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "From $1k to $10k Months: A Profit Roadmap",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "profit-calculator/hidden-tax-of-promoted-listings.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "The Hidden Tax of Promoted Listings on Your Margin",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "profit-calculator/how-returns-erode-profit-margin.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "How Returns Erode Your Profit Margin (And the Math)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "profit-calculator/lower-margins-faster-sales-tradeoff.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Should You Accept Lower Margins for Faster Sales?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "profit-calculator/markup-vs-margin-the-math-mistake.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Markup vs Margin: The Reseller's Math Mistake",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "profit-calculator/profit-margin-by-category.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Profit Margin by Category: What You Should Expect",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "profit-calculator/profit-per-hour-the-metric-that-changes-everything.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Profit Per Hour: The Metric That Changes Everything",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "profit-calculator/profit-per-square-foot-booth.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Profit per Square Foot: A Booth-Owner Metric",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "profit-calculator/reverse-engineer-sourcing-budget-from-profit-goals.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "How to Reverse-Engineer a Sourcing Budget from Profit Goals",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "profit-calculator/the-30-30-30-10-profit-rule.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "The 30-30-30-10 Profit Rule for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "profit-calculator/the-50-percent-rule-pricing-used-items.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "The 50% Rule for Pricing Used Items (and When to Break It)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 49
+    },
+    {
+      "path": "profit-calculator/tracking-profit-across-channels.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Tracking Profit Across Multiple Sales Channels",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "profit-calculator/variable-vs-fixed-costs-resellers.html",
+      "cluster": "profit-calculator",
+      "clusterLabel": "Profit calculator",
+      "title": "Variable vs Fixed Costs: How They Affect Your Profit",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "scaling-growth/adding-booth-to-online-only.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Adding Booth to an Online-Only Business",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "scaling-growth/adding-online-to-booth-only.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Adding Online to a Booth-Only Business",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "scaling-growth/building-a-reselling-brand.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Building a Reselling Brand: Local + Online",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "scaling-growth/buying-out-another-reseller.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Buying Out Another Reseller's Inventory",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "scaling-growth/growing-a-reseller-email-list.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Growing a Reseller Email List",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "scaling-growth/hiring-photographer-or-lister.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Hiring a Photographer or Lister",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "scaling-growth/scaling-one-booth-to-three.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Scaling from One Booth to Three",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "scaling-growth/selling-your-reseller-business-valuation.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "Selling Your Reseller Business: Valuation",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "scaling-growth/side-hustle-to-full-time-roadmap.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "From Side Hustle to Full Time: A Reseller's Roadmap",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "scaling-growth/when-to-hire-a-va.html",
+      "cluster": "scaling-growth",
+      "clusterLabel": "Scaling & growth",
+      "title": "When to Hire a VA for Reselling Tasks",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "sell-through-calculator/compounding-cost-of-slow-movers.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "The Compounding Cost of Slow Movers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "sell-through-calculator/inventory-aging-buckets.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Aging Buckets: Sorting Your Inventory by Days On Hand",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 44
+    },
+    {
+      "path": "sell-through-calculator/predicting-sell-through-before-you-buy.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Predicting Sell-Through Before You Buy",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "sell-through-calculator/sell-through-and-cash-flow.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Sell-Through and Cash Flow: How They Connect",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "sell-through-calculator/sell-through-by-platform-reality.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Sell-Through Rate by Platform: A Reality Check",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "sell-through-calculator/sell-through-vs-sell-in.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Sell-Through Rate vs Sell-In Rate: Don't Confuse Them",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "sell-through-calculator/selling-aged-inventory-at-cost.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Selling Aged Inventory at Cost: A Math Argument",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "sell-through-calculator/the-60-day-rule-pull-listing.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "The 60-Day Rule: When to Pull a Listing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 42
+    },
+    {
+      "path": "sell-through-calculator/tracking-sell-through-without-killing-day.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Tracking Sell-Through Without Killing Your Day",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "sell-through-calculator/why-sell-through-drops-q1.html",
+      "cluster": "sell-through-calculator",
+      "clusterLabel": "Sell-through calculator",
+      "title": "Why Sell-Through Drops in Q1 (and What to Do About It)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 48
+    },
+    {
+      "path": "sourcing-guide/antique-trail-sourcing-routes.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "The Antique Trail: Mapping Your Best Sourcing Routes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "sourcing-guide/auction-sourcing-101.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Auction Sourcing 101: From Live Bid to Resale",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "sourcing-guide/building-a-pickers-network.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Building a Pickers Network in Your Town",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "sourcing-guide/bulk-buying-when-it-helps.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Bulk Buying: When It Helps and When It Hurts",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "sourcing-guide/buying-inventory-from-other-resellers.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Buying Inventory from Other Resellers (Without Getting Burned)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "sourcing-guide/cross-border-sourcing.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Cross-Border Sourcing: Risks and Reality",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "sourcing-guide/estate-sale-day-before-vs-day-of.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Sourcing Estate Sales the Day Before vs Day Of",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "sourcing-guide/goodwill-high-end-brands-sourcing.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Sourcing High-End Brands at Goodwill (Without Wasting Time)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "sourcing-guide/holiday-sourcing-90-day-calendar.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Sourcing for the Holidays: A 90-Day Calendar",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "sourcing-guide/liquidation-pallets-risk-vs-reward.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Sourcing Liquidation Pallets: Risk vs Reward",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "sourcing-guide/reproductions-vs-real-thing.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "How to Spot a Reproduction vs the Real Thing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "sourcing-guide/shopgoodwill-online-for-resellers.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Goodwill Online (ShopGoodwill) for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "sourcing-guide/storage-unit-auction-sourcing.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "Sourcing from Storage Unit Auctions",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "sourcing-guide/vintage-pyrex-sourcing-guide.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "The Reseller's Guide to Vintage Pyrex",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "sourcing-guide/walk-away-test-sunk-cost.html",
+      "cluster": "sourcing-guide",
+      "clusterLabel": "Sourcing guide",
+      "title": "The &quot;Walk Away&quot; Test: Avoiding Sunk-Cost Sourcing",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "spreadsheet-template/conditional-formatting-recipes-inventory.html",
+      "cluster": "spreadsheet-template",
+      "clusterLabel": "Spreadsheet template",
+      "title": "Conditional Formatting Recipes for Inventory",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 35
+    },
+    {
+      "path": "spreadsheet-template/pivot-tables-reseller-sales-reports.html",
+      "cluster": "spreadsheet-template",
+      "clusterLabel": "Spreadsheet template",
+      "title": "Pivot Tables for Reseller Sales Reports",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "spreadsheet-template/reseller-spreadsheet-templates-roundup.html",
+      "cluster": "spreadsheet-template",
+      "clusterLabel": "Spreadsheet template",
+      "title": "Reseller Spreadsheet Templates: A Compared Roundup",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "spreadsheet-template/spreadsheet-macros-automate-boring.html",
+      "cluster": "spreadsheet-template",
+      "clusterLabel": "Spreadsheet template",
+      "title": "Reseller Spreadsheet Macros: Automate the Boring",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "spreadsheet-template/versioning-your-spreadsheet.html",
+      "cluster": "spreadsheet-template",
+      "clusterLabel": "Spreadsheet template",
+      "title": "Versioning Your Spreadsheet Without Losing Data",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 37
+    },
+    {
+      "path": "tax-checklist/1040-schedule-1-vs-c.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Form 1040 Schedule 1 vs Schedule C: Which Applies?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "tax-checklist/cash-vs-accrual-method-resellers.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Cash Method vs Accrual: Which Should Resellers Use?",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "tax-checklist/choosing-a-reseller-tax-pro.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Choosing a Tax Pro Who Actually Understands Reselling",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "tax-checklist/hobby-vs-business-irs-litmus-test.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Hobby vs Business: The IRS Litmus Test for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 43
+    },
+    {
+      "path": "tax-checklist/inventory-and-taxes-unsold-stock.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Inventory and Taxes: When You Get Taxed on Unsold Stock",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 45
+    },
+    {
+      "path": "tax-checklist/lesser-known-reseller-tax-hacks.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Lesser-Known Reseller Tax Hacks (Beyond the Mileage Deduction)",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "tax-checklist/multi-platform-tax-implications.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Tax Implications of Selling on Multiple Platforms",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "tax-checklist/sole-prop-vs-llc-vs-scorp-resellers.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Sole Prop vs LLC vs S-Corp for Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 41
+    },
+    {
+      "path": "tax-checklist/state-sales-tax-nexus-resellers.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "State Sales Tax Nexus for Online Resellers",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "tax-checklist/surviving-irs-audit-reseller.html",
+      "cluster": "tax-checklist",
+      "clusterLabel": "Tax checklist",
+      "title": "Surviving an IRS Audit as a Reseller",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 39
+    },
+    {
+      "path": "whatnot/whatnot-50-shows-lessons.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Lessons from a Reseller's First 50 Shows",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "whatnot/whatnot-categories-that-sell-2026.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Categories That Sell Best in 2026",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "whatnot/whatnot-hosting-cadence.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Hosting Cadence: How Often to Go Live",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "whatnot/whatnot-hot-seat-strategies.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Hot-Seat Strategies: Building Buyer Loyalty",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "whatnot/whatnot-live-selling-real-economics.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Live Selling: The Real Economics Behind a Show",
+      "description": "Ten Whatnot shows broken down—GMV, fees, Boost spend, prep time, and dollars per hour—plus where new live sellers leak margin in fast auctions.",
+      "status": "ready",
+      "wordCount": 880
+    },
+    {
+      "path": "whatnot/whatnot-margins-fees-boost-real-take.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Margins: Fees, Boost, and the Real Take",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 40
+    },
+    {
+      "path": "whatnot/whatnot-pre-show-prep.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Inventory Pre-Show Prep",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "whatnot/whatnot-production-budget-setups.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Production: Budget Setups That Convert",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "whatnot/whatnot-returns-disputes.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Returns and Disputes",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "whatnot/whatnot-shipping-workflow-after-show.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Shipping Workflow After a Show",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "whatnot/whatnot-show-format-auction-vs-fixed.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Show Format: Auction vs Fixed Price",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    },
+    {
+      "path": "whatnot/whatnot-show-recaps-marketing-reuse.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Show Recaps for Marketing Reuse",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "whatnot/whatnot-sponsorships-co-hosting.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Sponsorships and Co-Hosting",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 32
+    },
+    {
+      "path": "whatnot/whatnot-tags-categories-listing-hygiene.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot Tags, Categories, and Listing Hygiene",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 36
+    },
+    {
+      "path": "whatnot/whatnot-vs-ebay-live.html",
+      "cluster": "whatnot",
+      "clusterLabel": "Whatnot",
+      "title": "Whatnot vs eBay Live: A Reseller's Choice",
+      "description": "Draft article — not yet published.",
+      "status": "stub",
+      "wordCount": 38
+    }
+  ]
+}
