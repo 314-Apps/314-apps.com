@@ -6,6 +6,14 @@
     <title>314 Apps</title>
     <meta name="description" content="314 Apps builds mobile apps that bring people together. Home of the Pools NFL Pick'em app.">
     <link rel="stylesheet" href="style.css">
+    <script>
+      (function () {
+        if (location.hostname === 'consignment.314-apps.com' &&
+            (location.pathname === '/' || location.pathname === '/index.html')) {
+          location.replace('/blog/');
+        }
+      })();
+    </script>
 </head>
 <body>
     <div class="container">
@@ -21,6 +29,14 @@
         <div class="products">
             <h2>Our Apps</h2>
             <div class="product-cards">
+                <a class="product-card" href="fish/">
+                    <h3>BigBassIQ</h3>
+                    <p>Unofficial web tool for Lake of the Ozarks Big Bass Bash payout windows, live leaderboard context, and weigh-in timing. Pair with the local API to load scores.</p>
+                </a>
+                <a class="product-card" href="blog/">
+                    <h3>Inventr</h3>
+                    <p>Inventory and profit tracking for resellers, booth sellers, and consignment shops. Guides and free tools on the blog.</p>
+                </a>
                 <div class="product-card">
                     <h3>Pools</h3>
                     <p>An NFL Pick'em pool management app. Create or join weekly pick'em pools, make your predictions, and track standings all season long. Available on the App Store.</p>
