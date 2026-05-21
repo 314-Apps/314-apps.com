@@ -6,8 +6,45 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { ROOT, SITE_BASE, SITE_HOME } from './lib.mjs';
+import { injectPosthogSnippet } from './posthog-snippet.mjs';
 
 const OUT = path.join(ROOT, '_site');
+
+const ANALYTICS_SKIP_PREFIXES = ['blog-admin/'];
+
+function shouldInjectAnalytics(relPath) {
+  const norm = relPath.split(path.sep).join('/');
+  return !ANALYTICS_SKIP_PREFIXES.some((p) => norm.startsWith(p));
+}
+
+function injectAnalyticsIntoSite() {
+  let injected = 0;
+  let skipped = 0;
+  function walk(dir) {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      const stat = fs.statSync(full);
+      if (stat.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!name.endsWith('.html')) continue;
+      const rel = path.relative(OUT, full);
+      if (!shouldInjectAnalytics(rel)) {
+        skipped++;
+        continue;
+      }
+      const src = fs.readFileSync(full, 'utf8');
+      const next = injectPosthogSnippet(src);
+      if (next !== src) {
+        fs.writeFileSync(full, next);
+        injected++;
+      }
+    }
+  }
+  walk(OUT);
+  console.log(`PostHog snippet injected into ${injected} HTML files (skipped ${skipped} admin/no-head).`);
+}
 
 const COPY_DIRS = ['funnel-tools', 'blog-admin'];
 const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
@@ -79,5 +116,7 @@ ${blogUrls}
 </urlset>
 `;
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap);
+
+injectAnalyticsIntoSite();
 
 console.log(`Site assembled at ${OUT}`);
