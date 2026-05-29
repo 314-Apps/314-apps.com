@@ -5,12 +5,56 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
-import { ROOT, SITE_BASE, SITE_HOME } from './lib.mjs';
+import { ROOT, SITE_BASE, SITE_HOME, CATALOG_PATH, readPublishedLastmod } from './lib.mjs';
 import { injectPosthogSnippet } from './posthog-snippet.mjs';
+import { injectSeoMeta, resolvePageSeo } from './seo-meta.mjs';
 
 const OUT = path.join(ROOT, '_site');
 
 const ANALYTICS_SKIP_PREFIXES = ['blog-admin/'];
+
+function shouldInjectPublicMeta(relPath) {
+  const norm = relPath.split(path.sep).join('/');
+  return !ANALYTICS_SKIP_PREFIXES.some((p) => norm.startsWith(p));
+}
+
+function loadCatalogByPath() {
+  if (!fs.existsSync(CATALOG_PATH)) return new Map();
+  const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf8'));
+  return new Map(catalog.articles.map((a) => [a.path, a]));
+}
+
+function injectSeoIntoSite(catalogByPath, articleLastmod) {
+  let injected = 0;
+  let skipped = 0;
+  function walk(dir) {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      const stat = fs.statSync(full);
+      if (stat.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!name.endsWith('.html')) continue;
+      const rel = path.relative(OUT, full);
+      if (!shouldInjectPublicMeta(rel)) {
+        skipped++;
+        continue;
+      }
+      const src = fs.readFileSync(full, 'utf8');
+      const norm = rel.split(path.sep).join('/');
+      const meta = resolvePageSeo(norm, src, catalogByPath, articleLastmod);
+      if (!meta) continue;
+      const next = injectSeoMeta(src, meta);
+      if (next !== src) {
+        fs.writeFileSync(full, next);
+        injected++;
+      }
+    }
+  }
+  walk(OUT);
+  console.log(`SEO meta injected into ${injected} HTML files (skipped ${skipped} admin).`);
+}
 
 function shouldInjectAnalytics(relPath) {
   const norm = relPath.split(path.sep).join('/');
@@ -117,6 +161,9 @@ ${blogUrls}
 `;
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap);
 
+const catalogByPath = loadCatalogByPath();
+const articleLastmod = readPublishedLastmod();
+injectSeoIntoSite(catalogByPath, articleLastmod);
 injectAnalyticsIntoSite();
 
 console.log(`Site assembled at ${OUT}`);

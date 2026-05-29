@@ -1,17 +1,24 @@
 {
   "paths": [
     "break-even-calculator/how-store-commission-affects-bottom-line.html",
+    "break-even-calculator/how-to-calculate-booth-break-even.html",
+    "break-even-calculator/true-cost-running-consignment-booth.html",
     "consignment-shop-ops/setting-consignor-splits-fairly.html",
     "ebay/ebay-store-vs-no-store-roi.html",
     "etsy/etsy-vintage-20-year-rule-explained.html",
     "facebook-marketplace/fb-marketplace-furniture-flip-margins.html",
+    "inventr-app/getting-started-inventr-walkthrough.html",
     "inventr-app/inventr-vs-spreadsheets-why-switching.html",
     "mercari/mercari-vs-poshmark-where-to-list-first.html",
     "niches-books/book-scanning-apps-which-actually-pay.html",
     "niches-toys-collectibles/funko-pop-flipping-still-worth-it.html",
     "niches-vintage-clothing/identifying-valuable-vintage-band-tees.html",
+    "photo-checklist/how-to-photograph-resale-items.html",
     "photo-checklist/photographing-clothing-online-resale.html",
+    "photo-checklist/photos-every-listing-needs.html",
+    "pnl-template/how-to-read-pnl-better-decisions.html",
     "pnl-template/operating-expenses-booth-sellers.html",
+    "pnl-template/what-is-pnl-statement-resellers.html",
     "poshmark/poshmark-sharing-strategy-hours-vs-sales.html",
     "profit-calculator/how-to-calculate-true-reselling-profit.html",
     "profit-calculator/platform-fee-comparison-ebay-poshmark-mercari.html",
@@ -19,11 +26,14 @@
     "sell-through-calculator/how-to-improve-sell-through-rate.html",
     "sell-through-calculator/inventory-aging-silent-profit-killer.html",
     "sell-through-calculator/what-is-sell-through-rate.html",
+    "sourcing-guide/best-things-flip-thrift-stores.html",
     "sourcing-guide/garage-sale-sourcing-tips.html",
     "sourcing-guide/how-to-spot-valuable-vintage-clothing.html",
     "sourcing-guide/research-item-value-60-seconds.html",
+    "tax-checklist/reseller-tax-basics.html",
+    "tax-checklist/what-is-schedule-c-resellers.html",
     "whatnot/whatnot-live-selling-real-economics.html"
   ],
-  "updatedAt": "2026-05-20T01:30:07.150Z",
-  "updatedBy": "mjcdk9"
+  "updatedAt": "2026-05-29T20:50:00.000Z",
+  "updatedBy": "cursor-agent"
 }

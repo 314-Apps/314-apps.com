@@ -426,3 +426,28 @@ main {
   text-align: center;
   color: var(--color-muted);
 }
+
+.related-guides {
+  padding: 2.5rem 0 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.related-guides h2 {
+  font-size: 1.25rem;
+  margin: 0 0 1rem;
+}
+
+.related-guides__list {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  line-height: 1.8;
+}
+
+.related-guides__list a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.related-guides__list a:hover {
+  text-decoration: underline;
+}

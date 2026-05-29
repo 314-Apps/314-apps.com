@@ -11,6 +11,7 @@ import {
   SITE_STYLES,
   CLUSTER_SECTIONS,
   readPublished,
+  readPublishedLastmod,
   escapeHtml,
 } from './lib.mjs';
 import { APP_STORE_URL } from './app-links.mjs';
@@ -29,7 +30,59 @@ function stripDraftNoindex(html) {
     .replace(/\s*data-article-status="draft"/gi, '');
 }
 
-function copyPublished(published) {
+function relatedGuidesHtml(relPath, catalog, published) {
+  const current = catalog.articles.find((a) => a.path === relPath);
+  if (!current) return '';
+
+  const related = catalog.articles
+    .filter(
+      (a) =>
+        published.has(a.path) &&
+        a.path !== relPath &&
+        a.cluster === current.cluster &&
+        a.status === 'ready'
+    )
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .slice(0, 3);
+
+  if (related.length === 0) return '';
+
+  const items = related
+    .map(
+      (a) =>
+        `<li><a href="/blog/${escapeHtml(a.path)}">${escapeHtml(a.title)}</a></li>`
+    )
+    .join('\n');
+
+  return `
+  <section class="related-guides" aria-label="More guides">
+    <div class="container">
+      <h2>More ${escapeHtml(current.clusterLabel)} guides</h2>
+      <ul class="related-guides__list">${items}
+      </ul>
+    </div>
+  </section>`;
+}
+
+function injectRelatedGuides(html, relPath, catalog, published) {
+  const block = relatedGuidesHtml(relPath, catalog, published);
+  if (!block) return html;
+  if (html.includes('class="related-guides"')) return html;
+
+  const ctaIdx = html.indexOf('<section class="cta-banner">');
+  if (ctaIdx !== -1) {
+    return html.slice(0, ctaIdx) + block + '\n\n  ' + html.slice(ctaIdx);
+  }
+
+  const footerIdx = html.indexOf('<footer class="site-footer">');
+  if (footerIdx !== -1) {
+    return html.slice(0, footerIdx) + block + '\n\n  ' + html.slice(footerIdx);
+  }
+
+  return html;
+}
+
+function copyPublished(published, catalog) {
   if (fs.existsSync(BLOG_OUT)) {
     fs.rmSync(BLOG_OUT, { recursive: true, force: true });
   }
@@ -43,7 +96,9 @@ function copyPublished(published) {
       continue;
     }
     fs.mkdirSync(path.dirname(dest), { recursive: true });
-    fs.writeFileSync(dest, stripDraftNoindex(fs.readFileSync(src, 'utf8')));
+    let html = stripDraftNoindex(fs.readFileSync(src, 'utf8'));
+    html = injectRelatedGuides(html, rel, catalog, published);
+    fs.writeFileSync(dest, html);
   }
 }
 
@@ -142,23 +197,24 @@ function buildIndex(catalog, published) {
 `;
 }
 
-function funnelToolUrls() {
+function funnelToolUrls(lastmod) {
   const manifestPath = path.join(ROOT, 'funnel-tools/manifest.json');
   if (!fs.existsSync(manifestPath)) return [];
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   return manifest.map(
     (t) =>
-      `<url><loc>${SITE_BASE}/funnel-tools/${t.slug}/</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>`
+      `<url><loc>${SITE_BASE}/funnel-tools/${t.slug}/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>`
   );
 }
 
-function buildSitemap(published) {
+function buildSitemap(published, lastmod) {
   const urls = [
-    `<url><loc>${SITE_BASE}${SITE_HOME}</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
-    `<url><loc>${SITE_BASE}/funnel-tools/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
-    ...funnelToolUrls(),
+    `<url><loc>${SITE_BASE}${SITE_HOME}</loc><lastmod>${lastmod}</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>`,
+    `<url><loc>${SITE_BASE}/funnel-tools/</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`,
+    ...funnelToolUrls(lastmod),
     ...[...published].sort().map(
-      (p) => `<url><loc>${SITE_BASE}/blog/${p}</loc><changefreq>monthly</changefreq></url>`
+      (p) =>
+        `<url><loc>${SITE_BASE}/blog/${p}</loc><lastmod>${lastmod}</lastmod><changefreq>monthly</changefreq></url>`
     ),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -170,7 +226,8 @@ ${urls.join('\n')}
 
 const catalog = loadCatalog();
 const published = readPublished();
-copyPublished(published);
+const lastmod = readPublishedLastmod();
+copyPublished(published, catalog);
 fs.writeFileSync(path.join(BLOG_OUT, 'index.html'), buildIndex(catalog, published));
-fs.writeFileSync(path.join(ROOT, 'sitemap-blog.xml'), buildSitemap(published));
+fs.writeFileSync(path.join(ROOT, 'sitemap-blog.xml'), buildSitemap(published, lastmod));
 console.log(`Built blog: ${published.size} published of ${catalog.count} in catalog.`);

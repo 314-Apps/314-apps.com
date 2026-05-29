@@ -121,9 +121,20 @@ export function parseArticleMeta(html, relPath) {
   };
 }
 
+export function readPublishedJson() {
+  return JSON.parse(fs.readFileSync(PUBLISHED_PATH, 'utf8'));
+}
+
 export function readPublished() {
-  const raw = JSON.parse(fs.readFileSync(PUBLISHED_PATH, 'utf8'));
+  const raw = readPublishedJson();
   return new Set(raw.paths ?? []);
+}
+
+/** ISO date (YYYY-MM-DD) from published.json updatedAt, or today. */
+export function readPublishedLastmod() {
+  const raw = readPublishedJson();
+  const iso = raw.updatedAt ?? new Date().toISOString();
+  return iso.slice(0, 10);
 }
 
 export function escapeHtml(s) {
