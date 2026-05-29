@@ -189,7 +189,7 @@ function buildIndex(catalog, published) {
   </section>
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a></p>
+      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
     </div>
   </footer>
 </body>

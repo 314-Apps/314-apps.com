@@ -92,6 +92,10 @@ function injectAnalyticsIntoSite() {
 
 const COPY_DIRS = ['funnel-tools', 'blog-admin'];
 const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
+const LEGAL_PAGES = [
+  ['legal/privacy-policy.html', 'privacy-policy.html'],
+  ['legal/terms.html', 'terms.html'],
+];
 
 const BLOG_REDIRECT_HTML = `<!DOCTYPE html>
 <html lang="en">
@@ -133,6 +137,11 @@ execSync('node scripts/blog/generate-catalog.mjs', { cwd: ROOT, stdio: 'inherit'
 execSync('node scripts/blog/build-blog.mjs', { cwd: ROOT, stdio: 'inherit' });
 
 for (const f of COPY_FILES) copyFile(f);
+for (const [src, destName] of LEGAL_PAGES) {
+  const srcPath = path.join(ROOT, src);
+  if (!fs.existsSync(srcPath)) continue;
+  fs.copyFileSync(srcPath, path.join(OUT, destName));
+}
 for (const d of COPY_DIRS) copyDir(d);
 copyDir('blog');
 
@@ -145,6 +154,8 @@ if (fs.existsSync(blogIndex)) {
 
 fs.mkdirSync(path.join(OUT, 'blog-data'), { recursive: true });
 
+const articleLastmod = readPublishedLastmod();
+
 const blogSitemap = fs.existsSync(path.join(ROOT, 'sitemap-blog.xml'))
   ? fs.readFileSync(path.join(ROOT, 'sitemap-blog.xml'), 'utf8')
   : '';
@@ -154,15 +165,20 @@ const blogUrls = blogSitemap
   .trim()
   .replaceAll(`${SITE_BASE}/blog/`, `${SITE_BASE}/blog/`);
 
+const legalSitemapUrls = [
+  `<url><loc>${SITE_BASE}/privacy-policy.html</loc><lastmod>${articleLastmod}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>`,
+  `<url><loc>${SITE_BASE}/terms.html</loc><lastmod>${articleLastmod}</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>`,
+].join('\n');
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${blogUrls}
+${legalSitemapUrls}
 </urlset>
 `;
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap);
 
 const catalogByPath = loadCatalogByPath();
-const articleLastmod = readPublishedLastmod();
 injectSeoIntoSite(catalogByPath, articleLastmod);
 injectAnalyticsIntoSite();
 

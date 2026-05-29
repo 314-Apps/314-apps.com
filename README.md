@@ -26,3 +26,10 @@ After deploy, verify in [Google Search Console](https://search.google.com/search
 3. Request indexing on homepage + 2–3 key articles after adding external links
 
 **Discovery (manual):** Add the guides URL to App Store Connect (Developer Website / Marketing URL) and link from at least one profile you control (GitHub org, LinkedIn, etc.). Google rarely crawls new subdomains with zero inbound links.
+
+### App Store legal URLs
+
+Use these in App Store Connect for Inventr (Resell Tracker):
+
+- Privacy Policy: `https://consignment.314-apps.com/privacy-policy.html`
+- Terms of Service: `https://consignment.314-apps.com/terms.html`
