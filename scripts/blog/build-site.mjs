@@ -90,7 +90,7 @@ function injectAnalyticsIntoSite() {
   console.log(`PostHog snippet injected into ${injected} HTML files (skipped ${skipped} admin/no-head).`);
 }
 
-const COPY_DIRS = ['funnel-tools', 'blog-admin'];
+const COPY_DIRS = ['funnel-tools', 'blog-admin', 'media', 'invite', '.well-known'];
 const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
 const LEGAL_PAGES = [
   ['legal/privacy-policy.html', 'privacy-policy.html'],
@@ -144,6 +144,12 @@ for (const [src, destName] of LEGAL_PAGES) {
 }
 for (const d of COPY_DIRS) copyDir(d);
 copyDir('blog');
+
+// GitHub Pages serves 404.html for unknown paths — reuse invite landing for /invite/{token} URLs.
+const inviteIndexSrc = path.join(ROOT, 'invite/index.html');
+if (fs.existsSync(inviteIndexSrc)) {
+  fs.copyFileSync(inviteIndexSrc, path.join(OUT, '404.html'));
+}
 
 // Guides home at site root (consignment.314-apps.com/)
 const blogIndex = path.join(OUT, 'blog/index.html');
