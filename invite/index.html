@@ -93,7 +93,7 @@
                 <span class="inviter" id="inviter-email"></span> invited you to collaborate on Inventr &mdash; share booth inventory, track sales, and manage your reselling business together.
             </p>
             <a id="open-app-link" class="btn btn-primary" href="#">Open in Inventr</a>
-            <a class="btn btn-secondary" href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683">Download Inventr</a>
+            <a id="download-app-link" class="btn btn-secondary" href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683">Download Inventr</a>
         </div>
         <div id="error" class="error" style="display:none;">
             This invite link is invalid or has expired.
@@ -116,14 +116,28 @@
                 return;
             }
 
-            const apiBase = 'https://uv2aer7kmq.us-east-1.awsapprunner.com';
+            const isLocalPage = window.location.hostname === 'localhost'
+                || window.location.hostname === '127.0.0.1';
+            const apiBase = isLocalPage
+                ? 'http://127.0.0.1:8080'
+                : 'https://uv2aer7kmq.us-east-1.awsapprunner.com';
+            const openAppBase = isLocalPage
+                ? window.location.origin
+                : 'https://consignment.314-apps.com';
             fetch(apiBase + '/api/teams/invite/' + token)
                 .then(r => { if (!r.ok) throw new Error('not found'); return r.json(); })
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('content').style.display = 'block';
                     document.getElementById('inviter-email').textContent = data.inviterEmail;
-                    document.getElementById('open-app-link').href = 'https://consignment.314-apps.com/invite/' + token;
+                    const openLink = document.getElementById('open-app-link');
+                    const downloadLink = document.getElementById('download-app-link');
+                    if (isLocalPage) {
+                        openLink.href = 'inventr://invite/' + token;
+                        downloadLink.style.display = 'none';
+                    } else {
+                        openLink.href = openAppBase + '/invite/' + token;
+                    }
                 })
                 .catch(() => {
                     document.getElementById('loading').style.display = 'none';
