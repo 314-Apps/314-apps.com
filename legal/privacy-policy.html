@@ -23,94 +23,110 @@
   <section class="hero hero--small">
     <div class="container">
       <h1>Privacy Policy</h1>
-      <p class="legal-meta">314 Apps LLC · Inventr (Resell Tracker: Flip &amp; Profit) · Last updated May 29, 2026</p>
+      <p class="legal-meta">314 Apps LLC · Inventr (Resell Tracker: Flip &amp; Profit) · Last updated July 15, 2026</p>
     </div>
   </section>
 
   <main>
     <div class="article">
       <h2>1. Introduction</h2>
-      <p>This Privacy Policy describes how 314 Apps LLC ("314 Apps," "we," "us," or "our") collects, uses, and protects information when you use the Inventr mobile application marketed as <strong>Resell Tracker: Flip &amp; Profit</strong>, our website at <a href="https://consignment.314-apps.com/">consignment.314-apps.com</a>, and related services (collectively, the "Services").</p>
+      <p>This Privacy Policy describes how 314 Apps LLC ("314 Apps," "we," "us," or "our") collects, uses, and protects information when you use the Inventr mobile application for Android and iOS, marketed as <strong>Resell Tracker: Flip &amp; Profit</strong>, our website at <a href="https://consignment.314-apps.com/">consignment.314-apps.com</a>, and related services (collectively, the "Services").</p>
       <p>By using the Services, you agree to the practices described in this policy.</p>
 
       <h2>2. Information We Collect</h2>
 
       <h3>2.1 Information you provide</h3>
-      <p>Depending on how you use Inventr, you may provide:</p>
       <ul>
-        <li><strong>Account information:</strong> such as an email address or sign-in identifier if you create an account or use optional team sharing</li>
-        <li><strong>Inventory and business data:</strong> item descriptions, photos, purchase costs, sale prices, sources, tags, notes, and other resale records you enter in the app</li>
-        <li><strong>Support communications:</strong> information you send when you contact us</li>
+        <li><strong>Account information:</strong> your email address and sign-in credentials, managed through Firebase Authentication (Google), if you create an account</li>
+        <li><strong>Inventory and business data:</strong> item descriptions, photos, purchase costs, sale prices, sales records, sources, tags, storage locations, booth and seller details, and notes you enter in the app</li>
+        <li><strong>Team information:</strong> email addresses you invite to your team and related membership records</li>
+        <li><strong>Support communications:</strong> information you send when you contact us in-app or by email</li>
       </ul>
 
       <h3>2.2 Information collected automatically</h3>
-      <p>When you use the Services, we may automatically collect:</p>
       <ul>
-        <li><strong>Device and app information:</strong> device type, operating system, app version, and general diagnostic data</li>
-        <li><strong>Usage information:</strong> features used, screens viewed, and performance or crash logs</li>
-        <li><strong>Website analytics:</strong> on consignment.314-apps.com, we use analytics tools (including PostHog) to understand page visits and improve the site. This may include page URLs, referrer, browser type, and approximate location derived from IP address</li>
+        <li><strong>App analytics:</strong> feature usage events, session information, device model and OS version, app version, and crash and diagnostic data, collected via PostHog. Session replays mask text you type and images you upload</li>
+        <li><strong>Website analytics:</strong> on consignment.314-apps.com we use PostHog to understand page visits — page URLs, referrer, browser type, and approximate location derived from IP address</li>
+        <li><strong>Server logs:</strong> API request logs (timestamps, IP addresses, request metadata) kept for security and operations</li>
       </ul>
 
-      <h3>2.3 Payment information</h3>
-      <p>If you purchase a subscription or in-app purchase, payment is processed by Apple. We do not receive your full payment card number. Apple may provide us with purchase status, product identifiers, and subscription renewal information needed to deliver paid features.</p>
+      <h3>2.3 Payment and subscription information</h3>
+      <p>Subscription payments are processed by <strong>Google Play</strong> (on Android) or the <strong>Apple App Store</strong> (on iOS). We never receive your full payment card number. We use <strong>RevenueCat</strong> to manage subscription status; we and RevenueCat receive purchase status, product identifiers, and renewal information needed to deliver paid features.</p>
 
       <h2>3. How We Use Information</h2>
-      <p>We use information to:</p>
       <ul>
         <li>Provide, maintain, and improve Inventr and our website</li>
-        <li>Sync inventory and optional shared access between devices or team members where you enable those features</li>
-        <li>Process subscriptions and restore purchases</li>
+        <li>Sync inventory across your devices and with team members you invite</li>
+        <li>Create and secure your account, and authenticate sign-ins</li>
+        <li>Process subscriptions, entitlements, and purchase restores</li>
         <li>Respond to support requests</li>
-        <li>Monitor reliability, fix bugs, and prevent abuse</li>
+        <li>Monitor reliability, fix bugs, and prevent fraud and abuse</li>
         <li>Comply with legal obligations</li>
       </ul>
+      <p>We do <strong>not</strong> sell your personal information, and we do not use your data for third-party advertising.</p>
 
       <h2>4. How We Store and Protect Data</h2>
-      <p>We use reasonable technical and organizational measures designed to protect your information, including encryption in transit (HTTPS/TLS) where applicable. No method of storage or transmission is completely secure, and we cannot guarantee absolute security.</p>
-      <p>Your inventory data may be stored on your device, in cloud services used to operate the app, or both, depending on the features you use.</p>
+      <p>Your data is stored on Amazon Web Services (AWS) infrastructure in the United States — cloud database (DynamoDB) for inventory and account records and cloud storage (S3) for item photos. All data is encrypted in transit (HTTPS/TLS). Authentication tokens are stored in secure storage on your device. No method of storage or transmission is completely secure, and we cannot guarantee absolute security.</p>
 
       <h2>5. Third-Party Services</h2>
-      <p>We use service providers that may process information on our behalf, including:</p>
+      <p>We use service providers that process information on our behalf:</p>
       <ul>
-        <li><strong>Apple App Store:</strong> subscriptions, in-app purchases, and app distribution. <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple Privacy Policy</a></li>
-        <li><strong>PostHog:</strong> website analytics on consignment.314-apps.com. <a href="https://posthog.com/privacy" target="_blank" rel="noopener">PostHog Privacy Policy</a></li>
+        <li><strong>Firebase Authentication (Google):</strong> account creation and sign-in. <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy</a></li>
+        <li><strong>Amazon Web Services:</strong> cloud database, photo storage, server hosting, and operational logs. <a href="https://aws.amazon.com/privacy/" target="_blank" rel="noopener">AWS Privacy</a></li>
+        <li><strong>Google Play:</strong> subscription billing and app distribution on Android. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+        <li><strong>Apple App Store:</strong> subscription billing and app distribution on iOS. <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple Privacy Policy</a></li>
+        <li><strong>RevenueCat:</strong> subscription status management. <a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">RevenueCat Privacy Policy</a></li>
+        <li><strong>PostHog:</strong> product analytics in the app and website analytics. <a href="https://posthog.com/privacy" target="_blank" rel="noopener">PostHog Privacy Policy</a></li>
         <li><strong>Hosting providers:</strong> such as GitHub Pages for our public marketing site</li>
       </ul>
       <p>We may add or change providers as the Services evolve. We do not sell your personal information.</p>
 
       <h2>6. Sharing of Information</h2>
-      <p>We may share information:</p>
       <ul>
-        <li>With service providers who help us operate the Services, under confidentiality obligations</li>
-        <li>With people you explicitly invite when you use optional team or shared-access features</li>
+        <li>With the service providers above, under confidentiality obligations</li>
+        <li>With people you explicitly invite when you use team or shared-access features</li>
         <li>When required by law, legal process, or to protect rights, safety, and security</li>
         <li>In connection with a merger, acquisition, or sale of assets, with notice where required by law</li>
       </ul>
 
       <h2>7. Data Retention</h2>
-      <p>We retain information for as long as needed to provide the Services, comply with legal obligations, resolve disputes, and enforce agreements. You may request deletion of account-associated data as described below.</p>
-
-      <h2>8. Your Choices and Rights</h2>
       <ul>
-        <li><strong>Access and updates:</strong> You can review and edit inventory data within the app.</li>
-        <li><strong>Deletion:</strong> You may request deletion of account data by emailing us. We will delete or anonymize personal data unless retention is required by law.</li>
-        <li><strong>Subscriptions:</strong> Manage or cancel Apple subscriptions in your Apple ID account settings.</li>
-        <li><strong>Website analytics:</strong> You can use browser privacy settings or extensions to limit cookies and similar technologies on our marketing site.</li>
+        <li><strong>Account and inventory data:</strong> retained while your account is active and permanently deleted when you delete your account (Section 8)</li>
+        <li><strong>Server logs:</strong> expire automatically on a rolling basis (up to 90 days)</li>
+        <li><strong>Purchase records:</strong> retained by Google Play, Apple, and RevenueCat under their own policies for legal, tax, and fraud-prevention purposes</li>
+        <li><strong>Analytics events:</strong> retained in aggregate; no longer linkable to you after account deletion</li>
       </ul>
 
-      <h2>9. Children's Privacy</h2>
+      <h2>8. Account Deletion</h2>
+      <p>You can permanently delete your Inventr account and associated data at any time:</p>
+      <ul>
+        <li><strong>In the app:</strong> Settings → <strong>Delete Account</strong> → confirm with your password. Deletion starts immediately.</li>
+        <li><strong>On the web (no app needed):</strong> follow the steps at <a href="/delete-account.html">consignment.314-apps.com/delete-account.html</a> or email <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a> from your account email with the subject "Delete my Inventr account". Requests are completed within 30 days.</li>
+      </ul>
+      <p>Deletion permanently removes your account record (email and credentials), inventory items, item photos, team and booth memberships, support messages, and usage counters. Purchase records held by Google Play, Apple, and RevenueCat are retained by those providers as described above. Deleting your account does <strong>not</strong> cancel an active subscription — cancel first in <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play</a> or your Apple ID subscription settings.</p>
+
+      <h2>9. Your Choices and Rights</h2>
+      <ul>
+        <li><strong>Access and updates:</strong> review and edit your inventory data at any time in the app</li>
+        <li><strong>Deletion:</strong> delete your account and data as described in Section 8, or request a copy of your data by emailing us</li>
+        <li><strong>Subscriptions:</strong> manage or cancel in Google Play or Apple ID settings</li>
+        <li><strong>Regional rights:</strong> depending on your location, you may have rights to access, correct, delete, or port personal data, and to withdraw consent — contact us to exercise them</li>
+        <li><strong>Website analytics:</strong> use browser privacy settings or extensions to limit cookies and similar technologies on our marketing site</li>
+      </ul>
+
+      <h2>10. Children's Privacy</h2>
       <p>The Services are not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us personal information, contact us and we will take steps to delete it.</p>
 
-      <h2>10. International Users</h2>
+      <h2>11. International Users</h2>
       <p>If you access the Services from outside the United States, your information may be processed in the United States or other countries where we or our providers operate. By using the Services, you consent to that transfer.</p>
 
-      <h2>11. Changes to This Policy</h2>
+      <h2>12. Changes to This Policy</h2>
       <p>We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the "Last updated" date. Material changes may also be communicated in the app or by email where appropriate.</p>
 
-      <h2>12. California Privacy Rights</h2>
-      <p>California residents may have rights under the CCPA/CPRA, including the right to know, delete, and correct personal information, and to opt out of certain sharing. We do not sell personal information as defined by California law.</p>
+      <h2>13. California Privacy Rights</h2>
+      <p>California residents may have rights under the CCPA/CPRA, including the right to know, delete, and correct personal information, and to opt out of certain sharing. We do not sell personal information as defined by California law. To exercise these rights, use the deletion methods in Section 8 or contact us below. We will not discriminate against you for exercising your rights.</p>
 
-      <h2>13. Contact Us</h2>
+      <h2>14. Contact Us</h2>
       <p>Questions about this Privacy Policy or our data practices:</p>
       <p><strong>314 Apps LLC</strong><br>
       Email: <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a></p>
@@ -119,7 +135,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
+      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/delete-account.html">Delete account</a></p>
     </div>
   </footer>
 </body>

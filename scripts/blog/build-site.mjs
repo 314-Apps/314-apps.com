@@ -95,6 +95,7 @@ const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
 const LEGAL_PAGES = [
   ['legal/privacy-policy.html', 'privacy-policy.html'],
   ['legal/terms.html', 'terms.html'],
+  ['legal/delete-account.html', 'delete-account.html'],
 ];
 
 const BLOG_REDIRECT_HTML = `<!DOCTYPE html>
