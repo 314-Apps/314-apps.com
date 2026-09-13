@@ -17,6 +17,35 @@ npm run blog:preview   # serve _site/ on http://localhost:8765
 
 Deploy: push to `main`; GitHub Actions publishes `_site/` to GitHub Pages.
 
+### Paid-ad destination: `/app` and `/android`
+
+Meta (and any other paid) traffic points at **`https://consignment.314-apps.com/app`**
+rather than at the App Store directly, so the click is measured on our own domain
+before it leaves.
+
+| Path | What it does |
+|------|--------------|
+| [`app/index.html`](app/index.html) | Branches on user agent: Android → `/android/`, everything else → the App Store. Records an `app_redirect` event first. |
+| [`android/index.html`](android/index.html) | Waitlist page — there is no Play release, so Android visitors are asked for an email instead of sent to a store they cannot install from. |
+
+Both are `noindex`. Neither is in the sitemap.
+
+**Why the redirect waits ~0.2-1.2s.** `/app/` is the only place an ad click is
+counted, and PostHog's snippet queues events until `array.js` loads — navigating
+away sooner loses the pageview. The page polls for the real library, fires
+`app_redirect`, then leaves, capped at 1.2s so a blocked CDN never strands anyone.
+
+**Campaign tagging.** App Store links here carry Apple's `ct` + `mt`, *not*
+`utm_*`, which the App Store ignores. See `appStoreCampaignHref()` in
+[`scripts/blog/app-links.mjs`](scripts/blog/app-links.mjs). To make campaigns show
+up under App Analytics → Acquisition, set `APP_STORE_PROVIDER_TOKEN` there to the
+`pt=` value from an App Store Connect campaign link — until then `ct` is passed
+but not attributed.
+
+**Waitlist emails** land in PostHog as identified persons with
+`android_waitlist: true` (the site is static, so there is no backend to post to).
+Read them from Persons, or filter the `android_waitlist_joined` event.
+
 ### SEO / indexing checklist
 
 After deploy, verify in [Google Search Console](https://search.google.com/search-console):

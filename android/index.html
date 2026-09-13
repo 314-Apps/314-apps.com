@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventr for Android — join the waitlist</title>
+  <meta name="description" content="Inventr is on iPhone today and Android is in the works. Leave your email and we'll tell you the day it lands.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://consignment.314-apps.com/android/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/funnel-tools/css/styles.css">
+  <style>
+    /* Page-scoped. Tokens come from styles.css. */
+
+    .lp-header {
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.9rem 0;
+    }
+    .lp-header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .lp-header .logo { font-size: 1.15rem; }
+    .lp-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      white-space: nowrap;
+    }
+
+    .lp-hero {
+      padding: 2.25rem 0 0;
+      background: radial-gradient(90rem 40rem at 50% -12rem, rgba(102, 126, 234, 0.22), transparent 65%);
+    }
+    .lp-hero .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .lp-eyebrow {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #a5b4fc;
+      margin: 0 0 0.9rem;
+    }
+
+    .lp-hero h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 6.5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      font-weight: 800;
+      text-wrap: balance;
+    }
+    .lp-hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #8fa2ff, #c08ce8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lp-sub {
+      margin: 0.9rem 0 0;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--color-muted);
+      max-width: 32rem;
+      text-wrap: pretty;
+    }
+
+    /* ---- waitlist ---- */
+    .lp-waitlist {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.25rem 1.35rem;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      background: var(--color-surface);
+      max-width: 30rem;
+    }
+    .lp-waitlist h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .lp-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.9rem;
+    }
+    .lp-form input {
+      flex: 1 1 12rem;
+      min-width: 0;
+      padding: 0.75rem 0.85rem;
+      font: inherit;
+      font-size: 1rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+    }
+    .lp-form input::placeholder { color: #6d6d7d; }
+    .lp-form button {
+      flex: 0 0 auto;
+      padding: 0.75rem 1.35rem;
+      font: inherit;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .lp-form input:focus-visible,
+    .lp-form button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    .lp-note {
+      margin: 0.75rem 0 0;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--color-muted);
+    }
+    .lp-note.is-done { color: var(--color-success); font-weight: 600; }
+    .lp-note.is-error { color: #fca5a5; }
+
+    /* ---- device panel ---- */
+    .lp-shot {
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #eaebff 0%, #d8d7ff 100%);
+      max-width: 20rem;
+      margin-inline: auto;
+      line-height: 0;
+      box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+    }
+    .lp-shot img { display: block; width: 100%; height: auto; }
+    .lp-caption {
+      margin: 0.85rem 0 0;
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      text-align: center;
+    }
+
+    /* ---- what's coming ---- */
+    .lp-points { padding: 3rem 0 0.5rem; }
+    .lp-points h2 {
+      margin: 0 0 1.5rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    .lp-points ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .lp-point h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .lp-point p {
+      margin: 0;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: var(--color-muted);
+    }
+    .lp-point .lp-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      margin-bottom: 0.75rem;
+      border-radius: 9px;
+      background: rgba(102, 126, 234, 0.16);
+      color: #a5b4fc;
+    }
+
+    .lp-footer {
+      margin-top: 3rem;
+      padding: 1.75rem 0 2.5rem;
+      border-top: 1px solid var(--color-border);
+      font-size: 0.85rem;
+      color: var(--color-muted);
+      text-align: center;
+    }
+    .lp-footer p { margin: 0.4rem 0 0; }
+    .lp-footer a { color: var(--color-muted); text-decoration: underline; }
+    .lp-footer a:hover { color: var(--color-text); }
+
+    @media (min-width: 820px) {
+      .lp-hero { padding-top: 3.25rem; }
+      .lp-hero .container {
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: 3rem;
+      }
+      .lp-shot { margin-inline: 0 auto; }
+      .lp-points ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="lp-header">
+    <div class="container">
+      <a href="/" class="logo">Inventr</a>
+      <span class="lp-badge">Android — coming soon</span>
+    </div>
+  </header>
+
+  <section class="lp-hero">
+    <div class="container">
+
+      <div>
+        <p class="lp-eyebrow">For booth sellers &amp; resellers</p>
+
+        <h1>Inventr is on iPhone today. <em>Android is next.</em></h1>
+
+        <p class="lp-sub">
+          Track inventory, log every sale, and see your real profit — after commission,
+          fees, and what the item cost you. Leave your email and we'll tell you the day
+          the Android app lands.
+        </p>
+
+        <div class="lp-waitlist">
+          <h2>Get told first</h2>
+          <form class="lp-form" id="waitlist-form" novalidate>
+            <label for="waitlist-email" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Email address</label>
+            <input type="email" id="waitlist-email" name="email" placeholder="you@example.com"
+                   autocomplete="email" inputmode="email" required>
+            <button type="submit" id="waitlist-submit">Notify me</button>
+          </form>
+          <p class="lp-note" id="waitlist-note">One email, when Android is ready. Nothing else, and no sharing your address.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="lp-shot">
+          <img src="/app/inventr-dashboard.webp"
+               width="820" height="1260"
+               alt="The Inventr dashboard, showing inventory value, revenue, profit and cost basis across 140 tracked items."
+               fetchpriority="high" decoding="async">
+        </div>
+        <p class="lp-caption">The dashboard you'll get — shown on the iPhone version.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="lp-points">
+    <div class="container">
+      <h2>What you're on the list for</h2>
+      <ul>
+        <li class="lp-point">
+          <span class="lp-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          </span>
+          <h3>Real profit, not just revenue</h3>
+          <p>Enter what you paid and what it sold for. Inventr does the commission, fee and cost-basis math, so the number you see is the number you keep.</p>
+        </li>
+        <li class="lp-point">
+          <span class="lp-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          </span>
+          <h3>Photograph it, and it's listed</h3>
+          <p>Point your camera at an item and Inventr drafts the name, description and a price to start from. Correct anything you disagree with and save.</p>
+        </li>
+        <li class="lp-point">
+          <span class="lp-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v3"/><path d="M3 6v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2"/><circle cx="17" cy="14" r="1.5"/></svg>
+          </span>
+          <h3>Built for booths, not just online</h3>
+          <p>Track items across a booth, a consignment shop and the marketplaces at once — with the commission split baked into every sale.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="lp-footer">
+    <div class="container">
+      <p>In the meantime: <a href="/">free reseller guides &amp; calculators</a></p>
+      <p>On an iPhone? <a href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?ct=meta_resellers_2026_09&amp;mt=8">Get Inventr on the App Store</a></p>
+      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a></p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var track = function (event, props) {
+      try {
+        if (typeof window.posthog !== 'undefined' && typeof window.posthog.capture === 'function') {
+          window.posthog.capture(event, props || {});
+        }
+      } catch (e) { /* analytics must never break the form */ }
+    };
+
+    var form = document.getElementById('waitlist-form');
+    var input = document.getElementById('waitlist-email');
+    var note = document.getElementById('waitlist-note');
+
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = (input.value || '').trim();
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        note.textContent = 'That email address does not look right — check it and try again.';
+        note.className = 'lp-note is-error';
+        input.focus();
+        track('android_waitlist_rejected', { reason: 'invalid_email' });
+        return;
+      }
+
+      /* No backend here — the site is static. Identifying the person is what
+         puts them on a list we can actually read and export from PostHog. */
+      try {
+        if (typeof window.posthog !== 'undefined' && typeof window.posthog.identify === 'function') {
+          window.posthog.identify(email, { email: email, android_waitlist: true });
+        }
+      } catch (err) { /* fall through — the event below still records the signup */ }
+
+      track('android_waitlist_joined', { email: email });
+
+      form.hidden = true;
+      note.textContent = "You're on the list. We'll email you the day Android is ready.";
+      note.className = 'lp-note is-done';
+    });
+  })();
+  </script>
+
+</body>
+</html>

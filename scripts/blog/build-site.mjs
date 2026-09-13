@@ -90,7 +90,7 @@ function injectAnalyticsIntoSite() {
   console.log(`PostHog snippet injected into ${injected} HTML files (skipped ${skipped} admin/no-head).`);
 }
 
-const COPY_DIRS = ['funnel-tools', 'blog-admin', 'media', 'invite', '.well-known'];
+const COPY_DIRS = ['funnel-tools', 'blog-admin', 'media', 'invite', 'app', 'android', '.well-known'];
 const COPY_FILES = ['CNAME', '.nojekyll', 'robots.txt'];
 const LEGAL_PAGES = [
   ['legal/privacy-policy.html', 'privacy-policy.html'],
