@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opening Inventr on the App Store…</title>
+  <meta name="description" content="Opening Inventr on the App Store.">
+  <!-- Ad destination, not a page to be found in search. -->
+  <meta name="robots" content="noindex,nofollow">
+  <!-- NOTE: deliberately no <meta http-equiv="refresh"> fallback. It cannot
+       branch on platform, so it would send Android visitors to an App Store
+       page they can install nothing from. The redirect is JS-only; the links
+       below are the no-JS path and are visible from first paint. -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f12;
+      --surface: #1a1a22;
+      --border: #2e2e3a;
+      --text: #e8e8ef;
+      --muted: #9b9bab;
+      --primary: #667eea;
+      --accent: #764ba2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      text-align: center;
+    }
+    .card { width: 100%; max-width: 24rem; }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0 0 1.5rem;
+    }
+    .spinner {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 1.1rem;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation-duration: 2.4s; }
+    }
+    .status {
+      margin: 0 0 1.75rem;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      line-height: 1.45;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      align-items: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.4rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+    }
+    .alt {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: underline;
+    }
+    .alt:hover { color: var(--text); }
+    a:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="logo">Inventr</p>
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="status" id="status" role="status">Opening the App Store…</p>
+    <div class="links">
+      <a class="btn" id="store-link"
+         href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?ct=meta_resellers_2026_09&amp;mt=8">Open the App Store</a>
+      <a class="alt" id="android-link" href="/android/">On Android? Join the waitlist</a>
+    </div>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var STORE_URL = 'https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?ct=meta_resellers_2026_09&mt=8';
+    var WAITLIST_URL = '/android/';
+
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    var destination = isAndroid ? WAITLIST_URL : STORE_URL;
+
+    if (isAndroid) {
+      var status = document.getElementById('status');
+      var storeLink = document.getElementById('store-link');
+      var androidLink = document.getElementById('android-link');
+      if (status) status.textContent = 'Taking you to the Android waitlist…';
+      /* Swap the fallbacks so the prominent one is the one that works here. */
+      if (storeLink) { storeLink.setAttribute('href', WAITLIST_URL); storeLink.textContent = 'Join the Android waitlist'; }
+      if (androidLink) { androidLink.setAttribute('href', STORE_URL); androidLink.textContent = 'On iPhone? Get Inventr'; }
+    }
+
+    /* This page exists to be left, so the analytics have to win the race.
+       PostHog's snippet installs a queueing stub synchronously, but the queue
+       is only flushed once array.js loads — navigating away before then loses
+       both the pageview and this event. So: wait for the real library, then
+       leave. Capped so a blocked or slow CDN costs the visitor ~1.2s, never
+       the redirect itself. */
+    var REDIRECT_CAP_MS = 1200;
+    var POLL_MS = 50;
+    var waited = 0;
+    var gone = false;
+
+    function leave() {
+      if (gone) return;
+      gone = true;
+      window.location.replace(destination);
+    }
+
+    function phLoaded() {
+      return typeof window.posthog !== 'undefined' && window.posthog.__loaded === true;
+    }
+
+    function fireAndLeave() {
+      try {
+        if (phLoaded()) {
+          window.posthog.capture('app_redirect', {
+            platform: isAndroid ? 'android' : 'ios_or_other',
+            destination: isAndroid ? 'android_waitlist' : 'app_store'
+          });
+        }
+      } catch (e) { /* never block the redirect on analytics */ }
+      /* A beat for the request to leave the tab before navigation. */
+      setTimeout(leave, 120);
+    }
+
+    function poll() {
+      if (phLoaded() || waited >= REDIRECT_CAP_MS) {
+        fireAndLeave();
+        return;
+      }
+      waited += POLL_MS;
+      setTimeout(poll, POLL_MS);
+    }
+
+    poll();
+  })();
+  </script>
+</body>
+</html>
