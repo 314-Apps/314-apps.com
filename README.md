@@ -38,8 +38,11 @@ away sooner loses the pageview. The page polls for the real library, fires
 **Campaign tagging.** App Store links here carry Apple's `ct` + `mt`, *not*
 `utm_*`, which the App Store ignores. See `appStoreCampaignHref()` in
 [`scripts/blog/app-links.mjs`](scripts/blog/app-links.mjs). To make campaigns show
-up under App Analytics → Acquisition, set `APP_STORE_PROVIDER_TOKEN` there to the
-`pt=` value from an App Store Connect campaign link — until then `ct` is passed
+up under App Analytics → Acquisition, paste the `pt=` value from an App Store
+Connect campaign link into `COMMITTED_PROVIDER_TOKEN` there (or export
+`APP_STORE_PROVIDER_TOKEN` at build time). The build then stamps `pt` onto every
+`ct=` App Store link in `_site/` (`/app`, `/android`); source pages keep `ct` +
+`mt` only. A non-numeric value fails the build. Until it is set, `ct` is passed
 but not attributed.
 
 **Waitlist emails** land in PostHog as identified persons with
