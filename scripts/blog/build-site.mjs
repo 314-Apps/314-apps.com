@@ -8,6 +8,7 @@ import { execSync } from 'node:child_process';
 import { ROOT, SITE_BASE, SITE_HOME, CATALOG_PATH, readPublishedLastmod } from './lib.mjs';
 import { injectPosthogSnippet } from './posthog-snippet.mjs';
 import { injectSeoMeta, resolvePageSeo } from './seo-meta.mjs';
+import { APP_STORE_PROVIDER_TOKEN, withProviderToken } from './app-links.mjs';
 
 const OUT = path.join(ROOT, '_site');
 
@@ -88,6 +89,38 @@ function injectAnalyticsIntoSite() {
   }
   walk(OUT);
   console.log(`PostHog snippet injected into ${injected} HTML files (skipped ${skipped} admin/no-head).`);
+}
+
+/**
+ * Stamp Apple's provider token onto every App Store campaign link (`ct=`) in the
+ * built site, so installs from paid traffic show up under App Store Connect →
+ * Analytics → Acquisition → Campaigns. Source pages keep `ct` + `mt` only; the
+ * token lives in one place, `app-links.mjs`.
+ */
+function injectProviderTokenIntoSite() {
+  if (!APP_STORE_PROVIDER_TOKEN) {
+    console.log('App Store provider token not set — campaign links carry ct/mt only (not attributed).');
+    return;
+  }
+  let stamped = 0;
+  function walk(dir) {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      if (fs.statSync(full).isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!name.endsWith('.html')) continue;
+      const src = fs.readFileSync(full, 'utf8');
+      const next = withProviderToken(src);
+      if (next !== src) {
+        fs.writeFileSync(full, next);
+        stamped++;
+      }
+    }
+  }
+  walk(OUT);
+  console.log(`App Store provider token (pt=${APP_STORE_PROVIDER_TOKEN}) stamped onto campaign links in ${stamped} HTML files.`);
 }
 
 const COPY_DIRS = ['funnel-tools', 'blog-admin', 'media', 'invite', 'app', 'android', '.well-known'];
@@ -188,5 +221,6 @@ fs.writeFileSync(path.join(OUT, 'sitemap.xml'), sitemap);
 const catalogByPath = loadCatalogByPath();
 injectSeoIntoSite(catalogByPath, articleLastmod);
 injectAnalyticsIntoSite();
+injectProviderTokenIntoSite();
 
 console.log(`Site assembled at ${OUT}`);
