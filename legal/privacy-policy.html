@@ -1,142 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — Inventr</title>
-  <meta name="description" content="Privacy Policy for Inventr (Resell Tracker: Flip &amp; Profit) by 314 Apps LLC.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/funnel-tools/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — Inventr</title>
+    <meta name="description" content="Privacy Policy for Inventr (Resell Tracker: Flip & Profit) by 314 Apps LLC.">
+    <style>
+        :root { color-scheme: light dark; }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.65; color:#1a1a2e; background:#f7f7fb; }
+        @media (prefers-color-scheme: dark) {
+            body { color:#e8e8f0; background:#12121a; }
+            .card { background:#1c1c28 !important; box-shadow:none !important; border:1px solid #2c2c3a; }
+            a { color:#8ab4f8; }
+        }
+        .container { max-width:820px; margin:0 auto; padding:40px 20px 60px; }
+        header h1 { margin:0 0 4px; font-size:2rem; }
+        header p.sub { margin:0; opacity:.75; }
+        header p.updated { margin:4px 0 28px; font-size:.9rem; opacity:.6; }
+        .card { background:#fff; border-radius:12px; padding:24px 28px; margin-bottom:20px; box-shadow:0 1px 4px rgba(20,20,40,.08); }
+        h2 { font-size:1.2rem; margin-top:0; }
+        h3 { font-size:1.02rem; margin-bottom:6px; }
+        table { width:100%; border-collapse:collapse; margin-top:10px; font-size:.93rem; }
+        th, td { text-align:left; padding:8px 10px; border-bottom:1px solid rgba(128,128,160,.25); vertical-align:top; }
+        footer { margin-top:32px; font-size:.85rem; opacity:.7; text-align:center; }
+        a { color:#3243d6; }
+        ul { margin:8px 0; }
+    </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <a href="/" class="logo">Inventr</a>
-      <nav class="nav-links">
-        <a href="/">Guides</a>
-        <a href="/funnel-tools/">Free Tools</a>
-        <a class="btn btn--primary btn--sm" href="https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?utm_source=legal&amp;utm_medium=nav" target="_blank" rel="noopener">Try Inventr Free</a>
-      </nav>
+<div class="container">
+    <header>
+        <h1>Privacy Policy</h1>
+        <p class="sub">Inventr — Resell Tracker: Flip &amp; Profit, by 314 Apps LLC</p>
+        <p class="updated">Last updated: September 8, 2026</p>
+    </header>
+
+    <div class="card">
+        <h2>1. Introduction</h2>
+        <p>314 Apps LLC ("we," "us," or "our") operates the Inventr mobile application for Android and iOS, the
+        website consignment.314-apps.com, and related services (together, the "Services"). This policy explains
+        what information we collect, how we use it, who we share it with, and the choices you have — including
+        how to delete your account and data.</p>
     </div>
-  </header>
 
-  <section class="hero hero--small">
-    <div class="container">
-      <h1>Privacy Policy</h1>
-      <p class="legal-meta">314 Apps LLC · Inventr (Resell Tracker: Flip &amp; Profit) · Last updated July 15, 2026</p>
+    <div class="card">
+        <h2>2. Information We Collect</h2>
+        <h3>2.1 Information you provide</h3>
+        <ul>
+            <li><strong>Account information:</strong> your email address and sign-in credentials, managed through Firebase Authentication.</li>
+            <li><strong>Referral payout information:</strong> a unique referral code for your account, any referral code you enter, and (if you opt in) your Venmo username so we can send referral rewards. Venmo usernames are stored only on our servers for payouts and are not sent to analytics.</li>
+            <li><strong>Business inventory data:</strong> items, descriptions, photos, costs, prices, sale records, tags, storage locations, booth/seller details, and notes you enter.</li>
+            <li><strong>AI scan content:</strong> when you use AI scan to draft a listing, the item photos you scan and any item details you type for that scan are sent to OpenAI to generate the draft. AI scan is optional — nothing is sent to OpenAI unless you use it.</li>
+            <li><strong>Team information:</strong> email addresses you invite to your team and membership records.</li>
+            <li><strong>Support communications:</strong> messages you send us through in-app support or email.</li>
+        </ul>
+        <h3>2.2 Information collected automatically</h3>
+        <ul>
+            <li><strong>App analytics:</strong> feature usage events, session information, device model and OS version, app version, and crash/diagnostic data, collected via PostHog.</li>
+            <li><strong>Website analytics:</strong> page URLs, referrer, browser type, and approximate location derived from IP address, collected via PostHog on our website.</li>
+            <li><strong>Server logs:</strong> API request logs (timestamps, IP addresses, request metadata) retained for security and operations.</li>
+        </ul>
+        <h3>2.3 Payment and subscription information</h3>
+        <p>Subscription payments are processed entirely by <strong>Google Play</strong> (on Android) or the
+        <strong>Apple App Store</strong> (on iOS). We never receive your full payment card number. We use
+        <strong>RevenueCat</strong> to manage subscription status; we and RevenueCat receive purchase status,
+        product identifiers, and renewal information only.</p>
     </div>
-  </section>
 
-  <main>
-    <div class="article">
-      <h2>1. Introduction</h2>
-      <p>This Privacy Policy describes how 314 Apps LLC ("314 Apps," "we," "us," or "our") collects, uses, and protects information when you use the Inventr mobile application for Android and iOS, marketed as <strong>Resell Tracker: Flip &amp; Profit</strong>, our website at <a href="https://consignment.314-apps.com/">consignment.314-apps.com</a>, and related services (collectively, the "Services").</p>
-      <p>By using the Services, you agree to the practices described in this policy.</p>
-
-      <h2>2. Information We Collect</h2>
-
-      <h3>2.1 Information you provide</h3>
-      <ul>
-        <li><strong>Account information:</strong> your email address and sign-in credentials, managed through Firebase Authentication (Google), if you create an account</li>
-        <li><strong>Inventory and business data:</strong> item descriptions, photos, purchase costs, sale prices, sales records, sources, tags, storage locations, booth and seller details, and notes you enter in the app</li>
-        <li><strong>Team information:</strong> email addresses you invite to your team and related membership records</li>
-        <li><strong>Support communications:</strong> information you send when you contact us in-app or by email</li>
-      </ul>
-
-      <h3>2.2 Information collected automatically</h3>
-      <ul>
-        <li><strong>App analytics:</strong> feature usage events, session information, device model and OS version, app version, and crash and diagnostic data, collected via PostHog. Session replays mask text you type and images you upload</li>
-        <li><strong>Website analytics:</strong> on consignment.314-apps.com we use PostHog to understand page visits — page URLs, referrer, browser type, and approximate location derived from IP address</li>
-        <li><strong>Server logs:</strong> API request logs (timestamps, IP addresses, request metadata) kept for security and operations</li>
-      </ul>
-
-      <h3>2.3 Payment and subscription information</h3>
-      <p>Subscription payments are processed by <strong>Google Play</strong> (on Android) or the <strong>Apple App Store</strong> (on iOS). We never receive your full payment card number. We use <strong>RevenueCat</strong> to manage subscription status; we and RevenueCat receive purchase status, product identifiers, and renewal information needed to deliver paid features.</p>
-
-      <h2>3. How We Use Information</h2>
-      <ul>
-        <li>Provide, maintain, and improve Inventr and our website</li>
-        <li>Sync inventory across your devices and with team members you invite</li>
-        <li>Create and secure your account, and authenticate sign-ins</li>
-        <li>Process subscriptions, entitlements, and purchase restores</li>
-        <li>Respond to support requests</li>
-        <li>Monitor reliability, fix bugs, and prevent fraud and abuse</li>
-        <li>Comply with legal obligations</li>
-      </ul>
-      <p>We do <strong>not</strong> sell your personal information, and we do not use your data for third-party advertising.</p>
-
-      <h2>4. How We Store and Protect Data</h2>
-      <p>Your data is stored on Amazon Web Services (AWS) infrastructure in the United States — cloud database (DynamoDB) for inventory and account records and cloud storage (S3) for item photos. All data is encrypted in transit (HTTPS/TLS). Authentication tokens are stored in secure storage on your device. No method of storage or transmission is completely secure, and we cannot guarantee absolute security.</p>
-
-      <h2>5. Third-Party Services</h2>
-      <p>We use service providers that process information on our behalf:</p>
-      <ul>
-        <li><strong>Firebase Authentication (Google):</strong> account creation and sign-in. <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy</a></li>
-        <li><strong>Amazon Web Services:</strong> cloud database, photo storage, server hosting, and operational logs. <a href="https://aws.amazon.com/privacy/" target="_blank" rel="noopener">AWS Privacy</a></li>
-        <li><strong>Google Play:</strong> subscription billing and app distribution on Android. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
-        <li><strong>Apple App Store:</strong> subscription billing and app distribution on iOS. <a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">Apple Privacy Policy</a></li>
-        <li><strong>RevenueCat:</strong> subscription status management. <a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">RevenueCat Privacy Policy</a></li>
-        <li><strong>PostHog:</strong> product analytics in the app and website analytics. <a href="https://posthog.com/privacy" target="_blank" rel="noopener">PostHog Privacy Policy</a></li>
-        <li><strong>Hosting providers:</strong> such as GitHub Pages for our public marketing site</li>
-      </ul>
-      <p>We may add or change providers as the Services evolve. We do not sell your personal information.</p>
-
-      <h2>6. Sharing of Information</h2>
-      <ul>
-        <li>With the service providers above, under confidentiality obligations</li>
-        <li>With people you explicitly invite when you use team or shared-access features</li>
-        <li>When required by law, legal process, or to protect rights, safety, and security</li>
-        <li>In connection with a merger, acquisition, or sale of assets, with notice where required by law</li>
-      </ul>
-
-      <h2>7. Data Retention</h2>
-      <ul>
-        <li><strong>Account and inventory data:</strong> retained while your account is active and permanently deleted when you delete your account (Section 8)</li>
-        <li><strong>Server logs:</strong> expire automatically on a rolling basis (up to 90 days)</li>
-        <li><strong>Purchase records:</strong> retained by Google Play, Apple, and RevenueCat under their own policies for legal, tax, and fraud-prevention purposes</li>
-        <li><strong>Analytics events:</strong> retained in aggregate; no longer linkable to you after account deletion</li>
-      </ul>
-
-      <h2>8. Account Deletion</h2>
-      <p>You can permanently delete your Inventr account and associated data at any time:</p>
-      <ul>
-        <li><strong>In the app:</strong> Settings → <strong>Delete Account</strong> → confirm with your password. Deletion starts immediately.</li>
-        <li><strong>On the web (no app needed):</strong> follow the steps at <a href="/delete-account.html">consignment.314-apps.com/delete-account.html</a> or email <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a> from your account email with the subject "Delete my Inventr account". Requests are completed within 30 days.</li>
-      </ul>
-      <p>Deletion permanently removes your account record (email and credentials), inventory items, item photos, team and booth memberships, support messages, and usage counters. Purchase records held by Google Play, Apple, and RevenueCat are retained by those providers as described above. Deleting your account does <strong>not</strong> cancel an active subscription — cancel first in <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play</a> or your Apple ID subscription settings.</p>
-
-      <h2>9. Your Choices and Rights</h2>
-      <ul>
-        <li><strong>Access and updates:</strong> review and edit your inventory data at any time in the app</li>
-        <li><strong>Deletion:</strong> delete your account and data as described in Section 8, or request a copy of your data by emailing us</li>
-        <li><strong>Subscriptions:</strong> manage or cancel in Google Play or Apple ID settings</li>
-        <li><strong>Regional rights:</strong> depending on your location, you may have rights to access, correct, delete, or port personal data, and to withdraw consent — contact us to exercise them</li>
-        <li><strong>Website analytics:</strong> use browser privacy settings or extensions to limit cookies and similar technologies on our marketing site</li>
-      </ul>
-
-      <h2>10. Children's Privacy</h2>
-      <p>The Services are not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us personal information, contact us and we will take steps to delete it.</p>
-
-      <h2>11. International Users</h2>
-      <p>If you access the Services from outside the United States, your information may be processed in the United States or other countries where we or our providers operate. By using the Services, you consent to that transfer.</p>
-
-      <h2>12. Changes to This Policy</h2>
-      <p>We may update this Privacy Policy from time to time. We will post the revised policy on this page and update the "Last updated" date. Material changes may also be communicated in the app or by email where appropriate.</p>
-
-      <h2>13. California Privacy Rights</h2>
-      <p>California residents may have rights under the CCPA/CPRA, including the right to know, delete, and correct personal information, and to opt out of certain sharing. We do not sell personal information as defined by California law. To exercise these rights, use the deletion methods in Section 8 or contact us below. We will not discriminate against you for exercising your rights.</p>
-
-      <h2>14. Contact Us</h2>
-      <p>Questions about this Privacy Policy or our data practices:</p>
-      <p><strong>314 Apps LLC</strong><br>
-      Email: <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a></p>
+    <div class="card">
+        <h2>3. How We Use Information</h2>
+        <ul>
+            <li>Operate the Services: sync your inventory across devices and with your team.</li>
+            <li>Create and secure your account, and authenticate sign-ins.</li>
+            <li>Process and manage your subscription and entitlements.</li>
+            <li>Pay referral rewards via Venmo using the username you choose to provide.</li>
+            <li>Provide customer support and respond to requests.</li>
+            <li>Understand feature usage to improve the app, and diagnose crashes and bugs.</li>
+            <li>Prevent fraud and abuse, and comply with legal obligations.</li>
+        </ul>
+        <p>We do <strong>not</strong> sell your personal information, and we do not use your data for third-party advertising.</p>
     </div>
-  </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/delete-account.html">Delete account</a></p>
+    <div class="card">
+        <h2>4. Third-Party Services</h2>
+        <p>We share data only with the service providers that operate parts of the Services on our behalf:</p>
+        <table>
+            <tr><th>Provider</th><th>Purpose</th><th>Data involved</th></tr>
+            <tr><td>Firebase Authentication (Google)</td><td>Account creation and sign-in</td><td>Email address, credentials, user identifier (<a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>Amazon Web Services</td><td>Cloud database (DynamoDB), photo storage (S3), server hosting and logs</td><td>Inventory data, item photos, server logs (<a href="https://aws.amazon.com/privacy/" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>Google Play</td><td>Subscription billing on Android</td><td>Purchase and renewal records (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>Apple App Store</td><td>Subscription billing on iOS</td><td>Purchase and renewal records (<a href="https://www.apple.com/legal/privacy/" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>RevenueCat</td><td>Subscription status management</td><td>Purchase history, anonymous app user ID linked to your account (<a href="https://www.revenuecat.com/privacy" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>PostHog</td><td>Product and website analytics</td><td>Usage events, device information, pseudonymous identifiers (<a href="https://posthog.com/privacy" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>OpenAI</td><td>Generating listing drafts from item photos (AI scan)</td><td>Item photos you choose to scan, and any item details you type for that scan. Sent only when you use the AI scan feature (<a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">privacy policy</a>)</td></tr>
+            <tr><td>GitHub Pages</td><td>Website hosting</td><td>Standard web server logs</td></tr>
+        </table>
+        <p>We may also disclose information when required by law, to protect rights and safety, or in connection
+        with a corporate transaction (with notice where legally required).</p>
     </div>
-  </footer>
+
+    <div class="card">
+        <h2>5. Data Storage and Security</h2>
+        <p>Your data is stored on AWS infrastructure in the United States. All data is encrypted in transit
+        (HTTPS/TLS) between the app, our servers, and our service providers. Authentication tokens are stored
+        in secure storage on your device (EncryptedSharedPreferences on Android, Keychain on iOS). No method of
+        transmission or storage is 100% secure, and we cannot guarantee absolute security.</p>
+    </div>
+
+    <div class="card">
+        <h2>6. Data Retention</h2>
+        <ul>
+            <li><strong>Account and inventory data:</strong> retained while your account is active, and permanently deleted when you delete your account (see Section 7).</li>
+            <li><strong>Referral reward ledger:</strong> opaque user ids, amounts, and paid/void status may be retained as accounting records after account deletion. Venmo usernames stored on the account are deleted with the account.</li>
+            <li><strong>Server logs:</strong> automatically expire on a rolling basis (up to 90 days).</li>
+            <li><strong>Purchase records:</strong> retained by Google Play, Apple, and RevenueCat under their own policies for legal, tax, and fraud-prevention purposes.</li>
+            <li><strong>Analytics events:</strong> retained in aggregate; no longer linkable to you after account deletion.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>7. Account Deletion</h2>
+        <p>You can permanently delete your Inventr account and associated data at any time:</p>
+        <ul>
+            <li><strong>In the app:</strong> Settings → <strong>Delete Account</strong> → confirm with your password. Deletion starts immediately.</li>
+            <li><strong>On the web (no app needed):</strong> follow the steps at
+                <a href="/delete-account.html">consignment.314-apps.com/delete-account.html</a>, or email
+                <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a> from your account email with the subject
+                "Delete my Inventr account". Requests are completed within 30 days.</li>
+        </ul>
+        <p>Deletion permanently removes your account record (email and credentials), Venmo username and referral
+        code lookup, inventory items, item photos, team and booth memberships, support messages, and usage
+        counters. Referral reward ledger rows (opaque identifiers and amounts) may be retained as accounting
+        records. Purchase records held by Google Play, Apple, and RevenueCat are retained by those providers as
+        described above. Deleting your account does
+        <strong>not</strong> cancel an active subscription — cancel first in
+        <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">Google Play</a>
+        or your Apple ID subscription settings.</p>
+    </div>
+
+    <div class="card">
+        <h2>8. Your Choices and Rights</h2>
+        <ul>
+            <li>Access, edit, and delete your inventory data at any time in the app.</li>
+            <li>Delete your account and data (Section 7), or request a copy of your data by emailing us.</li>
+            <li>Manage or cancel subscriptions in Google Play or Apple ID settings.</li>
+            <li>Depending on your location, you may have rights to access, correct, delete, or port your personal data, and to withdraw consent. Contact us to exercise them.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>9. Children's Privacy</h2>
+        <p>The Services are not directed to children under 13 (or the equivalent minimum age in your region), and
+        we do not knowingly collect personal information from children. If you believe a child has provided us
+        personal information, contact us and we will delete it.</p>
+    </div>
+
+    <div class="card">
+        <h2>10. International Users</h2>
+        <p>Your information may be processed in the United States or other countries where we or our service
+        providers operate. These countries may have different data-protection laws than your country; we take
+        reasonable measures to ensure your information receives adequate protection.</p>
+    </div>
+
+    <div class="card">
+        <h2>11. California Privacy Rights</h2>
+        <p>If you are a California resident, the CCPA/CPRA gives you rights to know, delete, and correct personal
+        information we hold about you, and to opt out of "sales" or "sharing" of personal information. We do not
+        sell or share personal information as defined by California law. To exercise these rights, use the
+        deletion methods in Section 7 or contact us below. We will not discriminate against you for exercising
+        your rights.</p>
+    </div>
+
+    <div class="card">
+        <h2>12. Changes to This Policy</h2>
+        <p>We may update this policy from time to time. Updates are posted on this page with a revised "Last
+        updated" date; material changes will be communicated in the app or by email.</p>
+    </div>
+
+    <div class="card">
+        <h2>13. Contact Us</h2>
+        <p>314 Apps LLC<br>
+        Developer: Mark Chafin<br>
+        Email: <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a></p>
+    </div>
+
+    <footer>&copy; 2026 314 Apps LLC · <a href="/delete-account.html">Delete your account</a> · <a href="/terms.html">Terms of Service</a></footer>
+</div>
 </body>
 </html>

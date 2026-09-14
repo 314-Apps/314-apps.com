@@ -1,80 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Delete Your Account — Inventr</title>
-  <meta name="description" content="How to delete your Inventr account and all associated data — in the app or without it.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/funnel-tools/css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Your Account — Inventr</title>
+    <meta name="description" content="How to delete your Inventr account and all associated data, in the app or without it.">
+    <style>
+        :root { color-scheme: light dark; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6; color: #1a1a2e; background: #f7f7fb;
+        }
+        @media (prefers-color-scheme: dark) {
+            body { color: #e8e8f0; background: #12121a; }
+            .card { background: #1c1c28 !important; box-shadow: none !important; border: 1px solid #2c2c3a; }
+            .steps li { background: #232332; }
+            a { color: #8ab4f8; }
+        }
+        .container { max-width: 760px; margin: 0 auto; padding: 40px 20px 60px; }
+        header h1 { margin: 0 0 4px; font-size: 2rem; }
+        header p.sub { margin: 0 0 28px; opacity: .75; }
+        .card {
+            background: #fff; border-radius: 12px; padding: 24px 28px; margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(20,20,40,.08);
+        }
+        h2 { font-size: 1.25rem; margin-top: 0; }
+        .steps { padding-left: 0; list-style: none; counter-reset: step; margin: 16px 0 0; }
+        .steps li {
+            counter-increment: step; position: relative; padding: 10px 14px 10px 46px;
+            background: #f1f2f8; border-radius: 8px; margin-bottom: 8px;
+        }
+        .steps li::before {
+            content: counter(step); position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 24px; height: 24px; border-radius: 50%; background: #4757e0; color: #fff;
+            font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+        }
+        .notice {
+            border-left: 4px solid #e0a800; padding: 12px 16px; border-radius: 6px;
+            background: rgba(224,168,0,.09); margin-top: 16px;
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: .95rem; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid rgba(128,128,160,.25); vertical-align: top; }
+        footer { margin-top: 32px; font-size: .85rem; opacity: .7; text-align: center; }
+        a { color: #3243d6; }
+        .btn {
+            display: inline-block; margin-top: 12px; padding: 10px 18px; border-radius: 8px;
+            background: #4757e0; color: #fff !important; text-decoration: none; font-weight: 600;
+        }
+    </style>
 </head>
 <body>
-  <header class="site-header">
     <div class="container">
-      <a href="/" class="logo">Inventr</a>
-      <nav class="nav-links">
-        <a href="/">Guides</a>
-        <a href="/funnel-tools/">Free Tools</a>
-      </nav>
+        <header>
+            <h1>Delete Your Inventr Account</h1>
+            <p class="sub">Inventr — Resell &amp; Consignment Inventory Tracker, by Mark Chafin (314 Apps)</p>
+        </header>
+
+        <div class="card">
+            <h2>Delete your account in the app (fastest)</h2>
+            <ol class="steps">
+                <li>Open <strong>Inventr</strong> and sign in.</li>
+                <li>Go to <strong>Settings</strong> (gear icon).</li>
+                <li>Scroll down and tap <strong>Delete Account</strong>.</li>
+                <li>Confirm with your password. Deletion starts immediately.</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <h2>Delete your account without the app</h2>
+            <p>
+                If you no longer have the app installed, you can request deletion by email. Send the request
+                <strong>from the email address associated with your Inventr account</strong> so we can verify it's you.
+            </p>
+            <a class="btn" href="mailto:314Apps@gmail.com?subject=Delete%20my%20Inventr%20account&body=Please%20permanently%20delete%20my%20Inventr%20account%20and%20all%20associated%20data.%20My%20account%20email%20is%3A%20">Email a deletion request</a>
+            <p style="margin-bottom:0">
+                Or write to <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a> with the subject
+                "Delete my Inventr account". We verify the request against the account email and complete
+                deletion within <strong>30 days</strong>. You'll receive a confirmation when it's done.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>What gets deleted</h2>
+            <table>
+                <tr><th>Data</th><th>What happens</th></tr>
+                <tr><td>Account (email address, login credentials)</td><td>Permanently deleted</td></tr>
+                <tr><td>Inventory items, prices, costs, sales records you entered</td><td>Permanently deleted</td></tr>
+                <tr><td>Item photos you uploaded</td><td>Permanently deleted from our storage</td></tr>
+                <tr><td>Team and booth memberships, pending invitations</td><td>Removed</td></tr>
+                <tr><td>Support and feedback messages</td><td>Permanently deleted</td></tr>
+                <tr><td>Referral code lookup and Venmo username</td><td>Permanently deleted</td></tr>
+                <tr><td>Usage counters and AI-scan credits</td><td>Permanently deleted</td></tr>
+            </table>
+            <h2 style="margin-top:22px">What may be retained</h2>
+            <table>
+                <tr><th>Data</th><th>Why / how long</th></tr>
+                <tr><td>Referral reward ledger (opaque user ids, amounts, paid/void status)</td><td>Retained as accounting records; no longer linked to your email or Venmo username after the account is deleted.</td></tr>
+                <tr><td>Purchase and subscription records held by Google Play, the Apple App Store, and our payment processor (RevenueCat)</td><td>Retained by those providers under their own policies for legal, tax, and fraud-prevention reasons. We do not receive your payment card details.</td></tr>
+                <tr><td>Server operation logs</td><td>Automatically expire on a rolling basis (up to 90 days); not used to reconstruct your account.</td></tr>
+                <tr><td>Anonymized analytics events</td><td>No longer linkable to you after account deletion.</td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Have a subscription? Cancel it first</h2>
+            <p>
+                Deleting your account does <strong>not</strong> automatically cancel an active subscription —
+                subscriptions are managed by the app store you purchased through:
+            </p>
+            <ul>
+                <li><strong>Google Play:</strong> open <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>, choose Inventr, and tap Cancel.</li>
+                <li><strong>Apple App Store:</strong> Settings → your name → Subscriptions → Inventr → Cancel. (<a href="https://support.apple.com/en-us/HT202039" target="_blank" rel="noopener">Apple's guide</a>)</li>
+            </ul>
+            <div class="notice">
+                If you delete your account with an active subscription, the subscription will keep renewing
+                until you cancel it in the store — cancel first to avoid unwanted charges.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Questions?</h2>
+            <p style="margin-bottom:0">
+                Contact us at <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a>. See also our
+                <a href="/privacy-policy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a>.
+            </p>
+        </div>
+
+        <footer>&copy; 2026 Mark Chafin · 314 Apps · Inventr</footer>
     </div>
-  </header>
-
-  <section class="hero hero--small">
-    <div class="container">
-      <h1>Delete Your Inventr Account</h1>
-      <p class="legal-meta">314 Apps LLC · Inventr (Resell Tracker: Flip &amp; Profit) · Applies to Android and iOS</p>
-    </div>
-  </section>
-
-  <main>
-    <div class="article">
-      <h2>Delete your account in the app (fastest)</h2>
-      <ol>
-        <li>Open <strong>Inventr</strong> and sign in.</li>
-        <li>Go to <strong>Settings</strong>.</li>
-        <li>Scroll down and tap <strong>Delete Account</strong>.</li>
-        <li>Confirm with your password. Deletion starts immediately.</li>
-      </ol>
-
-      <h2>Delete your account without the app</h2>
-      <p>If you no longer have the app installed, you can request deletion by email. Send the request <strong>from the email address associated with your Inventr account</strong> so we can verify it's you.</p>
-      <p><a class="btn btn--primary" href="mailto:314Apps@gmail.com?subject=Delete%20my%20Inventr%20account&amp;body=Please%20permanently%20delete%20my%20Inventr%20account%20and%20all%20associated%20data.%20My%20account%20email%20is%3A%20">Email a deletion request</a></p>
-      <p>Or write to <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a> with the subject "Delete my Inventr account". We verify the request against the account email and complete deletion within <strong>30 days</strong>. You'll receive a confirmation when it's done.</p>
-
-      <h2>What gets deleted</h2>
-      <ul>
-        <li><strong>Account</strong> (email address, login credentials) — permanently deleted</li>
-        <li><strong>Inventory items, prices, costs, and sales records</strong> you entered — permanently deleted</li>
-        <li><strong>Item photos</strong> you uploaded — permanently deleted from our storage</li>
-        <li><strong>Team and booth memberships</strong> and pending invitations — removed</li>
-        <li><strong>Support and feedback messages</strong> — permanently deleted</li>
-        <li><strong>Usage counters and AI-scan credits</strong> — permanently deleted</li>
-      </ul>
-
-      <h2>What may be retained</h2>
-      <ul>
-        <li><strong>Purchase and subscription records</strong> held by Google Play, the Apple App Store, and our payment processor (RevenueCat) — retained by those providers under their own policies for legal, tax, and fraud-prevention reasons. We never receive your payment card details.</li>
-        <li><strong>Server operation logs</strong> — expire automatically on a rolling basis (up to 90 days).</li>
-        <li><strong>Anonymized analytics events</strong> — no longer linkable to you after account deletion.</li>
-      </ul>
-
-      <h2>Have a subscription? Cancel it first</h2>
-      <p>Deleting your account does <strong>not</strong> automatically cancel an active subscription — subscriptions are managed by the app store you purchased through:</p>
-      <ul>
-        <li><strong>Google Play:</strong> open <a href="https://play.google.com/store/account/subscriptions" target="_blank" rel="noopener">play.google.com/store/account/subscriptions</a>, choose Inventr, and tap Cancel.</li>
-        <li><strong>Apple App Store:</strong> Settings → your name → Subscriptions → Inventr → Cancel (<a href="https://support.apple.com/en-us/HT202039" target="_blank" rel="noopener">Apple's guide</a>).</li>
-      </ul>
-      <p><strong>If you delete your account with an active subscription, the subscription will keep renewing until you cancel it in the store — cancel first to avoid unwanted charges.</strong></p>
-
-      <h2>Questions?</h2>
-      <p>Contact us at <a href="mailto:314Apps@gmail.com">314Apps@gmail.com</a>. See also our <a href="/privacy-policy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Service</a>.</p>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2026 Inventr · <a href="https://314-apps.com">314 Apps</a> · <a href="/privacy-policy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/delete-account.html">Delete account</a></p>
-    </div>
-  </footer>
 </body>
 </html>

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.chafin.inventr",
+      "sha256_cert_fingerprints": [
+        "C9:F4:78:C3:19:C1:6E:6E:13:66:9E:97:5B:E5:39:BB:97:68:0D:A4:C5:D6:BB:F2:ED:D1:3A:69:9E:C0:71:87"
+      ]
+    }
+  }
+]
