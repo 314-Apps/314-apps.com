@@ -105,11 +105,40 @@
   (function () {
     'use strict';
 
-    var STORE_URL = 'https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?ct=meta_resellers_2026_09&mt=8';
+    /* The literal keeps `ct=` so the site build can stamp Apple's `pt`
+       onto it (scripts/blog/app-links.mjs). Per-arm tokens are swapped in
+       below; anything built dynamically here would miss the stamp. */
+    var STORE_BASE = 'https://apps.apple.com/us/app/resell-tracker-flip-profit/id6753903683?ct=meta_resellers_2026_09&mt=8';
     var WAITLIST_URL = '/android/';
+
+    /* One Apple campaign token per ad, so App Store Connect → Acquisition
+       reports downloads and paying users per creative, not per campaign.
+       Keys are the ad's `utm_content`: Meta's {{ad.id}} macro for the original
+       Void ad, and hand-set slugs for the September A/B arms. Tokens are
+       ≤30 chars, alphanumeric + underscore, matching Apple's rules. Anything
+       unrecognised falls back to the campaign-level token. */
+    var CT_DEFAULT = 'meta_resellers_2026_09';
+    var CT_BY_CONTENT = {
+      '120250303399200214': 'meta_void_2026_09',
+      'void_2026_09': 'meta_void_2026_09',
+      'pile_2026_09': 'meta_pile_2026_09',
+      'snap_2026_09': 'meta_snap_2026_09',
+      'ledger_2026_09': 'meta_ledger_2026_09'
+    };
+
+    var utmContent = '';
+    try {
+      utmContent = new URLSearchParams(window.location.search).get('utm_content') || '';
+    } catch (e) { /* very old browsers: fall through to the default token */ }
+    var campaignToken = CT_BY_CONTENT[utmContent] || CT_DEFAULT;
+    var STORE_URL = STORE_BASE.replace(/([?&])ct=[^&]*/, '$1ct=' + encodeURIComponent(campaignToken));
 
     var isAndroid = /Android/i.test(navigator.userAgent);
     var destination = isAndroid ? WAITLIST_URL : STORE_URL;
+
+    /* Keep the visible fallback button on the same per-arm link. */
+    var storeAnchor = document.getElementById('store-link');
+    if (storeAnchor && !isAndroid) storeAnchor.setAttribute('href', STORE_URL);
 
     if (isAndroid) {
       var status = document.getElementById('status');
@@ -147,7 +176,9 @@
         if (phLoaded()) {
           window.posthog.capture('app_redirect', {
             platform: isAndroid ? 'android' : 'ios_or_other',
-            destination: isAndroid ? 'android_waitlist' : 'app_store'
+            destination: isAndroid ? 'android_waitlist' : 'app_store',
+            campaign_token: campaignToken,
+            ad_content: utmContent
           });
         }
       } catch (e) { /* never block the redirect on analytics */ }
