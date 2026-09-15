@@ -12,3 +12,12 @@
 # Local env
 .env
 node_modules/
+
+# Stock Advisor
+stock-advisor/venv/
+stock-advisor/frontend/node_modules/
+stock-advisor/frontend/dist/
+stock-advisor/__pycache__/
+stock-advisor/**/__pycache__/
+stock-advisor/*.db
+*.pyc
